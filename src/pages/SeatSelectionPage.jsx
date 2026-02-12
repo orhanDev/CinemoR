@@ -144,25 +144,27 @@ const SeatSelectionPage = () => {
 	const handleTouchMove = (e) => {
 		if (!seatsPanelRef.current || touchStartXRef.current === null || touchStartYRef.current === null) return;
 		const target = e.target;
+		// Koltuk üzerindeyse sayfa scroll'una izin ver
 		if (target.classList.contains('seat') || target.closest('.seat')) {
 			touchStartXRef.current = null;
 			touchStartYRef.current = null;
-			return; // Koltuk üzerindeyse sayfa scroll'una izin ver
+			return; // Sayfa scroll'una izin ver
 		}
+		
 		const touchX = e.touches[0].clientX;
 		const touchY = e.touches[0].clientY;
 		const diffX = Math.abs(touchStartXRef.current - touchX);
 		const diffY = Math.abs(touchStartYRef.current - touchY);
 		
-		// Eğer dikey hareket varsa veya dikey hareket yatay hareketten fazlaysa, sayfa scroll'una izin ver
-		if (diffY > 0 && (diffY >= diffX || diffY > 10)) {
+		// Eğer dikey hareket varsa (5px'den fazla), sayfa scroll'una izin ver
+		if (diffY > 5) {
 			touchStartXRef.current = null;
 			touchStartYRef.current = null;
 			return; // Sayfa scroll'una izin ver - preventDefault çağırma
 		}
 		
-		// Sadece yatay scroll için
-		if (diffX > 5) {
+		// Sadece yatay scroll için (dikey hareket yoksa veya çok azsa - 5px'den az)
+		if (diffX > 5 && diffY <= 5) {
 			seatsPanelRef.current.scrollLeft = scrollLeftRef.current + (touchStartXRef.current - touchX);
 			e.preventDefault(); // Sadece yatay scroll için prevent default
 		}
