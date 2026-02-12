@@ -94,14 +94,47 @@ src/
 ## 🚢 Deployment
 
 ### Frontend (Netlify)
-- Automatic deployments from GitHub
-- Environment variables configured in Netlify dashboard
+
+The frontend is deployed on Netlify with automatic deployments from GitHub.
+
+**Setup:**
+1. Connect GitHub repository to Netlify
+2. Configure build settings (automatically detected from `netlify.toml`):
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Node version: `18`
+
+3. Set environment variables in Netlify dashboard:
+   ```
+   VITE_API_URL=https://your-api-domain.com/api
+   VITE_API_URL_WITHOUT_API=https://your-api-domain.com
+   ```
+
+4. Ensure backend CORS settings include Netlify domain
+
+**Features:**
+- Automatic deployments on push to main branch
 - SPA routing handled via `_redirects` file
+- Environment-based configuration
 
 ### Backend (Render.com)
+
+The backend is deployed on Render.com using Docker.
+
+**Setup:**
+1. Create PostgreSQL database on Render
+2. Create Web Service with Docker runtime
+3. Configure environment variables:
+   - `SPRING_PROFILES_ACTIVE=production`
+   - `SPRING_DATASOURCE_URL=jdbc:postgresql://...`
+   - `SPRING_DATASOURCE_USERNAME=...`
+   - `SPRING_DATASOURCE_PASSWORD=...`
+   - `PORT=8082`
+
+**Features:**
 - Docker-based deployment
-- PostgreSQL database on Render
-- Environment variables for database connection
+- PostgreSQL database integration
+- Environment-based configuration
 
 ## 📝 Development Notes
 
