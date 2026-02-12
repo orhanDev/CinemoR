@@ -143,7 +143,7 @@ const createDemoShowtimes = ({ movie, startOffset, days }) => {
 };
 
 
-const ACTOR_EXTENSIONS = ["jpg", "png", "webp"];
+const ACTOR_EXTENSIONS = ["webp", "jpg", "png"];
 const ActorAvatar = ({ name }) => {
 	const [tryIndex, setTryIndex] = useState(0);
 	const ext = ACTOR_EXTENSIONS[tryIndex];
@@ -205,7 +205,10 @@ const MovieDetail = () => {
 	const [showtimes, setShowtimes] = useState([]);
 	const [showtimesLoading, setShowtimesLoading] = useState(true);
 	const [demoSchedule, setDemoSchedule] = useState(false);
-	const [useApiShowtimes, setUseApiShowtimes] = useState(false);
+	const [useApiShowtimes, setUseApiShowtimes] = useState(() => {
+		const apiUrl = import.meta.env.VITE_API_URL || "";
+		return apiUrl && !apiUrl.includes("localhost");
+	});
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM-DD"));
 	const [cityFilter, setCityFilter] = useState(() => {
@@ -225,6 +228,7 @@ const MovieDetail = () => {
 	const lastScrollYRef = useRef(0);
 	const dateCardsRef = useRef(null);
 	const dateCardsInnerRef = useRef(null);
+	const showtimesSectionRef = useRef(null);
 	const dateOffsetDirectionRef = useRef(0);
 	const [dateStripTranslateX, setDateStripTranslateX] = useState(0);
 	const MOBILE_CARD_SCROLL_PX = 108;
@@ -321,7 +325,10 @@ const MovieDetail = () => {
 
 	useEffect(() => {
 		if (!id) return;
-		window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+		// Desktop'ta en üste git
+		if (window.innerWidth > 750) {
+			window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+		}
 		const fetchMovie = async () => {
 			try {
 				setLoading(true);
@@ -413,6 +420,26 @@ const MovieDetail = () => {
 		};
 		fetchMovie();
 	}, [id, language]);
+
+	// Mobilde sayfa yüklendiğinde showtimes section'a scroll et
+	useEffect(() => {
+		if (!movie || !isMobile) return;
+		// Sayfa yüklendikten ve movie data hazır olduktan sonra scroll et
+		const scrollToShowtimes = () => {
+			if (showtimesSectionRef.current) {
+				const offset = 100; // Header için offset
+				const elementPosition = showtimesSectionRef.current.getBoundingClientRect().top;
+				const offsetPosition = elementPosition + window.pageYOffset - offset;
+				window.scrollTo({
+					top: offsetPosition,
+					behavior: "smooth"
+				});
+			}
+		};
+		// Kısa bir gecikme ile scroll et (sayfa render edildikten sonra)
+		const timer = setTimeout(scrollToShowtimes, 500);
+		return () => clearTimeout(timer);
+	}, [movie, isMobile]);
 
 	useEffect(() => {
 		const fetchAll = async () => {
@@ -958,7 +985,7 @@ const MovieDetail = () => {
 
 				{}
 				<div className="movie-detail-container">
-					<section className="showtimes-section">
+					<section ref={showtimesSectionRef} className="showtimes-section">
 						<div className="showtimes-header">
 							<h2 className="showtimes-title">{t("moviedetail.vorstellungen")}</h2>
 							{}
