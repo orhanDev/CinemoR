@@ -2452,13 +2452,13 @@
 		min-width: 0;
 		padding: 0.75rem 0.5rem 1rem;
 		border-radius: 12px;
-		max-height: none; /* Yükseklik sınırlamasını kaldır */
+		max-height: min(60vh, 520px);
 		overflow-x: auto; /* Sadece yatay scroll */
 		overflow-y: hidden; /* Dikey scroll'u tamamen devre dışı bırak - sayfa scroll etsin */
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
-		touch-action: pan-x pan-y; /* Hem yatay hem dikey touch'a izin ver ama dikey sayfa scroll'una geçsin */
+		touch-action: pan-x; /* Sadece yatay scroll - dikey için sayfa scroll etsin */
 		overscroll-behavior-x: contain;
 		overscroll-behavior-y: auto; /* Dikey overscroll sayfa scroll'una geçsin */
 		will-change: scroll-position;
@@ -2517,7 +2517,7 @@
 		min-width: min-content;
 		justify-content: flex-start;
 		padding-right: 30px;
-		touch-action: pan-x pan-y; /* Hem yatay hem dikey touch'a izin ver - dikey sayfa scroll'una geçsin */
+		touch-action: pan-x; /* Sadece yatay scroll - dikey için sayfa scroll etsin */
 		user-select: none;
 		-webkit-user-select: none;
 	}
