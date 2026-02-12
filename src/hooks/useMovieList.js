@@ -56,7 +56,6 @@ export function useMovieList(fallbackMovies = [], options = {}) {
 
 		load();
 		return () => { cancelled = true; };
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dedupe]);
 
 	return { movies, loading, error };
