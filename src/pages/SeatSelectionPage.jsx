@@ -24,6 +24,7 @@ const SeatSelectionPage = () => {
 	const defaultsInitializedRef = useRef(false);
 	const seatsPanelRef = useRef(null);
 	const touchStartXRef = useRef(null);
+	const touchStartYRef = useRef(null);
 	const scrollLeftRef = useRef(0);
 	const MAX_SELECTION = 6;
 
@@ -136,26 +137,40 @@ const SeatSelectionPage = () => {
 			return;
 		}
 		touchStartXRef.current = e.touches[0].clientX;
+		touchStartYRef.current = e.touches[0].clientY;
 		scrollLeftRef.current = seatsPanelRef.current.scrollLeft;
 	};
 
 	const handleTouchMove = (e) => {
-		if (!seatsPanelRef.current || touchStartXRef.current === null) return;
+		if (!seatsPanelRef.current || touchStartXRef.current === null || touchStartYRef.current === null) return;
 		const target = e.target;
 		if (target.classList.contains('seat') || target.closest('.seat')) {
 			touchStartXRef.current = null;
+			touchStartYRef.current = null;
 			return;
 		}
 		const touchX = e.touches[0].clientX;
-		const diff = touchStartXRef.current - touchX;
-		seatsPanelRef.current.scrollLeft = scrollLeftRef.current + diff;
-		if (Math.abs(diff) > 5) {
-			e.preventDefault();
+		const touchY = e.touches[0].clientY;
+		const diffX = Math.abs(touchStartXRef.current - touchX);
+		const diffY = Math.abs(touchStartYRef.current - touchY);
+		
+		// Eğer dikey hareket yatay hareketten fazlaysa, sayfa scroll'una izin ver
+		if (diffY > diffX) {
+			touchStartXRef.current = null;
+			touchStartYRef.current = null;
+			return; // Sayfa scroll'una izin ver - preventDefault çağırma
+		}
+		
+		// Yatay scroll için
+		seatsPanelRef.current.scrollLeft = scrollLeftRef.current + (touchStartXRef.current - touchX);
+		if (diffX > 5) {
+			e.preventDefault(); // Sadece yatay scroll için prevent default
 		}
 	};
 
 	const handleTouchEnd = () => {
 		touchStartXRef.current = null;
+		touchStartYRef.current = null;
 	};
 
 	const handleContinue = () => {
