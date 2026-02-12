@@ -840,7 +840,6 @@ const MovieDetail = () => {
 
 		content = (
 			<div className="movie-detail-view">
-				{}
 				<div className="movie-detail-top">
 					<button
 						type="button"
@@ -921,7 +920,6 @@ const MovieDetail = () => {
 									<span>{isFavorite(movie.id) ? t("home.favorite.remove") : t("home.favorite.add")}</span>
 								</button>
 							)}
-							{}
 							{!hideCast && (
 								<section className="movie-detail-personal">
 									<h2 className="movie-detail-personal__title">{t("moviedetail.cast")}</h2>
@@ -979,7 +977,6 @@ const MovieDetail = () => {
 					</div>
 				</div>
 
-				{}
 				<div className="movie-detail-container">
 					<section ref={showtimesSectionRef} className="showtimes-section">
 						<div className="showtimes-header">
