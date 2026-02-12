@@ -271,7 +271,6 @@ const FEB_YEAR = 2026;
 const FEB_MONTH = 2;
 const FEB_DAYS = 28;
 
-// sampleMovies'i component dışına taşıdık - hoisting sorununu önlemek için
 const sampleMovies = [
 		{
 			id: 1,
@@ -477,7 +476,6 @@ const Movies = () => {
 
 					return (
 						<>
-				{}
 				<div className="movies-breadcrumb">
 					<Link to="/">{t("movies.breadcrumb.home")}</Link>
 					<span className="breadcrumb-separator">›</span>
@@ -488,7 +486,6 @@ const Movies = () => {
 					<h2 className="section-title">{pageTitle}</h2>
 				</header>
 
-				{}
 				<div className="movies-tabs">
 					<Link
 						to="/movies/im-kino"
@@ -507,7 +504,6 @@ const Movies = () => {
 					);
 				})()}
 
-				{}
 				{loading ? (
 					<div className="movies-loading">
 						<p>{t("movies.loading")}</p>

@@ -341,7 +341,6 @@ const Home = () => {
 		const withSlider = movies.filter((m) => Boolean(getSliderRaw(m)));
 		movies = (withSlider.length > 0 ? withSlider : movies).slice(0, 9);
 		
-		// Charlie der Superhund'u ilk sıraya al
 		const charlieIndex = movies.findIndex((m) => 
 			m?.title?.toLowerCase().includes("charlie") || 
 			m?.title?.toLowerCase().includes("superhund") ||
@@ -438,7 +437,6 @@ const Home = () => {
 
 	return (
 		<main className="home-page">
-			{}
 			<section className="hero-section-slider">
 				<div className="hero-slider-wrapper">
 					{!isMobile && (
@@ -502,10 +500,9 @@ const Home = () => {
 												loading={index === 0 ? "eager" : "lazy"}
 												onError={(e) => {
 													e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
-												}}
-											/>
-											{}
-											{isMobile && (
+											}}
+										/>
+										{isMobile && (
 												<button
 													type="button"
 													className="hero-slide-tickets-btn"
@@ -544,7 +541,6 @@ const Home = () => {
 							})}
 					</div>
 					
-					{}
 					<div className="hero-slider-dots">
 						{sliderMovies.map((_, index) => (
 							<button
@@ -557,7 +553,6 @@ const Home = () => {
 					</div>
 				</div>
 				
-				{}
 				{isMobile && (
 					<button
 						type="button"
@@ -572,7 +567,6 @@ const Home = () => {
 				)}
 			</section>
 
-			{}
 			<section className="movies-section" ref={moviesSectionRef}>
 				<Container>
 					<header className="movies-section-header">

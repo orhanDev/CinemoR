@@ -46,12 +46,10 @@ export const fetchMenuItems = async () => {
 			const items = await response.json();
 			return items.length > 0 ? items : defaultMenuItems;
 		}
-		// Silently handle 404 - backend endpoint may not exist yet
 		if (response.status === 404) {
 			return defaultMenuItems;
 		}
 	} catch (err) {
-		// Silently handle network errors - use default menu items
 		logError("menu-items", err);
 	}
 	return defaultMenuItems;

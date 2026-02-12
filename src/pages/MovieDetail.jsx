@@ -325,7 +325,6 @@ const MovieDetail = () => {
 
 	useEffect(() => {
 		if (!id) return;
-		// Desktop'ta en üste git
 		if (window.innerWidth > 750) {
 			window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 		}
@@ -421,13 +420,11 @@ const MovieDetail = () => {
 		fetchMovie();
 	}, [id, language]);
 
-	// Mobilde sayfa yüklendiğinde showtimes section'a scroll et
 	useEffect(() => {
 		if (!movie || !isMobile) return;
-		// Sayfa yüklendikten ve movie data hazır olduktan sonra scroll et
 		const scrollToShowtimes = () => {
 			if (showtimesSectionRef.current) {
-				const offset = 100; // Header için offset
+				const offset = 100;
 				const elementPosition = showtimesSectionRef.current.getBoundingClientRect().top;
 				const offsetPosition = elementPosition + window.pageYOffset - offset;
 				window.scrollTo({
@@ -436,7 +433,6 @@ const MovieDetail = () => {
 				});
 			}
 		};
-		// Kısa bir gecikme ile scroll et (sayfa render edildikten sonra)
 		const timer = setTimeout(scrollToShowtimes, 500);
 		return () => clearTimeout(timer);
 	}, [movie, isMobile]);
@@ -988,7 +984,6 @@ const MovieDetail = () => {
 					<section ref={showtimesSectionRef} className="showtimes-section">
 						<div className="showtimes-header">
 							<h2 className="showtimes-title">{t("moviedetail.vorstellungen")}</h2>
-							{}
 							<CustomSelect
 								id="showtimes-cinema-select"
 								label={t("cinemas.selectLabel")}
