@@ -2629,9 +2629,15 @@
 		margin-bottom: 0.5rem;
 	}
 
+	.seat-selection-page .seat-summary .ticket-card-footer {
+		padding-bottom: 120px; /* Footer'ın altında kalmaması için yeterli boşluk */
+		margin-bottom: 0;
+	}
+
 	.seat-selection-page .seat-summary .summary-cta {
 		font-size: 0.85rem;
 		padding: 0.6rem 0.75rem;
 		border-radius: 10px;
+		margin-bottom: 0;
 	}
 }
