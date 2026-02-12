@@ -1,0 +1,113 @@
+
+
+.custom-select__wrap {
+	position: relative;
+
+	@media (max-width: 768px) {
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box !important;
+
+		*,
+		*::before,
+		*::after {
+			box-sizing: border-box !important;
+		}
+	}
+}
+
+.custom-select__label {
+	display: block;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: rgba(248, 250, 252, 0.7);
+	margin-bottom: 0.5rem;
+	letter-spacing: 0.03em;
+}
+
+.custom-select__trigger {
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.75rem 1rem;
+	padding-right: 2.5rem;
+	background: rgba(30, 32, 36, 0.9);
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 10px;
+	color: #f8fafc;
+	font-size: 0.875rem;
+	text-align: left;
+	cursor: pointer;
+	appearance: none;
+	box-sizing: border-box !important;
+
+	&:focus {
+		outline: none;
+		border-color: rgba(212, 168, 83, 0.5);
+		box-shadow: 0 0 0 2px rgba(212, 168, 83, 0.15);
+	}
+
+	@media (max-width: 768px) {
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box !important;
+	}
+}
+
+.custom-select__trigger-text {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.custom-select__trigger-icon {
+	font-size: 0.6rem;
+	opacity: 0.8;
+	position: absolute;
+	right: 1rem;
+	pointer-events: none;
+}
+
+.custom-select__label + .custom-select__trigger {
+	position: relative;
+}
+
+.custom-select__list {
+	position: absolute;
+	top: calc(100% + 0.35rem);
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 0.35rem 0;
+	list-style: none;
+	background: rgba(15, 23, 42, 0.98);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	border-radius: 10px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+	z-index: 1000;
+	max-height: 240px;
+	overflow-y: auto;
+}
+
+.custom-select__option {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	color: #e2e8f0;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.06);
+		color: #f8fafc;
+	}
+
+	&.is-selected {
+		background: rgba(59, 130, 246, 0.25);
+		color: #f8fafc;
+	}
+}

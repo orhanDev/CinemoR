@@ -1,0 +1,2073 @@
+
+
+
+.movie-detail-page {
+	background: linear-gradient(180deg, #0f1012 0%, #15171b 100%);
+	min-height: 100vh;
+	color: #f1f3f5;
+	padding: 80px 0 4rem;
+	position: relative;
+	overflow-x: visible;
+	overflow-y: visible;
+
+	&::before {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: 
+			radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
+			radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+		pointer-events: none;
+		z-index: 0;
+	}
+}
+
+.movie-detail-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 60vh;
+	gap: 1.5rem;
+	color: #cbd5e1;
+
+	.loading-spinner {
+		width: 48px;
+		height: 48px;
+		border: 3px solid rgba(255, 255, 255, 0.1);
+		border-top-color: #3b82f6;
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+
+	p {
+		font-size: 1rem;
+		font-weight: 500;
+	}
+}
+
+@keyframes spin {
+	to { transform: rotate(360deg); }
+}
+
+.movie-detail-container {
+	position: relative;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1rem;
+	z-index: 1;
+	overflow-x: visible;
+	overflow-y: visible;
+
+	@media (min-width: 1401px) {
+		max-width: 1400px;
+		padding: 0 2rem;
+	}
+
+	@media (min-width: 1600px) {
+		max-width: 1600px;
+		padding: 0 3rem;
+	}
+}
+
+.movie-detail-view {
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+}
+
+.movie-detail-top {
+	position: relative;
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 1.5rem 1rem 2rem;
+	background: rgba(26, 28, 32, 0.5);
+	border-radius: 16px;
+	border: 1px solid rgba(255, 255, 255, 0.07);
+
+	@media (min-width: 1401px) {
+		max-width: 1400px;
+		padding: 2rem 2rem 2.5rem;
+	}
+
+	@media (min-width: 1600px) {
+		max-width: 1600px;
+		padding: 2.5rem 3rem 3rem;
+	}
+}
+
+.movie-detail-close--top {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	z-index: 2;
+}
+
+.movie-detail-top__inner {
+	display: grid;
+	grid-template-columns: 1fr calc(280px + 4rem);
+	gap: 2.5rem;
+	align-items: start;
+
+	@media (min-width: 751px) and (max-width: 1000px) {
+		gap: 2rem;
+		grid-template-columns: 1fr calc(240px + 3rem);
+	}
+
+	@media (min-width: 1401px) {
+		gap: 3rem;
+		grid-template-columns: 1fr calc(320px + 5rem);
+		align-items: stretch;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 4rem;
+		grid-template-columns: 1fr calc(360px + 6rem);
+		align-items: stretch;
+	}
+}
+
+.movie-detail-top__left {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+
+	@media (min-width: 1401px) {
+		gap: 2rem;
+		min-height: 600px;
+		justify-content: flex-start;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 2.5rem;
+		min-height: 700px;
+	}
+}
+
+.movie-detail-top__title {
+	margin: 0 0 0.35rem;
+	font-size: 1.75rem;
+	font-weight: 700;
+	line-height: 1.25;
+	color: rgba(248, 250, 252, 0.98);
+
+	@media (min-width: 1401px) {
+		font-size: 2rem;
+	}
+
+	@media (min-width: 1600px) {
+		font-size: 2.25rem;
+	}
+}
+
+.movie-detail-top__subtitle {
+	margin: 0;
+	font-size: 0.9rem;
+	color: rgba(248, 250, 252, 0.5);
+
+	@media (min-width: 1401px) {
+		font-size: 0.95rem;
+		margin-bottom: 0.5rem;
+	}
+
+	@media (min-width: 1600px) {
+		font-size: 1rem;
+	}
+}
+
+.movie-detail-top__description {
+	margin-bottom: 0;
+
+	@media (min-width: 1401px) {
+		background: rgba(255, 255, 255, 0.03);
+		padding: 1.25rem 1.5rem;
+		border-radius: 12px;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(10px);
+	}
+
+	@media (min-width: 1600px) {
+		padding: 1.5rem 2rem;
+	}
+
+	p {
+		margin: 0 0 0.5rem;
+		font-size: 0.95rem;
+		line-height: 1.55;
+		color: rgba(248, 250, 252, 0.85);
+
+		@media (min-width: 1401px) {
+			font-size: 1rem;
+			line-height: 1.6;
+		}
+
+		@media (min-width: 1600px) {
+			font-size: 1.05rem;
+		}
+	}
+}
+
+.movie-detail-description-toggle {
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: 0.88rem;
+	font-weight: 600;
+	color: rgba(91, 72, 223, 0.95);
+	cursor: pointer;
+	transition: color 0.2s;
+
+	&:hover {
+		color: rgba(129, 110, 255, 1);
+	}
+}
+
+.movie-detail-top__cta {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: rgba(248, 250, 252, 0.95);
+
+	@media (min-width: 1401px) {
+		font-size: 1rem;
+		padding: 0.75rem 1rem;
+		background: rgba(91, 72, 223, 0.1);
+		border-left: 3px solid rgba(91, 72, 223, 0.6);
+		border-radius: 8px;
+	}
+
+	@media (min-width: 1600px) {
+		font-size: 1.05rem;
+		padding: 0.875rem 1.25rem;
+	}
+}
+
+.movie-detail-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 0;
+
+	@media (min-width: 1401px) {
+		background: rgba(255, 255, 255, 0.03);
+		padding: 1.5rem;
+		border-radius: 12px;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(10px);
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 1600px) {
+		padding: 2rem;
+		gap: 1rem;
+	}
+}
+
+.movie-detail-meta__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.5rem;
+
+	@media (min-width: 1401px) {
+		padding: 0.5rem 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		gap: 0.75rem;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	dt {
+		margin: 0;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: rgba(248, 250, 252, 0.6);
+		min-width: 10rem;
+
+		@media (min-width: 1401px) {
+			font-size: 0.9rem;
+			min-width: 12rem;
+		}
+
+		@media (min-width: 1600px) {
+			font-size: 0.95rem;
+			min-width: 14rem;
+		}
+	}
+	dd {
+		margin: 0;
+		font-size: 0.9rem;
+		color: rgba(248, 250, 252, 0.9);
+
+		@media (min-width: 1401px) {
+			font-size: 0.95rem;
+		}
+
+		@media (min-width: 1600px) {
+			font-size: 1rem;
+		}
+	}
+}
+
+.movie-detail-fsk-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 36px;
+	padding: 0.2rem 0.5rem;
+	background: rgba(201, 162, 39, 0.2);
+	border: 1px solid rgba(201, 162, 39, 0.4);
+	border-radius: 6px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #c9a227;
+
+	&--none {
+		background: rgba(248, 250, 252, 0.1);
+		border-color: rgba(248, 250, 252, 0.2);
+		color: rgba(248, 250, 252, 0.85);
+		font-weight: 500;
+		min-width: auto;
+	}
+}
+
+.movie-detail-favorite-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	margin: 0;
+	border: 1px solid rgba(248, 250, 252, 0.35);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.05);
+	color: #f8fafc;
+	font-size: 0.88rem;
+	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s, color 0.2s;
+	align-self: flex-start;
+
+	@media (min-width: 1401px) {
+		padding: 0.75rem 1.25rem;
+		font-size: 0.95rem;
+		border-radius: 10px;
+	}
+
+	@media (min-width: 1600px) {
+		padding: 0.875rem 1.5rem;
+		font-size: 1rem;
+	}
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.08);
+		border-color: #c9a227;
+		color: #c9a227;
+	}
+	.filled {
+		color: #c9a227;
+	}
+}
+
+.movie-detail-top__right {
+	position: sticky;
+	top: 100px;
+	display: flex;
+	align-items: stretch;
+
+	@media (min-width: 1401px) {
+		height: 100%;
+		min-height: 600px;
+	}
+
+	@media (min-width: 1600px) {
+		min-height: 700px;
+	}
+}
+
+.movie-detail-top__poster {
+	width: 100%;
+	aspect-ratio: 2 / 3;
+	object-fit: cover;
+	border-radius: 12px;
+	box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+
+	@media (min-width: 1401px) {
+		height: 100%;
+		aspect-ratio: auto;
+		object-fit: cover;
+		min-height: 600px;
+	}
+
+	@media (min-width: 1600px) {
+		min-height: 700px;
+	}
+}
+
+.movie-detail-personal {
+	margin-top: 0;
+	padding: 0;
+	max-width: 100%;
+	width: 100%;
+
+	@media (min-width: 1401px) {
+		background: rgba(255, 255, 255, 0.03);
+		padding: 1.5rem;
+		border-radius: 12px;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		backdrop-filter: blur(10px);
+		margin-top: 0;
+	}
+
+	@media (min-width: 1600px) {
+		padding: 2rem;
+	}
+}
+
+.movie-detail-personal__title {
+	margin: 0 0 1rem;
+	font-size: 1.35rem;
+	font-weight: 700;
+	color: rgba(248, 250, 252, 0.95);
+
+	@media (min-width: 1401px) {
+		font-size: 1.5rem;
+	}
+
+	@media (min-width: 1600px) {
+		font-size: 1.75rem;
+	}
+}
+
+.movie-detail-personal__row {
+	display: flex;
+	gap: 1.25rem;
+	overflow-x: auto;
+	padding-bottom: 0.5rem;
+	margin-bottom: 1rem;
+	scrollbar-width: thin;
+
+	&::-webkit-scrollbar {
+		height: 6px;
+	}
+
+	@media (min-width: 1401px) {
+		gap: 1.5rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 2rem;
+	}
+}
+
+.movie-detail-personal__item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+}
+
+.movie-detail-personal__avatar {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media (min-width: 1401px) {
+		width: 72px;
+		height: 72px;
+	}
+
+	@media (min-width: 1600px) {
+		width: 80px;
+		height: 80px;
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	span {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: rgba(248, 250, 252, 0.5);
+	}
+
+	&--placeholder {
+		background: rgba(255, 255, 255, 0.05);
+		span {
+			font-size: 1rem;
+			color: rgba(248, 250, 252, 0.3);
+		}
+	}
+}
+
+.movie-detail-personal__name {
+	font-size: 0.8rem;
+	color: rgba(248, 250, 252, 0.8);
+	text-align: center;
+	max-width: 80px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-detail-personal__all {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0;
+	background: none;
+	border: none;
+	color: rgba(91, 72, 223, 0.95);
+	font-size: 0.9rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: color 0.2s;
+
+	&:hover {
+		color: rgba(129, 110, 255, 1);
+	}
+}
+
+.movie-detail-personal__empty {
+	margin: 0;
+	font-size: 0.85rem;
+	color: rgba(248, 250, 252, 0.45);
+}
+
+@media (max-width: 750px) {
+	.movie-detail-top__inner {
+		grid-template-columns: 1fr;
+	}
+
+	.movie-detail-top__right {
+		position: static;
+		max-width: calc(220px + 4rem);
+	}
+}
+
+@media (max-width: 750px) {
+	.movie-detail-top__title {
+		font-size: 1.35rem;
+	}
+}
+
+.movie-detail-page .container {
+	overflow-x: visible !important;
+	overflow-y: visible !important;
+}
+
+.movie-detail-close {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.75rem;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 50%;
+	color: #cbd5e1;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	z-index: 10;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.2);
+		color: #fff;
+		transform: rotate(90deg);
+	}
+
+	svg {
+		font-size: 0.95rem;
+	}
+}
+
+.movie-detail-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.movie-detail-summary {
+	display: grid;
+	grid-template-columns: 140px 1fr;
+	gap: 1rem;
+	background: rgba(255, 255, 255, 0.03);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 16px;
+	padding: 0.75rem 1rem;
+	box-shadow: 
+		0 10px 30px rgba(0, 0, 0, 0.2),
+		0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+	overflow: hidden;
+	max-height: none;
+	height: auto;
+	align-self: start;
+
+	> * {
+		min-width: 0;
+	}
+
+	@media (max-width: 750px) {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		padding: 1rem;
+		max-height: none;
+	}
+}
+
+.movie-poster-section {
+	position: relative;
+}
+
+.movie-poster-wrapper {
+	position: static;
+	border-radius: 10px;
+	overflow: hidden;
+	height: 100%;
+	max-height: 160px;
+	box-shadow: none;
+	transition: none;
+}
+
+.movie-poster {
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 2 / 3;
+	object-fit: cover;
+	display: block;
+	border-radius: 10px;
+	max-height: 160px;
+}
+
+.movie-info-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	min-width: 0;
+	overflow-y: visible;
+}
+
+.movie-detail-summary .movie-description {
+	max-height: 2.2em;
+	overflow: hidden;
+}
+
+
+.movie-header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.movie-title {
+	font-size: 1.75rem;
+	font-weight: 700;
+	line-height: 1.3;
+	color: #fff;
+	margin: 0;
+	letter-spacing: -0.01em;
+
+	@media (max-width: 750px) {
+		font-size: 1.5rem;
+	}
+}
+
+.movie-detail-summary .movie-title {
+	font-size: 1.25rem;
+	line-height: 1.2;
+}
+
+.movie-meta {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	font-size: 0.9rem;
+	color: #cbd5e1;
+}
+
+.movie-rating {
+	font-weight: 600;
+	color: #fbbf24;
+}
+
+.movie-separator {
+	opacity: 0.5;
+}
+
+.movie-duration,
+.movie-genre,
+.movie-fsk {
+	font-weight: 400;
+}
+
+.movie-subtitle {
+	font-size: 0.9rem;
+	color: #94a3b8;
+	margin: 0;
+}
+
+.movie-description {
+	font-size: 0.875rem;
+	line-height: 1.5;
+	color: #94a3b8;
+	margin: 0;
+}
+
+.movie-release {
+	font-weight: 400;
+}
+
+.movie-age-badges {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+}
+
+.movie-age-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 36px;
+	height: 24px;
+	padding: 0 0.5rem;
+	background: rgba(251, 191, 36, 0.2);
+	border: 1px solid rgba(251, 191, 36, 0.4);
+	border-radius: 6px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #fbbf24;
+}
+
+.movie-cast-section {
+	margin-top: 1.5rem;
+}
+
+.movie-cast-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: #fff;
+	margin: 0 0 1rem 0;
+
+	svg {
+		font-size: 1rem;
+		color: #94a3b8;
+	}
+}
+
+.movie-cast-list {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+
+.movie-cast-empty {
+	font-size: 0.9rem;
+	color: #64748b;
+	font-style: italic;
+}
+
+.movie-cast-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.movie-cast-avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	span {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #94a3b8;
+	}
+}
+
+.movie-cast-name {
+	font-size: 0.75rem;
+	color: #94a3b8;
+	text-align: center;
+	max-width: 70px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-cast-view-all {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: rgba(59, 130, 246, 0.2);
+	border: 1px solid rgba(59, 130, 246, 0.4);
+	border-radius: 10px;
+	color: #60a5fa;
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: rgba(59, 130, 246, 0.3);
+		color: #93c5fd;
+	}
+}
+
+.movie-info-banner {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 1rem 1.25rem;
+	background: rgba(239, 68, 68, 0.15);
+	border: 1px solid rgba(239, 68, 68, 0.3);
+	border-radius: 12px;
+	margin-top: 1.5rem;
+	color: #fca5a5;
+	font-size: 0.9rem;
+
+	svg {
+		font-size: 1.25rem;
+		flex-shrink: 0;
+	}
+}
+
+.showtimes-section {
+	margin-top: 0;
+	background: rgba(255, 255, 255, 0.03);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 16px;
+	padding: 1.5rem;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+	@media (min-width: 1401px) {
+		padding: 2rem;
+	}
+
+	@media (min-width: 1600px) {
+		padding: 2.5rem;
+	}
+}
+
+.showtimes-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+
+	@media (min-width: 1401px) {
+		gap: 1.5rem;
+		margin-bottom: 2rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 2rem;
+		margin-bottom: 2.5rem;
+	}
+}
+
+.showtimes-title {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #fff;
+	margin: 0;
+
+	@media (min-width: 1401px) {
+		font-size: 1.75rem;
+	}
+
+	@media (min-width: 1600px) {
+		font-size: 2rem;
+	}
+}
+
+.showtimes-select-wrap {
+	display: none;
+}
+
+.showtimes-select-label {
+	display: block;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: rgba(248, 250, 252, 0.7);
+	margin-bottom: 0.5rem;
+	letter-spacing: 0.03em;
+}
+
+.showtimes-select {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	background: rgba(30, 32, 36, 0.9);
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 10px;
+	color: #f8fafc;
+	font-size: 0.875rem;
+	cursor: pointer;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 1rem center;
+	padding-right: 2.5rem;
+
+	&:focus {
+		outline: none;
+		border-color: rgba(212, 168, 83, 0.5);
+		box-shadow: 0 0 0 2px rgba(212, 168, 83, 0.15);
+	}
+
+	option {
+		font-size: 0.875rem;
+	}
+}
+
+.showtimes-controls {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+
+	@media (min-width: 1401px) {
+		gap: 1.25rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1.5rem;
+	}
+}
+
+.showtimes-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-width: 200px;
+
+	@media (min-width: 1401px) {
+		min-width: 240px;
+	}
+
+	@media (min-width: 1600px) {
+		min-width: 280px;
+	}
+
+	.showtimes-search-icon {
+		position: absolute;
+		right: 0.75rem;
+		font-size: 0.9rem;
+		color: #94a3b8;
+		pointer-events: none;
+	}
+}
+
+.showtimes-search-input {
+	width: 100%;
+	padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	color: #fff;
+	font-size: 0.875rem;
+
+	&::placeholder {
+		color: #64748b;
+	}
+
+	&:focus {
+		outline: none;
+		border-color: rgba(59, 130, 246, 0.5);
+	}
+}
+
+.showtimes-city-filter {
+	position: relative;
+}
+
+.showtimes-city-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: #fbbf24;
+	color: #0f172a;
+	border: none;
+	border-radius: 10px;
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: #f59e0b;
+		transform: translateY(-1px);
+	}
+}
+
+.showtimes-city-icon {
+	font-size: 0.9rem;
+}
+
+.showtimes-city-dropdown {
+	position: absolute;
+	top: calc(100% + 0.5rem);
+	right: 0;
+	min-width: 160px;
+	background: rgba(15, 23, 42, 0.95);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	padding: 0.5rem;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+	z-index: 1000;
+}
+
+.showtimes-city-option {
+	width: 100%;
+	display: block;
+	padding: 5px;
+	background: transparent;
+	border: none;
+	border-radius: 8px;
+	color: #e2e8f0;
+	font-size: 0.85rem;
+	text-align: left;
+	cursor: pointer;
+	transition: all 0.15s ease;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.08);
+		color: #fff;
+	}
+
+	&.is-selected {
+		background: rgba(251, 191, 36, 0.2);
+		color: #fbbf24;
+		font-weight: 600;
+	}
+}
+
+.showtimes-date-bar {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin-bottom: 1.5rem;
+	padding: 0.75rem;
+	background: #1a1c20;
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+
+	@media (min-width: 1401px) {
+		gap: 1rem;
+		padding: 1rem;
+		margin-bottom: 2rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1.25rem;
+		padding: 1.25rem;
+		margin-bottom: 2.5rem;
+	}
+}
+
+.showtimes-date-nav {
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	color: #cbd5e1;
+	font-size: 1.25rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+
+	@media (min-width: 1401px) {
+		width: 40px;
+		height: 40px;
+		font-size: 1.35rem;
+	}
+
+	@media (min-width: 1600px) {
+		width: 44px;
+		height: 44px;
+		font-size: 1.5rem;
+	}
+
+	&:hover:not(:disabled) {
+		background: rgba(255, 255, 255, 0.1);
+		color: #fff;
+	}
+
+	&:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+}
+
+.showtimes-date-cards {
+	display: flex;
+	gap: 0.5rem;
+	flex: 1;
+	overflow-x: auto;
+	padding: 0.25rem 0;
+	justify-content: space-between;
+	scrollbar-width: none; 
+	-ms-overflow-style: none; 
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	@media (min-width: 1401px) {
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1rem;
+	}
+}
+
+.showtimes-date-cards-inner {
+	display: flex;
+	gap: 0.5rem;
+	width: max-content;
+	flex-shrink: 0;
+
+	@media (min-width: 1401px) {
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1rem;
+	}
+}
+
+.showtimes-date-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 1rem 0 0 0;
+	background: #202228;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 10px;
+	color: #cbd5e1;
+	font-size: 0.8rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	flex: 1;
+	min-width: 120px;
+	border-bottom: 3px solid transparent;
+	height: 66px;
+	user-select: none;
+
+	@media (min-width: 1401px) {
+		min-width: 140px;
+		padding: 1.25rem 0 0 0;
+		height: 72px;
+	}
+
+	@media (min-width: 1600px) {
+		min-width: 160px;
+		padding: 1.5rem 0 0 0;
+		height: 78px;
+	}
+
+	&:hover {
+		color: #fff;
+		background: #262a32;
+	}
+
+	&.is-active {
+		color: #f1f3f5;
+		font-weight: 700;
+		background: #2b2f38;
+		border-bottom-color: #e6c15a;
+	}
+}
+
+.showtimes-date-card-main {
+	font-size: 0.85rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.showtimes-date-card-short {
+	display: none;
+}
+
+.showtimes-date-card-sub {
+	font-size: 0.75rem;
+	opacity: 0.9;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.showtimes-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+
+	@media (min-width: 1401px) {
+		gap: 1.25rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1.5rem;
+	}
+}
+
+.showtimes-empty {
+	padding: 3rem 2rem;
+	text-align: center;
+	color: #94a3b8;
+	font-size: 0.95rem;
+}
+
+.showtimes-cinema-block {
+	padding: 1.25rem;
+	background: rgba(26, 28, 32, 0.8);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 14px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+	--ticket-cutout: rgba(26, 28, 32, 0.95);
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	@media (min-width: 1401px) {
+		padding: 1.5rem;
+	}
+
+	@media (min-width: 1600px) {
+		padding: 2rem;
+	}
+}
+
+.showtimes-cinema-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.showtimes-cinema-info {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+}
+
+.showtimes-cinema-icon {
+	font-size: 1.1rem;
+	color: #94a3b8;
+	margin-top: 0.2rem;
+	flex-shrink: 0;
+}
+
+.showtimes-cinema-name {
+	font-size: 1rem;
+	font-weight: 700;
+	color: #fff;
+	margin: 0 0 0.25rem 0;
+}
+
+.showtimes-cinema-movie {
+	font-size: 0.85rem;
+	color: #94a3b8;
+	margin: 0;
+}
+
+.showtimes-cinema-date {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: #fff;
+}
+
+.showtimes-cinema-date-icon {
+	font-size: 0.9rem;
+	color: #94a3b8;
+}
+
+.showtimes-hall-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 0 0.75rem 1.5rem;
+	border-left: 2px solid rgba(255, 255, 255, 0.08);
+	margin-left: 0.5rem;
+
+	@media (min-width: 1401px) {
+		gap: 1.25rem;
+		padding: 1rem 0 1rem 2rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1.5rem;
+		padding: 1.25rem 0 1.25rem 2.5rem;
+	}
+}
+
+.showtimes-hall-info {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.showtimes-hall-label {
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: #fff;
+}
+
+.showtimes-hall-format {
+	font-size: 0.8rem;
+	color: #94a3b8;
+}
+
+.showtimes-hall-slots {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+
+	@media (min-width: 1401px) {
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 1600px) {
+		gap: 1rem;
+	}
+}
+
+.showtimes-slot-btn {
+	position: relative;
+	padding: 0.55rem 1.4rem;
+	background: linear-gradient(180deg, #5B48DF 0%, #4a3bc7 100%);
+	border: 1px solid rgba(129, 110, 255, 0.5);
+	border-radius: 12px;
+	color: #f8fafc;
+	font-size: 0.9rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	overflow: hidden;
+	isolation: isolate;
+	box-shadow: 0 10px 18px rgba(91, 72, 223, 0.25);
+
+	@media (min-width: 1401px) {
+		padding: 0.65rem 1.6rem;
+		font-size: 0.95rem;
+	}
+
+	@media (min-width: 1600px) {
+		padding: 0.75rem 1.8rem;
+		font-size: 1rem;
+	}
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		width: 18px;
+		height: 18px;
+		border-radius: 999px;
+		background: var(--ticket-cutout, #0f172a);
+		transform: translateX(-50%);
+	}
+
+	&::before {
+		top: -9px;
+	}
+
+	&::after {
+		bottom: -9px;
+	}
+
+	&:hover {
+		background: linear-gradient(180deg, #6b5aef 0%, #5B48DF 100%);
+		border-color: rgba(129, 110, 255, 0.7);
+	}
+
+	&.is-disabled,
+	&:disabled {
+		background: rgba(148, 163, 184, 0.12);
+		border-color: rgba(148, 163, 184, 0.35);
+		color: rgba(148, 163, 184, 0.7);
+		cursor: not-allowed;
+	}
+
+	&.is-active {
+		background: linear-gradient(180deg, #6b5aef 0%, #5B48DF 100%);
+		color: #fff;
+		border-color: rgba(129, 110, 255, 0.8);
+		box-shadow: 0 12px 22px rgba(91, 72, 223, 0.35);
+	}
+}
+
+@media (max-width: 750px) {
+	.movie-detail-page,
+	.movie-detail-page *,
+	.movie-detail-page *::before,
+	.movie-detail-page *::after {
+		box-sizing: border-box !important;
+	}
+
+	.movie-detail-page {
+		padding: calc(80px + 1rem) 0 5rem;
+		overflow-x: hidden;
+	}
+
+	.movie-detail-container {
+		max-width: 100%;
+		padding: 0 1rem;
+		overflow-x: hidden;
+	}
+
+	.movie-detail-view {
+		gap: 1.5rem;
+	}
+
+	.movie-detail-top {
+		width: 100%;
+		max-width: 100%;
+		padding: 1.5rem 1.25rem 2rem;
+		margin: 0;
+	}
+
+	.movie-detail-top__inner {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.movie-detail-top__right {
+		order: -1;
+	}
+
+	.movie-detail-top__left {
+		order: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.movie-detail-top__title {
+		margin: 0 0 0.25rem;
+		font-size: 1.25rem;
+		line-height: 1.35;
+		padding-right: 2.5rem;
+	}
+
+	.movie-detail-top__subtitle {
+		margin: 0 0 0.5rem;
+		font-size: 0.85rem;
+	}
+
+	.movie-detail-top__description {
+		margin-bottom: 1.25rem;
+
+		p {
+			margin: 0 0 0.5rem;
+			font-size: 0.9rem;
+			line-height: 1.5;
+		}
+	}
+
+	.movie-detail-top__cta {
+		margin: 0 0 1.5rem;
+		font-size: 0.9rem;
+		line-height: 1.45;
+	}
+
+	.movie-detail-meta {
+		gap: 0.85rem;
+		margin: 0 0 1.25rem;
+	}
+
+	.movie-detail-meta__row {
+		gap: 0.5rem;
+		align-items: center;
+
+		dt {
+			min-width: 0;
+			font-size: 0.8rem;
+			flex: 0 0 auto;
+		}
+		dd {
+			font-size: 0.85rem;
+			text-align: right;
+			flex: 1;
+			min-width: 0;
+		}
+	}
+
+	.movie-detail-favorite-btn {
+		margin-bottom: 0;
+		margin-top: 0.25rem;
+		padding: 0.65rem 1rem;
+		font-size: 0.85rem;
+	}
+
+	.movie-detail-close--top {
+		top: 0.75rem;
+		right: 0.75rem;
+	}
+
+	.movie-detail-top__right {
+		position: static;
+		max-width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.movie-detail-top__poster {
+		max-width: 100%;
+		width: 100%;
+		margin: 0 auto;
+	}
+
+	.movie-detail-content {
+		padding: 1rem 0;
+		border-radius: 0;
+		max-width: 100%;
+	}
+
+	.movie-poster-wrapper {
+		position: static;
+		max-width: 200px;
+		margin: 0 auto;
+	}
+
+	.showtimes-section {
+		width: 100vw;
+		max-width: 100vw;
+		padding: 1.25rem 1rem;
+		margin-top: 0;
+		margin-left: calc(-1rem);
+		margin-right: calc(-1rem);
+		border-radius: 0;
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-left: none;
+		border-right: none;
+	}
+
+	.showtimes-title {
+		font-size: 1.2rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.showtimes-header {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 1rem;
+		margin-bottom: 1.25rem;
+	}
+
+	.showtimes-select-wrap {
+		display: block !important;
+		margin-bottom: 0.5rem;
+	}
+
+	.showtimes-controls {
+		display: none !important;
+	}
+
+	.showtimes-search {
+		min-width: 0;
+		width: 100%;
+	}
+
+	.showtimes-search-input {
+		width: 100%;
+		max-width: 100%;
+		padding: 0.65rem 2.25rem 0.65rem 0.75rem;
+		font-size: 0.9rem;
+		border-radius: 10px;
+	}
+
+	.showtimes-date-bar {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.35rem;
+		margin-bottom: 1.25rem;
+		background: transparent;
+		border-radius: 0;
+		min-width: 0;
+	}
+
+	.showtimes-date-nav {
+		flex-shrink: 0;
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		font-size: 0.95rem;
+		font-weight: 300;
+		border: none;
+		border-radius: 0;
+		background: transparent;
+		color: rgba(255, 255, 255, 0.85);
+		transition: color 0.2s;
+
+		&:disabled {
+			opacity: 0.35;
+		}
+	}
+
+	.showtimes-date-cards {
+		flex: 1 1 0;
+		min-width: 0;
+		overflow: hidden;
+		padding: 0.15rem 0;
+		touch-action: none;
+	}
+
+	.showtimes-date-cards-inner {
+		display: flex;
+		gap: 0.4rem;
+		width: max-content;
+		transition: transform 0.2s ease;
+		will-change: transform;
+	}
+
+	.showtimes-date-card {
+		flex: 0 0 auto;
+		width: 108px;
+		min-width: 108px;
+		min-height: 52px;
+		padding: 0.5rem 0.5rem;
+		font-size: 0.8rem;
+		border-radius: 12px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.15rem;
+		background: rgba(255, 255, 255, 0.95);
+		border: 1px solid rgba(0, 0, 0, 0.06);
+		color: #334155;
+		transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+		&.is-active {
+			background: #c9a227;
+			border-color: #b8921f;
+			color: #fff;
+
+			.showtimes-date-card-sub {
+				opacity: 1;
+				color: rgba(255, 255, 255, 0.95);
+			}
+		}
+	}
+
+	.showtimes-date-card-main {
+		font-size: 0.8rem;
+		line-height: 1.25;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+		font-weight: 600;
+	}
+
+	.showtimes-date-card-sub {
+		font-size: 0.7rem;
+		opacity: 0.9;
+		color: #64748b;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+	}
+
+	.showtimes-date-bar-mobile {
+		position: relative;
+		margin-bottom: 1.25rem;
+	}
+
+	.showtimes-date-trigger {
+		width: 100%;
+		padding: 0.75rem 1rem;
+		background: rgba(255, 255, 255, 0.95);
+		border: 1px solid rgba(0, 0, 0, 0.06);
+		border-radius: 12px;
+		color: #334155;
+		font-size: 0.9rem;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		cursor: pointer;
+		transition: background 0.2s, border-color 0.2s;
+
+		&:hover {
+			background: rgba(255, 255, 255, 1);
+		}
+
+		svg {
+			font-size: 1rem;
+		}
+	}
+
+	.mobile-calendar-wrapper {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		background: rgba(255, 255, 255, 0.98);
+		border-radius: 12px;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+		padding: 1rem;
+	}
+
+	.mobile-calendar {
+		width: 100%;
+	}
+
+	.mobile-calendar-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 2px solid #c9a227;
+	}
+
+	.mobile-calendar-nav {
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: none;
+		color: #334155;
+		cursor: pointer;
+		border-radius: 6px;
+		transition: background 0.2s;
+
+		&:hover {
+			background: rgba(201, 162, 39, 0.1);
+		}
+
+		svg {
+			font-size: 0.9rem;
+		}
+	}
+
+	.mobile-calendar-month-year {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-weight: 600;
+		color: #334155;
+	}
+
+	.mobile-calendar-month {
+		font-size: 1rem;
+	}
+
+	.mobile-calendar-year {
+		font-size: 1rem;
+	}
+
+	.mobile-calendar-weekdays {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 0.25rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.mobile-calendar-weekday {
+		text-align: center;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #64748b;
+		padding: 0.5rem 0;
+	}
+
+	.mobile-calendar-days {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 0.25rem;
+	}
+
+	.mobile-calendar-day {
+		aspect-ratio: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: 1px solid transparent;
+		border-radius: 8px;
+		color: #334155;
+		font-size: 0.85rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.2s;
+
+		&.other-month {
+			color: #cbd5e1;
+		}
+
+		&.today {
+			background: rgba(201, 162, 39, 0.1);
+			border-color: #c9a227;
+			color: #c9a227;
+			font-weight: 700;
+		}
+
+		&.selected {
+			background: #c9a227;
+			border-color: #b8921f;
+			color: #fff;
+			font-weight: 700;
+		}
+
+		&.past {
+			color: #cbd5e1;
+			cursor: not-allowed;
+			opacity: 0.5;
+		}
+
+		&:not(.past):not(.selected):hover {
+			background: rgba(201, 162, 39, 0.15);
+			border-color: rgba(201, 162, 39, 0.3);
+		}
+
+		&:disabled {
+			cursor: not-allowed;
+		}
+	}
+
+	.showtimes-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.showtimes-cinema-block {
+		width: 100%;
+		max-width: 100%;
+		padding: 1rem 0.85rem;
+		border-radius: 14px;
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		box-shadow: none;
+	}
+
+	.showtimes-cinema-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.35rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.showtimes-cinema-info {
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.showtimes-cinema-name {
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: #fff;
+		letter-spacing: 0.01em;
+	}
+
+	.showtimes-cinema-movie,
+	.showtimes-cinema-date {
+		font-size: 0.8rem;
+		color: rgba(248, 250, 252, 0.65);
+		font-weight: 400;
+	}
+
+	.showtimes-hall-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.6rem;
+		padding: 0.75rem 0 0;
+		margin: 0;
+		margin-top: 0.6rem;
+		border-left: none;
+		border-top: 1px solid rgba(255, 255, 255, 0.06);
+	}
+
+	.showtimes-hall-info {
+		gap: 0.15rem;
+	}
+
+	.showtimes-hall-label {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.showtimes-hall-format {
+		font-size: 0.75rem;
+		color: rgba(248, 250, 252, 0.5);
+	}
+
+	.showtimes-hall-slots {
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.4rem;
+		margin-top: 0.4rem;
+	}
+
+	.showtimes-slot-btn {
+		width: 100%;
+		min-width: 0;
+		padding: 0.5rem 0.6rem;
+		font-size: 0.8rem;
+		font-weight: 600;
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		color: rgba(248, 250, 252, 0.95);
+		box-shadow: none;
+
+		&::before,
+		&::after {
+			display: none;
+		}
+
+		&:hover:not(.is-disabled):not(:disabled) {
+			background: rgba(255, 255, 255, 0.12);
+			border-color: rgba(255, 255, 255, 0.15);
+		}
+
+		&.is-active {
+			background: rgba(91, 72, 223, 0.35);
+			border-color: rgba(129, 110, 255, 0.4);
+			color: #e0dcff;
+		}
+
+		&.is-disabled,
+		&:disabled {
+			background: rgba(255, 255, 255, 0.03);
+			border-color: rgba(255, 255, 255, 0.06);
+			color: rgba(248, 250, 252, 0.4);
+		}
+	}
+
+	.movie-detail-summary {
+		width: 100%;
+		max-width: 100%;
+		padding: 1rem;
+	}
+
+	.movie-detail-meta__row {
+		flex-wrap: wrap;
+	}
+
+	.movie-detail-personal {
+		max-width: 100%;
+	}
+
+	.movie-detail-personal__row {
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		gap: 1px;
+		overflow-x: auto;
+		scrollbar-width: thin;
+		padding-bottom: 0.5rem;
+
+		&::-webkit-scrollbar {
+			height: 4px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: rgba(255, 255, 255, 0.05);
+			border-radius: 2px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 2px;
+
+			&:hover {
+				background: rgba(255, 255, 255, 0.3);
+			}
+		}
+	}
+
+	.movie-detail-personal__item {
+		flex: 0 0 calc(25% - 0.375rem);
+		min-width: calc(25% - 0.375rem);
+		max-width: calc(25% - 0.375rem);
+	}
+
+	.movie-detail-personal__avatar {
+		width: 56px;
+		height: 56px;
+	}
+
+	.movie-detail-personal__name {
+		font-size: 0.75rem;
+		max-width: 100%;
+	}
+}

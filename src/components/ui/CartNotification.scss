@@ -1,0 +1,134 @@
+.cart-notification {
+	position: fixed;
+	top: 100px;
+	right: 2rem;
+	background: linear-gradient(160deg, #1f2937 0%, #111827 100%);
+	border: 1px solid rgba(212, 168, 83, 0.4);
+	border-radius: 12px;
+	padding: 1rem 1.5rem;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+	z-index: 10000;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	min-width: 320px;
+	max-width: 400px;
+	opacity: 0;
+	transform: translateX(400px);
+	transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	pointer-events: none;
+
+	&--visible {
+		opacity: 1;
+		transform: translateX(0);
+		pointer-events: auto;
+	}
+
+	&__icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+		flex-shrink: 0;
+		animation: checkmarkPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	&__content {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	&__text {
+		margin: 0;
+		font-size: 0.9rem;
+		color: #f8fafc;
+		line-height: 1.4;
+
+		strong {
+			color: #f59e0b;
+			font-weight: 600;
+		}
+	}
+
+	&__price {
+		margin: 0;
+		font-size: 0.85rem;
+		color: rgba(248, 250, 252, 0.7);
+		font-weight: 500;
+	}
+
+	&__cart-icon {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: rgba(245, 158, 11, 0.2);
+		border: 1px solid rgba(245, 158, 11, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #f59e0b;
+		flex-shrink: 0;
+		animation: cartBounce 0.6s ease-out;
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+}
+
+@keyframes checkmarkPop {
+	0% {
+		transform: scale(0);
+		opacity: 0;
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes cartBounce {
+	0%, 100% {
+		transform: translateY(0);
+	}
+	25% {
+		transform: translateY(-8px);
+	}
+	50% {
+		transform: translateY(0);
+	}
+	75% {
+		transform: translateY(-4px);
+	}
+}
+
+@media (max-width: 750px) {
+	.cart-notification {
+		top: 80px;
+		right: 1rem;
+		left: 1rem;
+		max-width: none;
+		min-width: auto;
+		transform: translateY(-100px);
+		z-index: 10001;
+
+		&--visible {
+			transform: translateY(0);
+		}
+	}
+}

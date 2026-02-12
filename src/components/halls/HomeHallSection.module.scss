@@ -1,0 +1,116 @@
+@use '../../styles/variables' as vars;
+@use '../../styles/mixins' as mix;
+
+.homeHallSection {
+  padding: vars.$spacing-xl 0;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 vars.$spacing-md;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: vars.$spacing-lg;
+}
+
+.sectionTitle {
+  color: vars.$color-white;
+  font-size: vars.$font-size-lg;
+  font-weight: vars.$font-weight-bold;
+  margin: 0;
+}
+
+.viewAllLink {
+  color: vars.$color-white;
+  text-decoration: none;
+  font-size: vars.$font-size-sm;
+  font-weight: vars.$font-weight-medium;
+  position: relative;
+  padding-bottom: 2px;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: vars.$color-white;
+    transition: background-color 0.3s ease;
+  }
+  
+  &:hover {
+    color: vars.$color-primary;
+    
+    &:after {
+      background-color: vars.$color-primary;
+    }
+  }
+}
+
+.hallsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: vars.$spacing-md;
+  
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.hallItem {
+  text-decoration: none;
+  display: block;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(calc(-1 * 5px));
+    
+    .hallLogoWrapper {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.hallLogoWrapper {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: vars.$spacing-sm;
+  aspect-ratio: 3/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.hallLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  
+  span {
+    color: vars.$color-white;
+    font-weight: vars.$font-weight-bold;
+    font-size: vars.$font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+}

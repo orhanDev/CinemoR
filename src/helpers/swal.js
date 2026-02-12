@@ -1,0 +1,24 @@
+import Swal from "sweetalert2";
+
+export const swAlert = (title, icon = "info", text = "") => {
+  Swal.fire({
+    title,
+    text,
+    icon,
+  });
+};
+
+export const swConfirm = (
+  title,
+  icon = "question",
+  text = "",
+  confirmButtonText = "Yes"
+) => {
+  return Swal.fire({
+    title,
+    icon,
+    text,
+    showCancelButton: true,
+    confirmButtonText,
+  });
+};

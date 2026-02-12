@@ -1,0 +1,150 @@
+
+@use "./variables" as *;
+
+$vendors: ("", "-webkit-", "-moz-", "-ms-", "-o-");
+
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex($fd: row, $jc: space-between, $ai: center, $gap: 0, $fw: wrap) {
+  display: flex;
+  flex-direction: $fd;
+  justify-content: $jc;
+  align-items: $ai;
+  gap: $gap;
+  flex-wrap: $fw;
+}
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+}
+
+@mixin transition($val) {
+  transition: $val;
+  -webkit-transition: $val;
+  -moz-transition: $val;
+  -ms-transition: $val;
+}
+
+@mixin transform($val) {
+  transform: $val;
+  -webkit-transform: $val;
+  -moz-transform: $val;
+  -ms-transform: $val;
+}
+
+@mixin cinema-gradient-bg {
+  background: #0F172A;
+}
+
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  padding: $spacing-xs $spacing-lg;
+  @include border-radius($border-radius-xl);
+  border: none;
+  cursor: pointer;
+  @include transition("all 0.3s ease");
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+}
+
+@mixin button-primary {
+  @include button-base;
+  background-color: $color-primary;
+  color: $color-white;
+  
+  &:hover, &:focus {
+    background-color: $button-hover;
+  }
+  
+  &:disabled {
+    background-color: $button-disabled;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-secondary {
+  @include button-base;
+  background-color: $button-disabled;
+  color: $color-white;
+  
+  &:hover, &:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+@mixin movie-card {
+  position: relative;
+  @include border-radius($border-radius-md);
+  overflow: hidden;
+  @include transition("transform 0.3s ease");
+  
+  &:hover {
+    @include transform("translateY(-5px)");
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin seat-button {
+  width: 40px;
+  height: 40px;
+  margin: $spacing-xxs;
+  @include border-radius($border-radius-sm);
+  @include flex-center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  @include transition("all 0.3s ease");
+  
+  &.selected {
+    background-color: $color-primary;
+    color: $color-white;
+    border-color: $color-primary;
+  }
+  
+  &.sold {
+    background-color: $color-danger;
+    cursor: not-allowed;
+  }
+}
+
+@mixin theater-identifier {
+  @include flex-center;
+  width: 80px;
+  height: 80px;
+  @include border-radius($border-radius-circle);
+  background-color: $color-primary;
+  color: $color-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+}
+
+
+
+
+@mixin mobile {
+  @media (max-width: 750px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 751px) {
+    @content;
+  }
+}

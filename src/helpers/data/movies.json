@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "image":"/images/movies/nowshowing/dune5.png",
+        "title": "Movie Title 1",
+        "description": "This is another movie description",
+        "rating": 4.5
+      },
+      {
+        "id": 2,
+        "image":"/images/movies/nowshowing/civilwar 3.png",
+        "title": "Movie Title 2",
+        "description": "This is another movie description",
+        "rating": 4.7
+      },
+      {
+        "id":3,
+        "title":"Movie Title 3",
+        "image":"/images/movies/nowshowing/furiosa1.png",
+       "description": "This is another movie description",
+        "rating": 5.0
+      },
+      {
+        "id":4,
+        "image":"/images/movies/nowshowing/if2.png",
+        "title":"Movie Title 4",
+        "description":"This is another movie description",
+        "rating":3.7
+      },
+      {
+        "id":5,
+        "title":"Movie Title 5",
+        "image":"/images/movies/nowshowing/kingdomplanetape4.png",
+        "description":"This is another movie description",
+        "rating":"4.5"
+      },
+      {
+        "id":6,
+        "title":"Movie Title 6",
+        "image":"/images/movies/nowshowing/sheriff6.png",
+        "description":"This is another movie description",
+        "rating":4.5
+      }
+]

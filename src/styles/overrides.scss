@@ -1,0 +1,25 @@
+
+
+
+*, *::before, *::after {
+	box-sizing: content-box !important;
+}
+
+@media print {
+	html,
+	body,
+	.app,
+	.main-content {
+		background: #fff !important;
+		min-height: auto !important;
+	}
+	.header,
+	.footer,
+	.mobile-bottom-bar,
+	.header__backdrop {
+		display: none !important;
+	}
+	.main-content {
+		padding-top: 0 !important;
+	}
+}

@@ -1,0 +1,123 @@
+
+.hallDetail {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	margin-top: 5%;
+}
+
+.loading,
+.error {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 60vh;
+	text-align: center;
+	padding: 2rem;
+}
+
+.hallHero {
+	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+		url("/images/halls-hero.jpg");
+	background-size: cover;
+	background-position: center;
+	padding: 4rem 0;
+	margin-bottom: 2rem;
+	text-align: center;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-o-border-radius: 8px;
+	.container {
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+	}
+
+	.heroTitle {
+		font-size: 2.5rem;
+		font-weight: bold;
+		color: #fff;
+		margin-bottom: 1rem;
+	}
+
+	.heroSubtitle {
+		font-size: 1.2rem;
+		color: #b9b9b9;
+		max-width: 700px;
+		margin: 0 auto;
+	}
+}
+
+.hallInfo {
+	.container {
+		display: flex;
+		gap: 2rem;
+		margin-top: 2rem;
+
+		@media (max-width: 750px) {
+			flex-direction: column;
+		}
+	}
+
+	.hallImage {
+		flex: 1;
+		border-radius: 8px;
+		-webkit-border-radius: 8px;
+		-moz-border-radius: 8px;
+		-ms-border-radius: 8px;
+		-o-border-radius: 8px;
+		img {
+			width: 100%;
+			height: auto;
+			border-radius: 8px;
+			object-fit: cover;
+		}
+	}
+
+	.hallDetails {
+		flex: 1;
+
+		h2 {
+			font-size: 2rem;
+			margin-bottom: 1rem;
+			color: #fff;
+		}
+
+		p {
+			margin-bottom: 1rem;
+			color: #b9b9b9;
+			line-height: 1.6;
+		}
+
+		.specialBadge {
+			display: inline-block;
+			background-color: #b8d94c;
+			color: #000;
+			padding: 0.5rem 1rem;
+			border-radius: 20px;
+			font-weight: bold;
+			margin-bottom: 1rem;
+		}
+
+		.capacity {
+			background-color: rgba(255, 255, 255, 0.1);
+			padding: 1rem;
+			border-radius: 8px;
+			font-size: 1.1rem;
+		}
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

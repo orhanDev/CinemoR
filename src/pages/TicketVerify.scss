@@ -1,0 +1,89 @@
+.ticket-verify-page {
+  background: #0f1012;
+  min-height: 100vh;
+  padding: 100px 1.25rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ticket-verify-card {
+  background: linear-gradient(145deg, rgba(42, 42, 42, 0.9) 0%, rgba(26, 26, 26, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+
+  &--invalid .ticket-verify-icon {
+    color: rgba(241, 243, 245, 0.4);
+  }
+
+  &--invalid h1 {
+    color: rgba(241, 243, 245, 0.9);
+  }
+}
+
+.ticket-verify-icon {
+  font-size: 3.5rem;
+  color: #d4a853;
+  margin-bottom: 1rem;
+}
+
+.ticket-verify-icon--invalid {
+  color: #e50914;
+}
+
+.ticket-verify-card h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f3f5;
+  margin: 0 0 0.35rem;
+}
+
+.ticket-verify-sub {
+  font-size: 0.95rem;
+  color: rgba(241, 243, 245, 0.7);
+  margin: 0 0 1rem;
+}
+
+.ticket-verify-details {
+  width: 100%;
+  margin: 0 0 1rem;
+  padding: 0;
+  text-align: left;
+
+  dt {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(241, 243, 245, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0.5rem 0 0.15rem;
+  }
+
+  dd {
+    font-size: 0.95rem;
+    color: #f1f3f5;
+    margin: 0;
+  }
+}
+
+.ticket-verify-code {
+  font-size: 0.8rem;
+  font-family: ui-monospace, "Consolas", monospace;
+  color: rgba(241, 243, 245, 0.6);
+  word-break: break-all;
+  margin: 0;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.ticket-verify-card p:not(.ticket-verify-sub):not(.ticket-verify-code) {
+  font-size: 0.9rem;
+  color: rgba(241, 243, 245, 0.65);
+  margin: 0;
+}

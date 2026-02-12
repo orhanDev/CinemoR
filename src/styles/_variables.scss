@@ -1,0 +1,53 @@
+
+
+$color-primary: #E50914;
+$color-secondary: #1A1C20;
+$color-background: #0F1012;
+$color-text: #F1F3F5;
+
+$color-accent: #E50914;
+$color-success: #22C55E;
+$color-danger: #EF4444;
+$color-info: #3B82F6;
+$color-warning: #E6C15A;
+
+$color-white: #F1F3F5;
+$color-light-text: rgba(241, 243, 245, 0.7);
+$color-muted-text: rgba(241, 243, 245, 0.5);
+
+$bg-primary: #0F1012;
+$bg-card: #1A1C20;
+$bg-hover: rgba(255, 255, 255, 0.08);
+
+$button-hover: #C40812;
+$button-inactive: rgba(229, 9, 20, 0.5);
+$button-disabled: rgba(255, 255, 255, 0.1);
+
+$vendors: ("", "-webkit-", "-moz-", "-ms-", "-o-");
+
+$spacing-xxs: 0.25rem;
+$spacing-xs: 0.5rem;
+$spacing-sm: 0.75rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 20px;
+$border-radius-circle: 50%;
+
+$font-size-xs: 0.875rem;
+$font-size-sm: 1rem;
+$font-size-md: 1.25rem;
+$font-size-lg: 1.5rem;
+$font-size-xl: 2rem;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+$primary: $color-primary;
+$secondary: $color-secondary;
