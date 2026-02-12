@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import Home from './pages/Home';
 import Movies from './pages/Movies';
@@ -34,13 +35,14 @@ import './styles/overrides.scss';
 
 function App() {
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <Router>
-          <div className="app" style={{ background: '#1A1A1A', minHeight: '100vh', overflowX: 'hidden', width: '100%' }}>
-            <Header />
-            <main className="main-content" style={{ overflowX: 'hidden', width: '100%' }}>
-            <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <LanguageProvider>
+          <Router>
+            <div className="app" style={{ background: '#1A1A1A', minHeight: '100vh', overflowX: 'hidden', width: '100%' }}>
+              <Header />
+              <main className="main-content" style={{ overflowX: 'hidden', width: '100%' }}>
+              <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/movies" element={<Navigate to="/movies/im-kino" replace />} />
               <Route path="/movies/:tab" element={<Movies />} />
@@ -70,13 +72,14 @@ function App() {
               <Route path="/kinoopass" element={<ComingSoon />} />
               <Route path="/club" element={<ComingSoon />} />
               <Route path="*" element={<NotFound />} />
-            </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </LanguageProvider>
-    </AuthProvider>
+              </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </LanguageProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
