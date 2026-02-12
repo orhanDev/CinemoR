@@ -2374,6 +2374,7 @@
 		padding: calc(80px + 6.5rem) 1rem 3rem;
 		overflow-x: hidden;
 		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 		padding-bottom: max(3rem, 80px);
 	}
 
@@ -2458,7 +2459,7 @@
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
-		touch-action: pan-x;
+		touch-action: pan-x pan-y;
 		overscroll-behavior-x: contain;
 		overscroll-behavior-y: auto;
 		will-change: scroll-position;
@@ -2517,7 +2518,7 @@
 		min-width: min-content;
 		justify-content: flex-start;
 		padding-right: 30px;
-		touch-action: pan-x;
+		touch-action: pan-x pan-y;
 		user-select: none;
 		-webkit-user-select: none;
 	}

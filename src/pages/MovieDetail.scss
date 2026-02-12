@@ -1151,11 +1151,10 @@
 	display: flex;
 	gap: 0.5rem;
 	flex: 1;
-	overflow-x: auto;
+	overflow-x: hidden;
 	padding: 0.25rem 0;
 	justify-content: space-between;
-	scrollbar-width: none; 
-	-ms-overflow-style: none; 
+	touch-action: pan-y;
 
 	&::-webkit-scrollbar {
 		display: none;
@@ -1679,7 +1678,7 @@
 		min-width: 0;
 		overflow: hidden;
 		padding: 0.15rem 0;
-		touch-action: none;
+		touch-action: pan-y;
 	}
 
 	.showtimes-date-cards-inner {

@@ -15,7 +15,7 @@ export function useFavorites(user) {
   const [loading, setLoading] = useState(!!user);
 
   const refresh = useCallback(async () => {
-    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
+    const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('token') : null;
     if (!user || !token || !getIsTokenValid(token)) {
       setFavoriteIds(new Set());
       setLoading(false);

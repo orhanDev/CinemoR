@@ -2,7 +2,7 @@ import { appConfig } from "./config";
 import { logError } from "./logger";
 
 export const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   let authHeader = {
     "Content-Type": "application/json",

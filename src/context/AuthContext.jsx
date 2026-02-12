@@ -10,10 +10,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
+    const storedToken = sessionStorage.getItem('token');
+    const storedUser = sessionStorage.getItem('user');
 
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
@@ -39,9 +38,9 @@ export const AuthProvider = ({ children }) => {
       
       setToken(data.token);
       setUser(data.user);
-      
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+
+      sessionStorage.setItem('token', data.token);
+      sessionStorage.setItem('user', JSON.stringify(data.user));
       
       return { success: true };
     } catch (error) {
@@ -100,8 +99,8 @@ export const AuthProvider = ({ children }) => {
   const logout = (callback) => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     if (callback && typeof callback === 'function') {
       callback();
     }
