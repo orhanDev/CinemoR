@@ -2371,10 +2371,10 @@
 
 @media (max-width: 750px) {
 	.seat-selection-page {
-		padding: calc(80px + 6.5rem) 1rem 11rem; /* Alt padding'i 10rem'den 12rem'e artırdık */
+		padding: calc(80px + 6.5rem) 1rem 5.5rem; /* Alt padding yarıya indirildi */
 		overflow-x: hidden;
 		overflow-y: auto; /* Sayfa seviyesinde dikey scroll'a izin ver */
-		padding-bottom: max(11rem, 200px); /* Minimum 200px veya 12rem, hangisi büyükse */
+		padding-bottom: max(5.5rem, 100px); /* Minimum 100px veya 5.5rem, hangisi büyükse - yarıya indirildi */
 	}
 
 	.seat-selection-page .seat-selection-shell {
@@ -2633,12 +2633,12 @@
 	}
 
 	.seat-selection-page .seat-summary .ticket-card-footer {
-		padding-bottom: 150px; /* Footer'ın altında kalmaması için yeterli boşluk (navigation bar + copyright + safe area) */
+		padding-bottom: 75px; /* Footer'ın altında kalmaması için yeterli boşluk (navigation bar + copyright + safe area) - yarıya indirildi */
 		margin-bottom: 0;
 	}
 
 	.seat-selection-page .seat-summary .seat-summary-card {
-		padding-bottom: 1rem; /* Ekstra güvenlik için card'a da padding */
+		padding-bottom: 0.5rem; /* Ekstra güvenlik için card'a da padding - yarıya indirildi */
 		margin-bottom: 0;
 	}
 
