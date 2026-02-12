@@ -1,5 +1,5 @@
-
 import { getAuthHeader } from "../helpers/auth-helper";
+import { fetchWithTimeout } from "../helpers/fetch-with-timeout";
 import {
 	GET_MOVIE_BY_ID,
 	MOVIE_CREATE_API_ROUTE,
@@ -49,7 +49,7 @@ export const getAllMoviesByPage = async (params = {}) => {
 
 
 export const getAllMovies = async () => {
-	return fetch(GET_ALL_MOVIES_API_ROUTE).catch(() => {
+	return fetchWithTimeout(GET_ALL_MOVIES_API_ROUTE, {}, 12_000).catch(() => {
 		return new Response(null, { status: 500, statusText: "Network Error" });
 	});
 };
