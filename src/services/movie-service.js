@@ -81,9 +81,8 @@ export const getMovieById = async (id, lang = null) => {
 
 	if (lang) {
 		headers['Accept-Language'] = lang === 'en' ? 'en-US,en;q=0.9' : 'de-DE,de;q=0.9';
-		const separator = url.includes('?') ? '&' : '?';
-		return fetch(`${url}${separator}lang=${lang}`, { headers });
 	}
+	// Removed lang query parameter - backend may not support it
 	return fetch(url, { headers });
 };
 
