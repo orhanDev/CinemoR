@@ -1,6 +1,6 @@
-# CinemoR - Cinema Ticket Booking Platform
+# CinemoR - Kinoticket-Buchungsplattform
 
-A modern, full-stack cinema ticket booking application built with React and Spring Boot.
+Eine moderne Full-Stack-Kinoticket-Buchungsanwendung, entwickelt mit React und Spring Boot.
 
 🌐 **Live Demo**: [cinemor.netlify.app](https://cinemor.netlify.app)
 
