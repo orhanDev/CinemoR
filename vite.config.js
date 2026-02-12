@@ -37,6 +37,12 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        globIgnores: [
+          '**/images/movies/**/*-slider.png',
+          '**/images/tickets/**/*.jpg',
+          '**/images/actors/**/*.jpg'
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.(?:png|jpg|jpeg|svg|gif|webp)$/,
