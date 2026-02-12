@@ -266,38 +266,13 @@ MovieCard.displayName = 'MovieCard';
 
 const CINEMA_FILTER_OPTIONS = ["CinemoR Berlin", "CinemoR München", "CinemoR Stuttgart", "CinemoR Offenburg"];
 
-const Movies = () => {
-	const { t } = useLanguage();
-	const navigate = useNavigate();
-	const location = useLocation();
-	const { movies: movieData, loading } = useMovieList(sampleMovies, { dedupe: true });
-	const { tab } = useParams();
-	const { user } = useAuth();
-	const { isFavorite, toggleFavorite } = useFavorites(user);
+const MAX_FEATURED = 9;
+const FEB_YEAR = 2026;
+const FEB_MONTH = 2;
+const FEB_DAYS = 28;
 
-	const searchQuery = useMemo(() => {
-		const params = new URLSearchParams(location.search);
-		return (params.get("search") || "").trim().toLowerCase();
-	}, [location.search]);
-
-	const selectedCinema = location.state?.cinema && CINEMA_FILTER_OPTIONS.includes(location.state.cinema)
-		? location.state.cinema
-		: null;
-
-	const handleFavoriteClick = (movieId) => {
-		if (!user) {
-			navigate("/login", { state: { from: "/movies/im-kino" } });
-			return;
-		}
-		toggleFavorite(movieId);
-	};
-	const activeTab = tab === "bald" ? "bald" : "im-kino";
-	const MAX_FEATURED = 9;
-	const FEB_YEAR = 2026;
-	const FEB_MONTH = 2;
-	const FEB_DAYS = 28;
-
-	const sampleMovies = [
+// sampleMovies'i component dışına taşıdık - hoisting sorununu önlemek için
+const sampleMovies = [
 		{
 			id: 1,
 			title: "AB DURCH DIE MITTE",
@@ -397,7 +372,34 @@ const Movies = () => {
 			genre: "Drama",
 			fsk: ""
 		}
-	];
+];
+
+const Movies = () => {
+	const { t } = useLanguage();
+	const navigate = useNavigate();
+	const location = useLocation();
+	const { movies: movieData, loading } = useMovieList(sampleMovies, { dedupe: true });
+	const { tab } = useParams();
+	const { user } = useAuth();
+	const { isFavorite, toggleFavorite } = useFavorites(user);
+
+	const searchQuery = useMemo(() => {
+		const params = new URLSearchParams(location.search);
+		return (params.get("search") || "").trim().toLowerCase();
+	}, [location.search]);
+
+	const selectedCinema = location.state?.cinema && CINEMA_FILTER_OPTIONS.includes(location.state.cinema)
+		? location.state.cinema
+		: null;
+
+	const handleFavoriteClick = (movieId) => {
+		if (!user) {
+			navigate("/login", { state: { from: "/movies/im-kino" } });
+			return;
+		}
+		toggleFavorite(movieId);
+	};
+	const activeTab = tab === "bald" ? "bald" : "im-kino";
 
 	const filteredAndSortedMovies = useMemo(() => {
 		const keyOf = (m) =>
