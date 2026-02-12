@@ -2373,6 +2373,7 @@
 	.seat-selection-page {
 		padding: calc(80px + 6.5rem) 1rem 12rem; /* Alt padding'i 10rem'den 12rem'e artırdık */
 		overflow-x: hidden;
+		overflow-y: auto; /* Sayfa seviyesinde dikey scroll'a izin ver */
 		padding-bottom: max(12rem, 200px); /* Minimum 200px veya 12rem, hangisi büyükse */
 	}
 
@@ -2457,8 +2458,9 @@
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
-		touch-action: pan-x pan-y;
+		touch-action: pan-x pan-y; /* Hem yatay hem dikey scroll'a izin ver */
 		overscroll-behavior-x: contain;
+		overscroll-behavior-y: contain; /* Dikey overscroll'u da kontrol et */
 		will-change: scroll-position;
 
 		&::-webkit-scrollbar {
@@ -2515,7 +2517,7 @@
 		min-width: min-content;
 		justify-content: flex-start;
 		padding-right: 30px;
-		touch-action: pan-x;
+		touch-action: pan-x pan-y; /* Hem yatay hem dikey scroll'a izin ver */
 		user-select: none;
 		-webkit-user-select: none;
 	}
