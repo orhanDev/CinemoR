@@ -336,10 +336,25 @@ const Home = () => {
 			m?.slider || m?.sliderPath || m?.sliderUrl || m?.sliderImage || m?.sliderImagePath;
 
 		const wideOnly = displayMovies.filter((m) => isWideSliderAsset(getSliderRaw(m)));
-		if (wideOnly.length > 0) return wideOnly.slice(0, 9);
-
-		const withSlider = displayMovies.filter((m) => Boolean(getSliderRaw(m)));
-		return (withSlider.length > 0 ? withSlider : displayMovies).slice(0, 9);
+		let movies = wideOnly.length > 0 ? wideOnly : displayMovies;
+		
+		const withSlider = movies.filter((m) => Boolean(getSliderRaw(m)));
+		movies = (withSlider.length > 0 ? withSlider : movies).slice(0, 9);
+		
+		// Charlie der Superhund'u ilk sıraya al
+		const charlieIndex = movies.findIndex((m) => 
+			m?.title?.toLowerCase().includes("charlie") || 
+			m?.title?.toLowerCase().includes("superhund") ||
+			m?.originalTitle?.toLowerCase().includes("charlie") ||
+			m?.originalTitle?.toLowerCase().includes("superhund")
+		);
+		
+		if (charlieIndex > 0) {
+			const charlie = movies[charlieIndex];
+			movies = [charlie, ...movies.filter((_, i) => i !== charlieIndex)];
+		}
+		
+		return movies;
 	}, [displayMovies]);
 
 	useEffect(() => {
