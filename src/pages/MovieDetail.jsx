@@ -994,7 +994,6 @@ const MovieDetail = () => {
 								wrapperClassName="showtimes-select-wrap"
 								triggerClassName="showtimes-select"
 							/>
-							{}
 							<div className="showtimes-controls">
 								<div className="showtimes-search">
 									<input
