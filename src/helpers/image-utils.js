@@ -2,7 +2,7 @@ import { appConfig } from "./config";
 
 
 export const getPosterUrl = (posterPath) => {
-	if (!posterPath) return null;
+	if (!posterPath) return "/images/movies/placeholder.png";
 
 	if (posterPath.startsWith("http://") || posterPath.startsWith("https://")) {
 		return posterPath;

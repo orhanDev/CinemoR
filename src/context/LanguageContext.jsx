@@ -266,6 +266,7 @@ const translations = {
 		"common.error": "An error occurred",
 
 		"footer.copyright": "© 2026 Demo Version by Orhan Yilmaz – all rights reserved; no commercial use.",
+		"footer.demo": "This is a demo website. No real payment transactions are processed. Movies, showtimes, and posters are for demonstration purposes only and are not used for commercial purposes.",
 
 		"menu.addToCart": "Add to Cart",
 		"menu.extraGrosses.name": "Extra Large Menu",
@@ -652,6 +653,7 @@ const translations = {
 		"common.error": "Ein Fehler ist aufgetreten",
 
 		"footer.copyright": "© 2026 Demo-Version von Orhan Yilmaz – alle Rechte vorbehalten; keine kommerzielle Nutzung.",
+		"footer.demo": "Dies ist eine Demo-Website. Es werden keine echten Zahlungstransaktionen durchgeführt. Filme, Vorstellungen und Filmplakate dienen nur zu Demonstrationszwecken und werden nicht für kommerzielle Zwecke verwendet.",
 
 		"menu.addToCart": "In den Warenkorb",
 		"menu.extraGrosses.name": "Extra Großes Menu",

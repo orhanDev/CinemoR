@@ -8,6 +8,7 @@
 	&__copyright {
 		text-align: center;
 		padding: 0 1rem;
+		margin-bottom: 0.75rem;
 
 		p {
 			color: rgba(248, 250, 252, 0.7);
@@ -15,6 +16,30 @@
 			line-height: 1.4;
 			letter-spacing: 0.01em;
 			margin: 0;
+		}
+	}
+
+	&__demo {
+		text-align: center;
+		padding: 0 1rem;
+		max-width: 900px;
+		margin: 0 auto;
+
+		p {
+			color: rgba(248, 250, 252, 0.55);
+			font-size: 0.75rem;
+			line-height: 1.5;
+			letter-spacing: 0.01em;
+			margin: 0;
+		}
+
+		@media (max-width: 750px) {
+			padding: 0 1rem;
+
+			p {
+				font-size: 0.7rem;
+				line-height: 1.4;
+			}
 		}
 	}
 }

@@ -8,6 +8,9 @@ const Footer = () => {
       <div className="footer__copyright">
         <p>{t("footer.copyright")}</p>
       </div>
+      <div className="footer__demo">
+        <p>{t("footer.demo")}</p>
+      </div>
     </footer>
   );
 };
