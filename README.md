@@ -2,6 +2,12 @@
 
 A modern, full-stack cinema ticket booking application built with React and Spring Boot.
 
+🌐 **Live Demo**: [cinemor.netlify.app](https://cinemor.netlify.app)
+
+[![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-green)](https://spring.io/projects/spring-boot)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
 ## 🚀 Features
 
 - **Movie Listings**: Browse now showing and coming soon movies
@@ -150,13 +156,29 @@ The backend is deployed on Render.com using Docker.
 - CORS configured for production domains
 - Input validation on forms
 
+## 🌐 Live Demo
+
+- **Frontend**: [cinemor.netlify.app](https://cinemor.netlify.app)
+- **Backend API**: Deployed on Render.com
+
+## 📸 Screenshots
+
+_Add screenshots of your application here_
+
+## 🤝 Contributing
+
+This is a portfolio project. Contributions and feedback are welcome!
+
 ## 📄 License
 
-This is a demo project for portfolio purposes.
+This project is for portfolio/demonstration purposes.
 
 ## 👤 Author
 
-Orhan Yilmaz
+**Orhan Yilmaz**
+
+- GitHub: [@orhanDev](https://github.com/orhanDev)
+- Portfolio: _Add your portfolio link_
 
 ---
 

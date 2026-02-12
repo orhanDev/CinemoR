@@ -48,3 +48,13 @@ Thumbs.db
 
 # Build outputs
 *.map
+
+# Environment files (keep .env.example)
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# IDE specific
+.vscode/settings.json
+.idea/workspace.xml
