@@ -266,7 +266,7 @@ MovieCard.displayName = 'MovieCard';
 
 const CINEMA_FILTER_OPTIONS = ["CinemoR Berlin", "CinemoR München", "CinemoR Stuttgart", "CinemoR Offenburg"];
 
-const MAX_FEATURED = 9;
+const MAX_FEATURED = 50;
 const FEB_YEAR = 2026;
 const FEB_MONTH = 2;
 const FEB_DAYS = 28;

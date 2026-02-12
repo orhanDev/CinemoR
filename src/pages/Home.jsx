@@ -305,6 +305,12 @@ const Home = () => {
 
 	const cities = ["Berlin", "München", "Hamburg", "Frankfurt", "Köln", "Stuttgart"];
 
+	const isCharlieMovie = (m) => {
+		const t = (m?.title || "").toString().trim().toLowerCase();
+		const ot = (m?.originalTitle || "").toString().trim().toLowerCase();
+		return t.includes("charlie") || t.includes("superhund") || ot.includes("charlie") || ot.includes("superhund");
+	};
+
 	const displayMovies = useMemo(() => {
 		const MAX_MOVIES = 9;
 		const isTrainToBusan = (m) => {
@@ -328,7 +334,17 @@ const Home = () => {
 			seen.add(key);
 			return true;
 		});
-		return unique.filter((m) => !isTrainToBusan(m)).slice(0, MAX_MOVIES);
+		let list = unique.filter((m) => !isTrainToBusan(m)).slice(0, MAX_MOVIES);
+		const charlieInList = list.find(isCharlieMovie);
+		const charlieFromSample = sampleMovies.find((m) => m.title && m.title.toLowerCase().includes("charlie"));
+		if (charlieInList) {
+			if (list.indexOf(charlieInList) !== 0) {
+				list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
+			}
+		} else if (charlieFromSample) {
+			list = [charlieFromSample, ...list.filter((m) => !isCharlieMovie(m))].slice(0, MAX_MOVIES);
+		}
+		return list;
 	}, [movieData]);
 
 	const sliderMovies = useMemo(() => {
@@ -337,22 +353,17 @@ const Home = () => {
 
 		const wideOnly = displayMovies.filter((m) => isWideSliderAsset(getSliderRaw(m)));
 		let movies = wideOnly.length > 0 ? wideOnly : displayMovies;
-		
+
 		const withSlider = movies.filter((m) => Boolean(getSliderRaw(m)));
 		movies = (withSlider.length > 0 ? withSlider : movies).slice(0, 9);
-		
-		const charlieIndex = movies.findIndex((m) => 
-			m?.title?.toLowerCase().includes("charlie") || 
-			m?.title?.toLowerCase().includes("superhund") ||
-			m?.originalTitle?.toLowerCase().includes("charlie") ||
-			m?.originalTitle?.toLowerCase().includes("superhund")
-		);
-		
-		if (charlieIndex > 0) {
-			const charlie = movies[charlieIndex];
-			movies = [charlie, ...movies.filter((_, i) => i !== charlieIndex)];
+
+		const charlieInSlider = movies.find(isCharlieMovie);
+		const charlieFromDisplay = displayMovies.find(isCharlieMovie);
+		const charlie = charlieInSlider || charlieFromDisplay;
+		if (charlie) {
+			movies = [charlie, ...movies.filter((m) => m !== charlie)].slice(0, 9);
 		}
-		
+
 		return movies;
 	}, [displayMovies]);
 
