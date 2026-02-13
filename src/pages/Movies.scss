@@ -529,6 +529,38 @@
 	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 	height: auto;
+	box-sizing: border-box;
+	padding: 0;
+	text-align: left;
+	min-height: auto;
+	width: 100%;
+	max-width: 100%;
+	border: none;
+	display: block;
+	flex-direction: row;
+	position: relative;
+	z-index: 1;
+	cursor: pointer;
+}
+
+.movies-page .movie-card-simple.coming-soon {
+	cursor: default;
+}
+
+.movies-page .movie-card-simple.coming-soon .movie-card-inner {
+	display: flex;
+	gap: 0.9rem;
+	padding: 1.2rem 1.4rem;
+	align-items: flex-start;
+	box-sizing: border-box;
+	text-align: left;
+	min-height: auto;
+	width: 100%;
+	max-width: 100%;
+	border: none;
+	flex-direction: row;
+	position: relative;
+	z-index: 1;
 }
 
 .movies-page .movie-card-simple:hover {
@@ -541,6 +573,15 @@
 	gap: 0.9rem;
 	padding: 1.2rem 1.4rem;
 	align-items: flex-start;
+	box-sizing: border-box;
+	text-align: left;
+	min-height: auto;
+	width: 100%;
+	max-width: 100%;
+	border: none;
+	flex-direction: row;
+	position: relative;
+	z-index: 1;
 }
 
 .movies-page .movie-card-poster {
