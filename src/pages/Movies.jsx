@@ -286,6 +286,215 @@ const sampleMovies = [
 			duration: 100,
 			genre: "Drama",
 			fsk: ""
+		},
+		{
+			id: 10,
+			title: "EXORCISM CHRONICLES: THE BEGINNING",
+			poster: "/images/movies/comingsoon/exorcism_chronicles_the_beginning.jpg",
+			slider: "/images/movies/comingsoon/exorcism_chronicles_the_beginning-slider.png",
+			ticket: "/images/tickets/comingsoon/exorcism_chronicles_the_beginning-ticket.png",
+			rating: 6.8,
+			duration: 95,
+			genre: "Horror",
+			fsk: "16"
+		},
+		{
+			id: 11,
+			title: "GODZILLA MINUS ONE MINUS COLOR",
+			poster: "/images/movies/comingsoon/godzilla_minus_one_minus_color.png",
+			slider: "/images/movies/comingsoon/godzilla_minus_one_minus_color-slider.png",
+			ticket: "/images/tickets/comingsoon/godzilla_minus_one_minus_color-ticket.png",
+			rating: 8.5,
+			duration: 125,
+			genre: "Action",
+			fsk: "12"
+		},
+		{
+			id: 12,
+			title: "IT'S CHRISTMAS - WEIHNACHTEN MIT JONAS KAUFMANN",
+			poster: "/images/movies/comingsoon/it_s_christmas_weihnachten_mit_jonas_kaufmann.jpg",
+			slider: "/images/movies/comingsoon/it_s_christmas_weihnachten_mit_jonas_kaufmann-slider.png",
+			ticket: "/images/tickets/comingsoon/it_s_christmas_weihnachten_mit_jonas_kaufmann-ticket.png",
+			rating: 8.0,
+			duration: 90,
+			genre: "Musik",
+			fsk: "0"
+		},
+		{
+			id: 13,
+			title: "MAD HEIDI",
+			poster: "/images/movies/comingsoon/mad_heidi.jpg",
+			slider: "/images/movies/comingsoon/mad_heidi-slider.png",
+			ticket: "/images/tickets/comingsoon/mad_heidi-ticket.png",
+			rating: 7.3,
+			duration: 92,
+			genre: "Action",
+			fsk: "16"
+		},
+		{
+			id: 14,
+			title: "MARCO",
+			poster: "/images/movies/comingsoon/marco.jpg",
+			slider: "/images/movies/comingsoon/marco-slider.png",
+			ticket: "/images/tickets/comingsoon/marco-ticket.png",
+			rating: 7.5,
+			duration: 105,
+			genre: "Drama",
+			fsk: ""
+		},
+		{
+			id: 15,
+			title: "OVERLORD: THE SACRED KINGDOM",
+			poster: "/images/movies/comingsoon/overlord_the_sacred_kingdom.jpg",
+			slider: "/images/movies/comingsoon/overlord_the_sacred_kingdom-slider.png",
+			ticket: "/images/tickets/comingsoon/overlord_the_sacred_kingdom-ticket.png",
+			rating: 7.1,
+			duration: 110,
+			genre: "Action",
+			fsk: "16"
+		},
+		{
+			id: 16,
+			title: "TERESA - EIN LEBEN ZWISCHEN LICHT UND SCHATTEN",
+			poster: "/images/movies/comingsoon/teresa_ein_leben_zwischen_licht_und_schatten.jpg",
+			slider: "/images/movies/comingsoon/teresa_ein_leben_zwischen_licht_und_schatten-slider.png",
+			ticket: "/images/tickets/comingsoon/teresa_ein_leben_zwischen_licht_und_schatten-ticket.png",
+			rating: 7.7,
+			duration: 98,
+			genre: "Drama",
+			fsk: ""
+		},
+		{
+			id: 17,
+			title: "THE LONGEST WAVE",
+			poster: "/images/movies/comingsoon/the_longest_wave.jpg",
+			slider: "/images/movies/comingsoon/the_longest_wave-slider.png",
+			ticket: "/images/tickets/comingsoon/the_longest_wave-ticket.png",
+			rating: 7.4,
+			duration: 88,
+			genre: "Dokumentarfilm",
+			fsk: "0"
+		},
+		{
+			id: 18,
+			title: "ZOMBIE: DAWN OF THE DEAD",
+			poster: "/images/movies/comingsoon/zombie_dawn_of_the_dead.jpg",
+			slider: "/images/movies/comingsoon/zombie_dawn_of_the_dead-slider.png",
+			ticket: "/images/tickets/comingsoon/zombie_dawn_of_the_dead-ticket.png",
+			rating: 7.9,
+			duration: 100,
+			genre: "Horror",
+			fsk: "18"
+		},
+		{
+			id: 19,
+			title: "DIE GESCHICHTE VON JEAN VALJEAN",
+			poster: "/images/movies/nowshowing/die_geschichte_von_jean_valjean.jpg",
+			slider: "/images/movies/nowshowing/die_geschichte_von_jean_valjean-slider.png",
+			ticket: "/images/tickets/nowshowing/die_geschichte_von_jean_valjean-ticket.png",
+			rating: 8.2,
+			duration: 95,
+			genre: "Drama",
+			fsk: ""
+		},
+		{
+			id: 20,
+			title: "EXORCISM CHRONICLES: THE BEGINNING",
+			poster: "/images/movies/nowshowing/exorcism_chronicles_the_beginning.jpg",
+			slider: "/images/movies/nowshowing/exorcism_chronicles_the_beginning-slider.png",
+			ticket: "/images/tickets/nowshowing/exorcism_chronicles_the_beginning-ticket.png",
+			rating: 6.8,
+			duration: 95,
+			genre: "Horror",
+			fsk: "16"
+		},
+		{
+			id: 21,
+			title: "GODZILLA MINUS ONE MINUS COLOR",
+			poster: "/images/movies/nowshowing/godzilla_minus_one_minus_color.png",
+			slider: "/images/movies/nowshowing/godzilla_minus_one_minus_color-slider.png",
+			ticket: "/images/tickets/nowshowing/godzilla_minus_one_minus_color-ticket.png",
+			rating: 8.5,
+			duration: 125,
+			genre: "Action",
+			fsk: "12"
+		},
+		{
+			id: 22,
+			title: "IT'S CHRISTMAS - WEIHNACHTEN MIT JONAS KAUFMANN",
+			poster: "/images/movies/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann.jpg",
+			slider: "/images/movies/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann-slider.png",
+			ticket: "/images/tickets/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann-ticket.png",
+			rating: 8.0,
+			duration: 90,
+			genre: "Musik",
+			fsk: "0"
+		},
+		{
+			id: 23,
+			title: "MAD HEIDI",
+			poster: "/images/movies/nowshowing/mad_heidi.jpg",
+			slider: "/images/movies/nowshowing/mad_heidi-slider.png",
+			ticket: "/images/tickets/nowshowing/mad_heidi-ticket.png",
+			rating: 7.3,
+			duration: 92,
+			genre: "Action",
+			fsk: "16"
+		},
+		{
+			id: 24,
+			title: "MARCO",
+			poster: "/images/movies/nowshowing/marco.jpg",
+			slider: "/images/movies/nowshowing/marco-slider.png",
+			ticket: "/images/tickets/nowshowing/marco-ticket.png",
+			rating: 7.5,
+			duration: 105,
+			genre: "Drama",
+			fsk: ""
+		},
+		{
+			id: 25,
+			title: "OVERLORD: THE SACRED KINGDOM",
+			poster: "/images/movies/nowshowing/overlord_the_sacred_kingdom.jpg",
+			slider: "/images/movies/nowshowing/overlord_the_sacred_kingdom-slider.png",
+			ticket: "/images/tickets/nowshowing/overlord_the_sacred_kingdom-ticket.png",
+			rating: 7.1,
+			duration: 110,
+			genre: "Action",
+			fsk: "16"
+		},
+		{
+			id: 26,
+			title: "TERESA - EIN LEBEN ZWISCHEN LICHT UND SCHATTEN",
+			poster: "/images/movies/nowshowing/teresa_ein_leben_zwischen_licht_und_schatten.jpg",
+			slider: "/images/movies/nowshowing/teresa_ein_leben_zwischen_licht_und_schatten-slider.png",
+			ticket: "/images/tickets/nowshowing/teresa_ein_leben_zwischen_licht_und_schatten-ticket.png",
+			rating: 7.7,
+			duration: 98,
+			genre: "Drama",
+			fsk: ""
+		},
+		{
+			id: 27,
+			title: "THE LONGEST WAVE",
+			poster: "/images/movies/nowshowing/the_longest_wave.jpg",
+			slider: "/images/movies/nowshowing/the_longest_wave-slider.png",
+			ticket: "/images/tickets/nowshowing/the_longest_wave-ticket.png",
+			rating: 7.4,
+			duration: 88,
+			genre: "Dokumentarfilm",
+			fsk: "0"
+		},
+		{
+			id: 28,
+			title: "ZOMBIE: DAWN OF THE DEAD",
+			poster: "/images/movies/nowshowing/zombie_dawn_of_the_dead.jpg",
+			slider: "/images/movies/nowshowing/zombie_dawn_of_the_dead-slider.png",
+			ticket: "/images/tickets/nowshowing/zombie_dawn_of_the_dead-ticket.png",
+			rating: 7.9,
+			duration: 100,
+			genre: "Horror",
+			fsk: "18"
 		}
 ];
 

@@ -555,7 +555,7 @@
 .movies-page .movie-card-image {
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
 	display: block;
 	border: none;
 }
@@ -748,7 +748,7 @@
 	.movies-page .movie-card-image {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 	}
 
 	.movies-page .movie-card-favorite-btn,
