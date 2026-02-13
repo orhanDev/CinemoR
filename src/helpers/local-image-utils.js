@@ -47,12 +47,17 @@ export const titleToFilename = (title) => {
 		return 'godzilla_minus_one_minus_color';
 	}
 	
+	if (lowerTitle.includes('bon voyage') && lowerTitle.includes('bis hierher')) {
+		return 'bon_voyage_bis_hierher_und_noch_weiter';
+	}
+	
 	return decoded
 		.toLowerCase()
 		.normalize('NFD')
 		.replace(/[\u0300-\u036f]/g, '') // Remove diacritics
 		.replace(/[^a-z0-9\s-]/g, '') // Remove special chars except spaces and hyphens
 		.replace(/\s+/g, '_') // Replace spaces with underscores
+		.replace(/_+-_+/g, '_') // Collapse " - " (space-dash-space) to single underscore
 		.replace(/_+/g, '_') // Replace multiple underscores with single
 		.replace(/-+/g, '-') // Replace multiple hyphens with single
 		.replace(/^[-_]+|[-_]+$/g, ''); // Remove leading/trailing hyphens/underscores

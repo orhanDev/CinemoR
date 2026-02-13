@@ -224,7 +224,11 @@ const Header = () => {
 		<>
 			<header className={`header ${isMounted && isScrolled ? 'header--scrolled' : ''}`}>
 				<div className="header__inner">
-					<Link to="/" className="header__logo">
+					<Link 
+						to="/" 
+						className="header__logo" 
+						onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+					>
 						<img 
 							src="/images/logos/cinemorlogoweiss.png" 
 							alt="CinemoR" 

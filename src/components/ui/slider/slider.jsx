@@ -24,26 +24,11 @@ export const Slider = () => {
 	const fetchMovieData = async () => {
 		try {
 			setLoading(true);
-			const movieResponse = await getInTheatersMovies();
-
-			if (!movieResponse.ok) {
-				throw new Error("Filmdaten konnten nicht geladen werden");
-			}
-
-			const responseData = await movieResponse.json();
-
-			if (
-				responseData &&
-				responseData.object &&
-				responseData.object.content &&
-				Array.isArray(responseData.object.content)
-			) {
-				setMovies(responseData.object.content);
-			} else {
-				setMovies([]);
-			}
+			const list = await getInTheatersMovies();
+			setMovies(Array.isArray(list) ? list : []);
 		} catch (err) {
 			setError(err?.message ?? "Fehler beim Laden");
+			setMovies([]);
 		} finally {
 			setLoading(false);
 		}
@@ -142,6 +127,7 @@ export const Slider = () => {
 										<Link
 											to={`/movies/ticket/${movie.id}`}
 											className="btn btn-detail"
+											state={{ movie }}
 										>
 											▶ Details ansehen
 										</Link>

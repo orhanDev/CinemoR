@@ -1,5 +1,6 @@
 [
   {
+    "id":1,
     "title": "AB DURCH DIE MITTE",
     "originalTitle": "Le Million",
     "genre": "Komödie",
@@ -18,7 +19,8 @@
     "castImages": "{\"Rayane Bensetti\":\"/images/actors/Rayane_Bensetti.jpg\"}"
   },
   {
-    "title": "BON VOYAGE – BIS HIERHER UND NOCH WEITER",
+    "id":2,
+    "title": "BON VOYAGE-BIS HIERHER UND NOCH WEITER",
     "originalTitle": "On Ira",
     "genre": "Tragikomödie",
     "duration": "90 Minuten",
@@ -36,6 +38,7 @@
     "castImages": "{\"Hélène Vincent\":\"/images/actors/Hélène_Vincent.jpg\",\"Pierre Lottin\":\"/images/actors/Pierre_Lottin.jpg\"}"
   },
   {
+    "id":3,
     "title": "CHARLIE DER SUPERHUND",
     "originalTitle": "Charlie The Wonderdog",
     "genre": "Animation / Familie",
@@ -52,6 +55,7 @@
     "sliderPath": "/images/movies/nowshowing/charlie_der_superhund-slider.png"
   },
   {
+    "id":4,
     "title": "DAS SYSTEM MILCH",
     "originalTitle": "Das System Milch",
     "genre": "Dokumentarfilm",
@@ -68,6 +72,7 @@
     "sliderPath": "/images/movies/nowshowing/das_system_milch-slider.png"
   },
   {
+    "id":5,
     "title": "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
     "originalTitle": "Jean Valjean",
     "genre": "Drama",
@@ -86,6 +91,7 @@
     "castImages": "{\"Grégory Gadebois\":\"/images/actors/Grégory_Gadebois.jpg\"}"
   },
   {
+    "id":6,
     "title": "EXORCISM CHRONICLES – THE BEGINNING",
     "originalTitle": "Toemarok",
     "genre": "Anime / Horror",
@@ -102,6 +108,7 @@
     "sliderPath": "/images/movies/nowshowing/exorcism_chronicles_the_beginning-slider.png"
   },
   {
+    "id":7,
     "title": "GODZILLA MINUS ONE MINUS COLOR",
     "originalTitle": "Gojira Minus One Minus Color",
     "genre": "Action / Drama",
@@ -118,6 +125,7 @@
     "sliderPath": "/images/movies/nowshowing/godzilla_minus_one_minus_color-slider.png"
   },
   {
+    "id":8,
     "title": "HOME ENTERTAINMENT",
     "originalTitle": "Home Entertainment",
     "genre": "Drama",
@@ -136,6 +144,7 @@
     "castImages": "{\"Joseph Bundschuh\":\"/images/actors/Joseph_Bundschuh.jpg\",\"Karoline Teska\":\"/images/actors/Karoline_Teska.jpg\",\"Nadine Dubois\":\"/images/actors/Nadine_Dubois.jpg\"}"
   },
   {
+    "id":9,
     "title": "IT'S CHRISTMAS – WEIHNACHTEN MIT JONAS KAUFMANN",
     "originalTitle": "Weihnachten mit Jonas Kaufmann",
     "genre": "Musik / Event",
@@ -153,6 +162,7 @@
     "ticketPath": "/images/tickets/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann-ticket.jpg"
   },
   {
+    "id":10,
     "title": "KEIN WEG ZURUCK",
     "originalTitle": "Vejen hjem",
     "genre": "Drama / Thriller",
@@ -171,6 +181,7 @@
     "castImages": "{\"Nikolaj Lie Kaas\":\"/images/actors/Nikolaj_Lie_Kaas.jpg\"}"
   },
   {
+    "id":11,
     "title": "MAD HEIDI",
     "originalTitle": "Mad Heidi",
     "genre": "Horror / Action",
@@ -189,6 +200,7 @@
     "castImages": "{\"David Schofield\":\"/images/actors/David_Schofield.jpg\",\"Max Rüdlinger\":\"/images/actors/Max_Rüdlinger.jpg\"}"
   },
   {
+    "id":12,
     "title": "MARCO",
     "originalTitle": "Marco",
     "genre": "Action",
@@ -207,6 +219,7 @@
     "castImages": "{\"Siddique\":\"/images/actors/Siddique.jpg\",\"Unni Mukundan\":\"/images/actors/Unni_Mukundan.jpg\"}"
   },
   {
+    "id":13,
     "title": "MONSIEUR ROBERT KENNT KEIN PARDON",
     "originalTitle": "Les vengeances de Maître Poutifard",
     "genre": "Komödie",
@@ -225,6 +238,7 @@
     "castImages": "{\"Jennie Anne Walker\":\"/images/actors/Jennie_Anne_Walker.jpg\",\"Roby Schinasi\":\"/images/actors/Roby_Schinasi.jpg\"}"
   },
   {
+    "id":14,
     "title": "NACHBEBEN",
     "originalTitle": "Det Andet Offer",
     "genre": "Drama",
@@ -243,6 +257,7 @@
     "castImages": "{\"Olaf Johannessen\":\"/images/actors/Olaf_Johannessen.jpg\",\"Trine Dyrholm\":\"/images/actors/Trine_Dyrholm.jpg\",\"Özlem Saglanmak\":\"/images/actors/Özlem_Saglanmak.jpg\"}"
   },
   {
+    "id":15,
     "title": "OVERLORD: THE SACRED KINGDOM",
     "originalTitle": "Overlord Sei Oukoku-hen",
     "genre": "Anime / Fantasy / Action",
@@ -259,6 +274,7 @@
     "sliderPath": "/images/movies/nowshowing/overlord_the_sacred_kingdom-slider.png"
   },
   {
+    "id":16,
     "title": "TERESA – EIN LEBEN ZWISCHEN LICHT UND SCHATTEN",
     "originalTitle": "Mother",
     "genre": "Drama",
@@ -277,6 +293,7 @@
     "castImages": "{\"Sylvia Hoeks\":\"/images/actors/Sylvia_Hoeks.jpg\"}"
   },
   {
+    "id":17,
     "title": "THE LONGEST WAVE",
     "originalTitle": "The Longest Wave",
     "genre": "Dokumentarfilm",
@@ -293,6 +310,7 @@
     "sliderPath": "/images/movies/nowshowing/the_longest_wave-slider.png"
   },
   {
+    "id":18,
     "title": "TRAIN TO BUSAN",
     "originalTitle": "Train to Busan",
     "genre": "Action / Horror",
@@ -311,6 +329,7 @@
     "castImages": "{\"Kim Su-an\":\"/images/actors/Kim_Su-an.png\",\"Ma Dong-seok\":\"/images/actors/Ma_Dong-seok.jpg\"}"
   },
   {
+    "id":19,
     "title": "ZOMBIE – DAWN OF THE DEAD",
     "originalTitle": "Dawn of the Dead",
     "genre": "Horror",
@@ -327,5 +346,43 @@
     "sliderPath": "/images/movies/nowshowing/zombie_dawn_of_the_dead-slider.png",
     "ticketPath": "/images/tickets/nowshowing/zombie_dawn_of_the_dead-ticket.jpg",
     "castImages": "{\"Ken Foree\":\"/images/actors/Ken_Foree.jpg\"}"
+  },
+  {
+    "id": 20,
+    "title": "CRIME 101",
+    "originalTitle": "Crime 101",
+    "genre": "Thriller / Drama",
+    "duration": "96 Minuten",
+    "director": "",
+    "cast": "Chris Hemsworth, Halle Berry, Mark Ruffalo, Barry Keoghan",
+    "description": "Davis ist ein schwer fassbarer Juwelendieb, dessen Überfallserie die Polizei vor ein Rätsel stellt. Als er gerade den Coup seines Lebens ins Visier nimmt, trifft er auf die desillusionierte Versicherungsmanagerin Sharon, die selbst an einem Scheideweg steht. Überzeugt davon, ein Muster entdeckt zu haben, kommt währenddessen der unerbittliche Detective Lt. Lubesnik der ganzen Operation immer näher und erhöht damit das Risiko noch weiter.",
+    "year": "2025",
+    "country": "USA",
+    "releaseDate": "01.01.2025",
+    "fsk": "ab 12 Jahren",
+    "isComingSoon": false,
+    "posterPath": "/images/movies/nowshowing/crime_101.jpg",
+    "sliderPath": "/images/movies/nowshowing/crime_101-slider.png",
+    "ticketPath": "/images/tickets/nowshowing/crime_101-ticket.jpg",
+    "castImages": "{\"Chris Hemsworth\":\"/images/actors/Chris_Hemsworth.jpg\",\"Halle Berry\":\"/images/actors/Halle_Berry.png\",\"Mark Ruffalo\":\"/images/actors/Mark_Ruffalo.png\",\"Barry Keoghan\":\"/images/actors/Barry_Keoghan.png\"}"
+  },
+  {
+    "id": 21,
+    "title": "GREENLAND 2",
+    "originalTitle": "Greenland 2",
+    "genre": "Action / Science-Fiction",
+    "duration": "120 Minuten",
+    "director": "",
+    "cast": "Gerard Butler, Morena Baccarin, Roman Griffin Davis, Tommie Earl Jenkins",
+    "description": "Fünf Jahre nach dem verheerenden Einschlag des Kometen Clarke leben John (Gerard Butler), Allison (Morena Baccarin) und ihr Sohn Nathan (Roman Griffin Davis) noch immer in dem Bunker in Grönland, der ihr Überleben sicherte. Doch Frieden finden sie hier nicht: Luft und Wasser sind verseucht, Strahlungsstürme wüten über die Oberfläche und Fragmente des Kometen schweben noch immer in der Umlaufbahn und drohen auf die Erde zu stürzen. Als ein verheerendes Beben den Bunker zerstört, muss die Familie erneut aufbrechen und sich durch ein verwüstetes Europa bis zum einzig sicher scheinenden Ort auf dem Planeten durchschlagen – dem gigantischen Krater des Clarke-Kometen in Südfrankreich. Ein absolutes Highlight für alle Action-Fans: Mit atemberaubenden Bildern, packender Spannung und einer emotionalen Familiengeschichte bietet GREENLAND 2 alles, was einen großen Endzeit-Blockbuster ausmacht.",
+    "year": "2025",
+    "country": "USA",
+    "releaseDate": "01.01.2025",
+    "fsk": "ab 12 Jahren",
+    "isComingSoon": false,
+    "posterPath": "/images/movies/nowshowing/greenland_2.png",
+    "sliderPath": "/images/movies/nowshowing/greenland_2-slider.png",
+    "ticketPath": "/images/tickets/nowshowing/greenland_2-ticket.jpg",
+    "castImages": "{\"Gerard Butler\":\"/images/actors/Gerard_Butler.png\",\"Morena Baccarin\":\"/images/actors/Morena_Baccarin.png\",\"Roman Griffin Davis\":\"/images/actors/Roman_Griffin_Davis.png\",\"Tommie Earl Jenkins\":\"/images/actors/Tommie_Earl_Jenkins.png\"}"
   }
 ]

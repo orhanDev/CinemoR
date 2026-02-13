@@ -35,41 +35,14 @@ function filenameMatchesTitle(filename, title) {
 }
 
 // API'den film listesini al (veya fallback kullan)
+// Film verisini sadece local movies-data.json'dan al
 async function fetchMovies() {
-	const API_URL = process.env.VITE_API_URL_WITHOUT_API || 'http://localhost:8081';
-	
 	try {
-		const response = await fetch(`${API_URL}/api/movies`);
-		if (!response.ok) throw new Error(`API error: ${response.status}`);
-		
-		const data = await response.json();
-		const movies = Array.isArray(data?.object?.content) 
-			? data.object.content 
-			: Array.isArray(data?.object) 
-				? data.object 
-				: Array.isArray(data) 
-					? data 
-					: [];
-		
-		return movies.map(m => ({
-			title: m.title,
-			isComingSoon: m.isComingSoon ?? false
-		}));
-	} catch (error) {
-		console.log(`⚠️  API'den film listesi alınamadı (${error.message}). Fallback listesi kullanılıyor...\n`);
-		
-		// Fallback: Örnek film listesi
-		return [
-			{ title: "AB DURCH DIE MITTE", isComingSoon: true },
-			{ title: "BON VOYAGE – BIS HIERHER UND NOCH WEITER", isComingSoon: false },
-			{ title: "CHARLIE DER SUPERHUND", isComingSoon: true },
-			{ title: "DAS SYSTEM MILCH", isComingSoon: false },
-			{ title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN", isComingSoon: false },
-			{ title: "HOME ENTERTAINMENT", isComingSoon: true },
-			{ title: "KEIN WEG ZURUCK", isComingSoon: false },
-			{ title: "MONSIEUR ROBERT KENNT KEIN PARDON", isComingSoon: true },
-			{ title: "NACHBEBEN", isComingSoon: true },
-		];
+		const response = await fetch('../public/movies-data.json');
+		if (!response.ok) throw new Error('movies-data.json yüklenemedi');
+		return await response.json();
+	} catch (err) {
+		throw new Error('Film verisi alınamadı.');
 	}
 }
 

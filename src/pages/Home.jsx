@@ -81,7 +81,7 @@ const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) =
 							</button>
 						)}
 						{movie?.id ? (
-							<Link to={`/movies/ticket/${movie.id}`}>
+							<Link to={`/movies/ticket/${movie.id}`} state={{ movie }}>
 								<img
 									src={
 										posterUrl ||
@@ -149,7 +149,7 @@ const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) =
 							<span className="movie-card-duration">{movie.duration || 120} Min.</span>
 						</div>
 						<div className="movie-card-price">{formatEuroPrice(priceValue)}</div>
-						<Link className="movie-card-cta" to={`/movies/ticket/${movie.id}`}>
+						<Link className="movie-card-cta" to={`/movies/ticket/${movie.id}`} state={{ movie }}>
 							{t("home.ticketsBuchen")}
 						</Link>
 					</div>
@@ -175,6 +175,35 @@ const Home = () => {
 	const { isFavorite, toggleFavorite } = useFavorites(user);
 
 	const sampleMovies = [
+		// Yeni filmler – slider ve Jetzt im Kino'da ilk sırada
+		{
+			id: 20,
+			title: "CRIME 101",
+			posterPath: "/images/movies/nowshowing/crime_101.jpg",
+			sliderPath: "/images/movies/nowshowing/crime_101-slider.png",
+			poster: "/images/movies/nowshowing/crime_101.jpg",
+			slider: "/images/movies/nowshowing/crime_101-slider.png",
+			ticket: "/images/tickets/nowshowing/crime_101-ticket.jpg",
+			rating: 7.5,
+			duration: 96,
+			genre: "Thriller / Drama",
+			fsk: "ab 12 Jahren",
+			isComingSoon: false
+		},
+		{
+			id: 21,
+			title: "GREENLAND 2",
+			posterPath: "/images/movies/nowshowing/greenland_2.png",
+			sliderPath: "/images/movies/nowshowing/greenland_2-slider.png",
+			poster: "/images/movies/nowshowing/greenland_2.png",
+			slider: "/images/movies/nowshowing/greenland_2-slider.png",
+			ticket: "/images/tickets/nowshowing/greenland_2-ticket.jpg",
+			rating: 7.2,
+			duration: 120,
+			genre: "Action / Science-Fiction",
+			fsk: "ab 12 Jahren",
+			isComingSoon: false
+		},
 		// Coming soon movies (isComingSoon: true) - in /public/images/movies/comingsoon/
 		{
 			id: 1,
@@ -251,7 +280,7 @@ const Home = () => {
 		},
 		{
 			id: 7,
-			title: "BON VOYAGE - BIS HIERHER UND NOCH WEITER",
+			title: "BON VOYAGE – BIS HIERHER UND NOCH WEITER",
 			poster: "/images/movies/nowshowing/bon_voyage_bis_hierher_und_noch_weiter.jpg",
 			slider: "/images/movies/nowshowing/bon_voyage_bis_hierher_und_noch_weiter-slider.png",
 			ticket: "/images/tickets/nowshowing/bon_voyage_bis_hierher_und_noch_weiter-ticket.png",
@@ -290,6 +319,10 @@ const Home = () => {
 	const { movies: movieData, loading } = useMovieList(sampleMovies);
 
 	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "auto" });
+	}, []);
+
+	useEffect(() => {
 		const checkMobile = () => setIsMobile(window.innerWidth <= 768);
 		checkMobile();
 		window.addEventListener("resize", checkMobile);
@@ -315,8 +348,17 @@ const Home = () => {
 		return t.includes("charlie") || t.includes("superhund") || ot.includes("charlie") || ot.includes("superhund");
 	};
 
+	const isCrime101 = (m) => {
+		const t = (m?.title || "").toString().trim().toLowerCase();
+		return t.includes("crime 101") || (m?.id === 20);
+	};
+	const isGreenland2 = (m) => {
+		const t = (m?.title || "").toString().trim().toLowerCase();
+		return t.includes("greenland 2") || (m?.id === 21);
+	};
+
 	const displayMovies = useMemo(() => {
-		const MAX_MOVIES = 9;
+		const MAX_MOVIES = 11;
 		const isTrainToBusan = (m) => {
 			const t = (m?.title || "").toString().trim().toLowerCase();
 			const ot = (m?.originalTitle || "").toString().trim().toLowerCase();
@@ -338,15 +380,19 @@ const Home = () => {
 			seen.add(key);
 			return true;
 		});
-		// ALL movies are now in nowshowing folder - show all movies
-		// Filter out Train to Busan only
-		let list = unique.filter((m) => {
-			return !isTrainToBusan(m);
-		}).slice(0, MAX_MOVIES);
-		
-		// Ensure all movies have isComingSoon: false for image loading (all images in nowshowing)
+		let list = unique.filter((m) => !isTrainToBusan(m));
 		list = list.map(m => ({ ...m, isComingSoon: false }));
-		
+
+		// Crime 101 ve Greenland 2 her zaman ilk iki sırada
+		const crime101 = list.find(isCrime101);
+		const greenland2 = list.find(isGreenland2);
+		const featuredFirst = [crime101, greenland2].filter(Boolean);
+		if (featuredFirst.length > 0) {
+			list = [...featuredFirst, ...list.filter((m) => !isCrime101(m) && !isGreenland2(m))].slice(0, MAX_MOVIES);
+		} else {
+			list = list.slice(0, MAX_MOVIES);
+		}
+
 		const charlieInList = list.find(isCharlieMovie);
 		const charlieFromSample = sampleMovies.find((m) => {
 			let isComingSoon = false;
@@ -361,34 +407,34 @@ const Home = () => {
 			}
 			return !isComingSoon && m.title && m.title.toLowerCase().includes("charlie");
 		});
-		if (charlieInList) {
-			if (list.indexOf(charlieInList) !== 0) {
-				list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
-			}
-		} else if (charlieFromSample) {
-			const charlieFixed = charlieFromSample ? { ...charlieFromSample, isComingSoon: false } : null;
-			if (charlieFixed) {
-				list = [charlieFixed, ...list.filter((m) => !isCharlieMovie(m))].slice(0, MAX_MOVIES);
-			}
+		if (charlieInList && list.indexOf(charlieInList) !== 0 && !isCrime101(list[0]) && !isGreenland2(list[0])) {
+			list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
+		} else if (charlieFromSample && !charlieInList) {
+			const charlieFixed = { ...charlieFromSample, isComingSoon: false };
+			list = [charlieFixed, ...list.filter((m) => !isCharlieMovie(m))].slice(0, MAX_MOVIES);
 		}
 		return list;
 	}, [movieData]);
 
 	const sliderMovies = useMemo(() => {
-		// ALL movies are in nowshowing folder - use displayMovies directly
-		let movies = displayMovies.slice(0, 9);
+		const SLIDER_COUNT = 11;
+		let movies = displayMovies.slice(0, SLIDER_COUNT);
+
+		const crime101 = movies.find(isCrime101);
+		const greenland2 = movies.find(isGreenland2);
+		const featuredFirst = [crime101, greenland2].filter(Boolean);
+		if (featuredFirst.length > 0) {
+			movies = [...featuredFirst, ...movies.filter((m) => !isCrime101(m) && !isGreenland2(m))].slice(0, SLIDER_COUNT);
+		}
 
 		const charlieInSlider = movies.find(isCharlieMovie);
 		const charlieFromDisplay = displayMovies.find(isCharlieMovie);
 		const charlie = charlieInSlider || charlieFromDisplay;
-		if (charlie) {
-			movies = [charlie, ...movies.filter((m) => m !== charlie)].slice(0, 9);
+		if (charlie && !isCrime101(movies[0]) && !isGreenland2(movies[0])) {
+			movies = [charlie, ...movies.filter((m) => m !== charlie)].slice(0, SLIDER_COUNT);
 		}
 
-		// Ensure all slider movies have isComingSoon: false for image loading
-		// (all images are in nowshowing folder)
 		movies = movies.map(m => ({ ...m, isComingSoon: false }));
-
 		return movies;
 	}, [displayMovies]);
 
@@ -515,7 +561,7 @@ const Home = () => {
 										{movieId ? (
 										<div 
 											className="hero-slide-link"
-											onClick={() => navigate(`/movies/ticket/${movieId}`)}
+											onClick={() => navigate(`/movies/ticket/${movieId}`, { state: { movie } })}
 											data-has-bg="true"
 											style={{
 												cursor: "pointer",
@@ -570,7 +616,7 @@ const Home = () => {
 													className="hero-slide-tickets-btn"
 													onClick={(e) => {
 														e.stopPropagation();
-														navigate(`/movies/ticket/${movieId}`);
+														navigate(`/movies/ticket/${movieId}`, { state: { movie } });
 													}}
 												>
 													<FaTicketAlt />

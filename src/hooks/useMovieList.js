@@ -20,18 +20,13 @@ export function useMovieList(fallbackMovies = [], options = {}) {
 			setLoading(true);
 			setError(null);
 			try {
-				const response = await getAllMovies();
+				const data = await getAllMovies();
 				if (cancelled) return;
 
 				let list = [];
-				if (response?.ok) {
-					try {
-						const data = await response.json();
-						const raw = parseMoviesResponse(data);
-						list = raw.map(transformMovieData);
-					} catch (err) {
-						logError("useMovieList.parse", err);
-					}
+				const raw = Array.isArray(data) ? data : parseMoviesResponse(data || {});
+				if (raw.length > 0) {
+					list = raw.map(transformMovieData);
 				}
 
 				if (list.length === 0) {

@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { FaPrint, FaQrcode, FaCheckCircle } from "react-icons/fa";
 import { useBookingStore } from "../store/bookingStore";
 import { useLanguage } from "../context/LanguageContext";
 import "./TicketSuccess.scss";
+import { getMovieById } from "../services/movie-service";
 
 const TicketSuccess = () => {
 	const { t, language } = useLanguage();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { id: urlId } = useParams();
 	const booking = location.state?.booking;
 	const orderItems = location.state?.orderItems;
 	const totalPrice = location.state?.totalPrice;
 	const reset = useBookingStore((s) => s.reset);
 	const [showQr, setShowQr] = useState(false);
 	const [QRCodeComponent, setQRCodeComponent] = useState(null);
+	const [movieDetails, setMovieDetails] = useState(null);
 
 	useEffect(() => {
-		if (!booking) {
+		if (!booking && !urlId) {
 			navigate("/", { replace: true });
 			return;
 		}
@@ -30,12 +33,26 @@ const TicketSuccess = () => {
 				if (!cancelled) setQRCodeComponent(() => m.QRCodeSVG);
 			})
 			.catch(() => {});
+		// Film detayını local JSON'dan çek
+		const fetchMovie = async () => {
+			const movieId = booking?.movie?.id || urlId;
+			if (movieId) {
+				try {
+					const movie = await getMovieById(Number(movieId));
+					if (!cancelled) setMovieDetails(movie);
+				} catch (e) {
+					setMovieDetails(null);
+				}
+			}
+		};
+		fetchMovie();
 		return () => { cancelled = true; };
-	}, [booking, navigate, reset]);
+	}, [booking, urlId, navigate, reset]);
 
-	if (!booking) return null;
+	if (!booking && !movieDetails) return null;
 
-	const { movie, cinema, date, session, seats, price: bookingPrice, ticketId } = booking;
+	const { movie: bookingMovie, cinema, date, session, seats, price: bookingPrice, ticketId } = booking || {};
+	const movie = movieDetails || bookingMovie || {};
 	const displayTotal = totalPrice != null ? totalPrice : bookingPrice;
 
 	const locale = language === "en" ? "en-US" : "de-DE";

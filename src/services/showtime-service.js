@@ -6,24 +6,17 @@ import {
 
 
 export const getMovieShowtimes = async (movieId, params = {}) => {
-	const url = new URL(GET_UPCOMING_SHOWTIMES_API_ROUTE(movieId));
-
-	Object.entries(params).forEach(([key, value]) => {
-		if (value !== undefined && value !== null) {
-			url.searchParams.append(key, value);
-		}
-	});
-
-	return fetch(url.toString());
-};
-
-export const getShowtimeById = async (showtimeId) => {
-	const url = new URL(GET_SHOWTIME_BY_ID_API_ROUTE(showtimeId));
-
-	return fetch(url.toString());
-};
-
-
-export const getShowtimesByMovieAndCinema = async (movieId, cinemaId) => {
-	return fetch(GET_SHOWTIMES_BY_MOVIE_AND_CINEMA_API_ROUTE(movieId, cinemaId));
+	try {
+		const url = new URL(GET_UPCOMING_SHOWTIMES_API_ROUTE(movieId));
+		Object.entries(params).forEach(([key, value]) => {
+			if (value !== undefined && value !== null) {
+				url.searchParams.append(key, value);
+			}
+		});
+		const res = await fetch(url.toString());
+		return res;
+	} catch {
+		// API yoksa veya hata olursa null dön (demo showtimes kullanılacak)
+		return null;
+	}
 };

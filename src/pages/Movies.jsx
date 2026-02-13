@@ -172,7 +172,7 @@ const buildTicketImageCandidates = (rawTicket) => {
 							</button>
 						)}
 						{!isComingSoon && movie.id ? (
-							<Link to={`/movies/ticket/${movie.id}`} state={linkState}>
+							<Link to={`/movies/ticket/${movie.id}`} state={{ ...linkState, movie }}>
 								<img
 									src={
 										posterUrl ||
@@ -263,7 +263,7 @@ const buildTicketImageCandidates = (rawTicket) => {
 						{isComingSoon ? (
 							<span className="movie-card-cta is-disabled">{t("movies.comingSoon")}</span>
 						) : (
-							<Link className="movie-card-cta" to={`/movies/ticket/${movie.id}`} state={linkState}>
+							<Link className="movie-card-cta" to={`/movies/ticket/${movie.id}`} state={{ ...linkState, movie }}>
 								{t("movies.ticketsBuchen")}
 							</Link>
 						)}
@@ -493,6 +493,20 @@ const Movies = () => {
 					return 0;
 				})
 				.map(({ m }) => m);
+		}
+
+		// "im-kino": Crime 101 ve Greenland 2 ilk iki sırada
+		if (activeTab === "im-kino" && filtered.length > 0) {
+			const isCrime101 = (m) =>
+				(m?.title || "").toString().trim().toLowerCase().includes("crime 101") || m?.id === 20;
+			const isGreenland2 = (m) =>
+				(m?.title || "").toString().trim().toLowerCase().includes("greenland 2") || m?.id === 21;
+			const crime101 = filtered.find(isCrime101);
+			const greenland2 = filtered.find(isGreenland2);
+			const featured = [crime101, greenland2].filter(Boolean);
+			if (featured.length > 0) {
+				filtered = [...featured, ...filtered.filter((m) => !isCrime101(m) && !isGreenland2(m))];
+			}
 		}
 
 		return filtered;

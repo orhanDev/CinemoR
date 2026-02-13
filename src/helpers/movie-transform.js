@@ -70,8 +70,10 @@ export function transformMovieData(movie) {
 	return {
 		id: movie.id,
 		title: decodeUTF8(movie.title),
-		// All images are now served from local /public/images/movies/nowshowing/ folder
-		// Do not use API poster/slider/ticket paths anymore
+		// Local paths from movies-data.json so ticket page and list get correct poster/slider
+		posterPath: movie.posterPath ?? null,
+		sliderPath: movie.sliderPath ?? null,
+		ticketPath: movie.ticketPath ?? null,
 		poster: null,
 		posterUrl: null,
 		slider: null,
@@ -80,11 +82,15 @@ export function transformMovieData(movie) {
 		duration: parseDuration(movie.duration),
 		genre: decodeUTF8(movie.genre) || "Action",
 		releaseDate: movie.releaseDate,
-		// Set isComingSoon: false for all movies (all images are in nowshowing folder)
 		isComingSoon: false,
 		originalTitle: decodeUTF8(movie.originalTitle),
 		director: decodeUTF8(movie.director),
 		cast: typeof movie.cast === 'string' ? decodeUTF8(movie.cast) : movie.cast,
+		castImages: movie.castImages,
+		description: movie.description,
+		descriptionDe: movie.descriptionDe,
+		descriptionEn: movie.descriptionEn,
+		country: movie.country,
 		year: movie.year,
 		fsk: movie.fsk,
 	};

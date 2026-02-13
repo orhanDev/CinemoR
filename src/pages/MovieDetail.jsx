@@ -18,7 +18,7 @@ import { getAllMovies, getMovieById } from "@/services/movie-service";
 import { getMovieShowtimes } from "@/services/showtime-service";
 import { useBookingStore } from "@/store/bookingStore";
 import { getPosterUrl, getActorImageUrl } from "@/helpers/image-utils";
-import { getMoviePosterUrl, getMovieSliderUrl } from "@/helpers/local-image-utils";
+import { getMoviePosterUrl, getMovieSliderUrl, getMoviePosterUrlFallback } from "@/helpers/local-image-utils";
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
@@ -145,12 +145,17 @@ const createDemoShowtimes = ({ movie, startOffset, days }) => {
 
 
 const ACTOR_EXTENSIONS = ["webp", "jpg", "png"];
-const ActorAvatar = ({ name }) => {
+const ActorAvatar = ({ name, imageUrl: propImageUrl }) => {
+	const [propFailed, setPropFailed] = useState(false);
 	const [tryIndex, setTryIndex] = useState(0);
 	const ext = ACTOR_EXTENSIONS[tryIndex];
-	const src = name ? getActorImageUrl(name, ext) : "";
-	const showInitial = !src || tryIndex >= ACTOR_EXTENSIONS.length;
-	const handleError = () => setTryIndex((i) => (i + 1 < ACTOR_EXTENSIONS.length ? i + 1 : i + 1));
+	const fallbackSrc = name ? getActorImageUrl(name, ext) : "";
+	const src = (propImageUrl && !propFailed) ? propImageUrl : fallbackSrc;
+	const showInitial = !src || (tryIndex >= ACTOR_EXTENSIONS.length && !propImageUrl);
+	const handleError = () => {
+		if (propImageUrl && !propFailed) setPropFailed(true);
+		else setTryIndex((i) => Math.min(i + 1, ACTOR_EXTENSIONS.length));
+	};
 	if (showInitial) {
 		return <span>{(name && name.charAt(0)) || "?"}</span>;
 	}
@@ -330,102 +335,108 @@ const MovieDetail = () => {
 			window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 		}
 		const fetchMovie = async () => {
+			setError(null);
 			try {
 				setLoading(true);
-
-				const res = await getMovieById(id, language);
-				if (!res.ok) throw new Error("Film nicht gefunden");
-				const data = await res.json();
-				const raw = data?.object ?? data;
-
-				const durationRaw = raw.duration ?? raw.laufzeit ?? raw.runtime;
-
-				const isGermanText = (text) => {
-					if (!text || text.trim() === "") return false;
-
-					return /[äöüßÄÖÜ]|der|die|das|und|ist|sind|für|mit|von|auf|zu|ein|eine|einen|eine|ist|sind|werden|haben|sein|können|müssen|sollen|wollen|dürfen/i.test(text);
-				};
-
-
-				let descriptionDe = raw.descriptionDe ?? raw.description_de ?? raw.description ?? raw.synopsis ?? "";
-				let descriptionEn = raw.descriptionEn ?? raw.description_en ?? raw.synopsisEn ?? raw.synopsis_en ?? "";
-
-				if (language === "en" && (!descriptionEn || descriptionEn.trim() === "" || isGermanText(descriptionEn))) {
-					try {
-						const resEn = await getMovieById(id, "en");
-						if (resEn.ok) {
-							const dataEn = await resEn.json();
-							const rawEn = dataEn?.object ?? dataEn;
-							const fetchedEn = rawEn.descriptionEn ?? rawEn.description_en ?? rawEn.description ?? rawEn.synopsis ?? "";
-
-							if (!isGermanText(fetchedEn) && fetchedEn.trim() !== "") {
-								descriptionEn = fetchedEn;
-							} else if (fetchedEn.trim() !== "") {
-
-								descriptionEn = descriptionDe;
-							}
-						}
-					} catch (err) {
-
-						descriptionEn = descriptionDe;
-					}
+				// Önce liste sayfasından gelindiyse state'teki filmi kullan
+				const stateMovie = location.state?.movie;
+				if (stateMovie && String(stateMovie.id) === String(id)) {
+					const m = { ...stateMovie, isComingSoon: false };
+					setMovieData({
+						...stateMovie,
+						image: getMoviePosterUrl(m),
+						posterUrl: getMoviePosterUrl(m),
+						posterPath: getMoviePosterUrl(m),
+						sliderPath: getMovieSliderUrl(m),
+						slider: getMovieSliderUrl(m),
+					});
+					setLoading(false);
+					return;
 				}
-
-
-				const finalDescriptionEn = descriptionEn && !isGermanText(descriptionEn)
-					? descriptionEn
-					: descriptionDe;
-				
-				// Use local images from /public/images/movies/
-				const movieForImage = { title: raw.title, isComingSoon: raw.isComingSoon ?? false };
-				const localPosterUrl = getMoviePosterUrl(movieForImage);
-				const localSliderUrl = getMovieSliderUrl(movieForImage);
-				
-				setMovieData({
-					id: raw.id,
-					title: raw.title,
-					description: language === "en" ? finalDescriptionEn : descriptionDe,
-					descriptionDe: descriptionDe,
-					descriptionEn: finalDescriptionEn,
-					image: localPosterUrl,
-					posterUrl: localPosterUrl,
-					posterPath: localPosterUrl,
-					sliderPath: localSliderUrl,
-					slider: localSliderUrl,
-					releaseDate: raw.releaseDate,
-					genre: raw.genre ?? raw.genres,
-					duration: parseDuration(durationRaw) ?? durationRaw,
-					rating: raw.rating,
-					ageRating: raw.fsk ?? raw.ageRating ?? raw.age,
-					cast: raw.cast ?? raw.movieCast ?? raw.movie_cast ?? raw.besetzung ?? raw.actors ?? [],
-					director: raw.director,
-					originalTitle: raw.originalTitle,
-					isComingSoon: raw.isComingSoon ?? false,
-				});
+				// movies-data.json'dan tüm filmleri al
+				const movies = await getAllMovies();
+				const list = Array.isArray(movies) ? movies : [];
+				const movie = list.find(m => String(m.id) === String(id));
+				if (movie) {
+					const m = { ...movie, isComingSoon: false };
+					setMovieData({
+						...movie,
+						image: getMoviePosterUrl(m),
+						posterUrl: getMoviePosterUrl(m),
+						posterPath: getMoviePosterUrl(m),
+						sliderPath: getMovieSliderUrl(m),
+						slider: getMovieSliderUrl(m),
+					});
+				} else if (stateMovie) {
+					// ID eşleşmedi ama state'te film var, yine de kullan
+					const m = { ...stateMovie, isComingSoon: false };
+					setMovieData({
+						...stateMovie,
+						id: parseInt(id, 10),
+						image: getMoviePosterUrl(m),
+						posterUrl: getMoviePosterUrl(m),
+						posterPath: getMoviePosterUrl(m),
+						sliderPath: getMovieSliderUrl(m),
+						slider: getMovieSliderUrl(m),
+					});
+				} else {
+					setError("Film bulunamadı");
+					setMovieData({
+						id: parseInt(id, 10),
+						title: "Film",
+						description: "",
+						descriptionDe: "",
+						descriptionEn: "",
+						image: "/images/movies/placeholder.png",
+						posterUrl: "/images/movies/placeholder.png",
+						posterPath: "/images/movies/placeholder.png",
+						releaseDate: null,
+						genre: null,
+						duration: null,
+						rating: null,
+						ageRating: null,
+						cast: [],
+					});
+				}
 			} catch (err) {
-				setError(err.message);
-
-				setMovieData({
-					id: parseInt(id, 10),
-					title: "Film",
-					description: "",
-					descriptionDe: "",
-					descriptionEn: "",
-					image: null,
-					posterUrl: null,
-					releaseDate: null,
-					genre: null,
-					duration: null,
-					rating: null,
-					ageRating: null,
-					cast: [],
-				});
+				// JSON yüklenemezse liste sayfasından gelen state varsa onu kullan
+				const stateMovie = location.state?.movie;
+				if (stateMovie) {
+					const m = { ...stateMovie, isComingSoon: false };
+					setMovieData({
+						...stateMovie,
+						image: getMoviePosterUrl(m),
+						posterUrl: getMoviePosterUrl(m),
+						posterPath: getMoviePosterUrl(m),
+						sliderPath: getMovieSliderUrl(m),
+						slider: getMovieSliderUrl(m),
+					});
+					setError(null);
+				} else {
+					setError(err?.message || "Film bilgisi yüklenemedi");
+					setMovieData({
+						id: parseInt(id, 10),
+						title: "Film",
+						description: "",
+						descriptionDe: "",
+						descriptionEn: "",
+						image: "/images/movies/placeholder.png",
+						posterUrl: "/images/movies/placeholder.png",
+						posterPath: "/images/movies/placeholder.png",
+						releaseDate: null,
+						genre: null,
+						duration: null,
+						rating: null,
+						ageRating: null,
+						cast: [],
+					});
+				}
 			} finally {
 				setLoading(false);
 			}
 		};
 		fetchMovie();
-	}, [id, language]);
+	}, [id, language, location.state]);
 
 	useEffect(() => {
 		if (!movie || !isMobile) return;
@@ -447,14 +458,8 @@ const MovieDetail = () => {
 	useEffect(() => {
 		const fetchAll = async () => {
 			try {
-				const res = await getAllMovies();
-				if (!res.ok) return;
-				const data = await res.json();
-				const list = Array.isArray(data?.object)
-					? data.object
-					: Array.isArray(data)
-						? data
-						: [];
+				const data = await getAllMovies();
+				const list = Array.isArray(data) ? data : Array.isArray(data?.object) ? data.object : [];
 				setAllMovies(list);
 			} catch (err) {
 				logError("MovieDetail.fetchAllMovies", err);
@@ -481,7 +486,7 @@ const MovieDetail = () => {
 				}
 
 				const res = await getMovieShowtimes(id);
-				if (res.status === 404) {
+				if (!res || res.status === 404) {
 					setUseApiShowtimes(false);
 					setDemoSchedule(true);
 					setShowtimes(
@@ -791,6 +796,16 @@ const MovieDetail = () => {
 			: movie?.director && String(movie.director).trim()
 				? [{ id: 0, name: String(movie.director).trim(), image: null }]
 				: [];
+	const castImagesMap = useMemo(() => {
+		const raw = movie?.castImages;
+		if (!raw) return {};
+		if (typeof raw === "object" && raw !== null) return raw;
+		try {
+			return typeof raw === "string" ? JSON.parse(raw) : {};
+		} catch {
+			return {};
+		}
+	}, [movie?.castImages]);
 	const genreStr = typeof movie?.genre === "string" ? movie.genre : Array.isArray(movie?.genre) ? (movie.genre.join(" ") || "") : (movie?.genre ?? "");
 	const isAnimation = /\b(animation|animationsfilm|anime|animat|zeichentrick|trickfilm)\b/i.test(genreStr);
 	const isDocumentary = /\b(dokumentarfilm|dokumentation|dokumentar)\b/i.test(genreStr);
@@ -942,7 +957,10 @@ const MovieDetail = () => {
 											(showAllCast ? castList : castList.slice(0, CAST_PREVIEW_COUNT)).map((actor) => (
 												<div key={actor.id} className="movie-detail-personal__item">
 													<div className="movie-detail-personal__avatar">
-														<ActorAvatar name={actor.name} />
+														<ActorAvatar
+															name={actor.name}
+															imageUrl={actor.image || castImagesMap[actor.name] || (typeof actor.image === "string" ? actor.image : null)}
+														/>
 													</div>
 													<span className="movie-detail-personal__name">{actor.name || "—"}</span>
 												</div>
@@ -984,7 +1002,18 @@ const MovieDetail = () => {
 								alt={movieTitle}
 								className="movie-detail-top__poster"
 								onError={(e) => {
-									e.target.src = "/images/movies/nowshowing/dune5.png";
+									const img = e.target;
+									if (img.dataset.posterRetried) {
+										img.src = "/images/movies/placeholder.png";
+										return;
+									}
+									const fallback = getMoviePosterUrlFallback(movie, img.src);
+									if (fallback && fallback !== img.src) {
+										img.dataset.posterRetried = "1";
+										img.src = fallback;
+									} else {
+										img.src = "/images/movies/placeholder.png";
+									}
 								}}
 							/>
 						</div>
