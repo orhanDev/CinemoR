@@ -8,6 +8,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
 import { appConfig } from "@/helpers/config";
 import { useMovieList } from "@/hooks/useMovieList";
+import { getPosterUrl, getApiFallbackUrl } from "@/helpers/image-utils";
 import "./Movies.scss";
 
 const formatDate = (dateString) => {
@@ -70,38 +71,6 @@ const stableHash = (input) => {
 	}
 
 	return h >>> 0;
-};
-
-const getPosterUrl = (posterPath) => {
-	if (!posterPath) return null;
-
-	if (posterPath.startsWith("http://") || posterPath.startsWith("https://")) {
-		return posterPath;
-	}
-
-	if (posterPath.startsWith("/images/")) return posterPath;
-
-	const base = appConfig.apiURLWithoutApi || "";
-	if (
-		posterPath.startsWith("/uploads/") ||
-		posterPath.startsWith("/upload/") ||
-		posterPath.startsWith("/tickets/") ||
-		posterPath.startsWith("/files/")
-	) {
-		return base ? `${base}${posterPath}` : posterPath;
-	}
-	if (
-		posterPath.startsWith("uploads/") ||
-		posterPath.startsWith("upload/") ||
-		posterPath.startsWith("tickets/") ||
-		posterPath.startsWith("files/")
-	) {
-		return base ? `${base}/${posterPath}` : `/${posterPath}`;
-	}
-
-	if (posterPath.startsWith("/")) return posterPath;
-
-	return `/${posterPath}`;
 };
 
 const formatEuroPrice = (value) => {
@@ -167,7 +136,8 @@ const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false,
 	const { t } = useLanguage();
 	const linkState = selectedCinema ? { cinema: selectedCinema } : undefined;
 	const releaseLabel = movie.releaseDate ? formatDate(movie.releaseDate) : t("movies.comingSoon");
-	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster);
+	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster, movie.title);
+	const apiFallbackUrl = getApiFallbackUrl(movie.posterUrl || movie.poster);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
 		: Number.isFinite(movie?.price)
@@ -210,8 +180,11 @@ const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false,
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										e.target.src =
-											"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+										if (apiFallbackUrl && e.target.src !== apiFallbackUrl) {
+											e.target.src = apiFallbackUrl;
+										} else {
+											e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+										}
 									}}
 								/>
 							</Link>
