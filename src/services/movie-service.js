@@ -1,4 +1,4 @@
-
+// Film verisi sadece movies-data.json'dan alınır - API'den değil
 
 // Tüm filmleri getir (movies-data.json'dan)
 export const getAllMovies = async () => {
@@ -44,159 +44,25 @@ export const getMoviesByHall = async (hallName) => {
 	return movies.filter(m => m.hall && m.hall === hallName);
 };
 
-// Diğer film API fonksiyonları kaldırıldı (create, update, delete, import, vs.)
-
-export const getMoviesByQuery = async (params = {}) => {
-	const url = new URL(GET_MOVIE_BY_QUERY_API_ROUTE);
-
-	Object.entries(params).forEach(([key, value]) => {
-		if (value !== undefined && value !== null) {
-			url.searchParams.append(key, value);
-		}
-	});
-
-	return fetch(url.toString());
-};
-
+// Sayfalı filmler getir
 export const getAllMoviesByPage = async (params = {}) => {
-	try {
-		const url = new URL(GET_ALL_MOVIES_API_ROUTE);
-
-		Object.entries(params).forEach(([key, value]) => {
-			if (value !== undefined && value !== null) {
-				url.searchParams.append(key, value);
-			}
-		});
-
-		return fetch(url.toString()).catch(() => {
-			return new Response(null, { status: 500, statusText: "Network Error" });
-		});
-	} catch (error) {
-		return new Response(null, { status: 500, statusText: "Network Error" });
-	}
+	const movies = await getAllMovies();
+	const page = params.page || 0;
+	const size = params.size || 10;
+	
+	const start = page * size;
+	const end = start + size;
+	
+	return movies.slice(start, end);
 };
 
-
-export const getAllMovies = async () => {
-	return fetchWithTimeout(GET_ALL_MOVIES_API_ROUTE, {}, 12_000).catch(() => {
-		return new Response(null, { status: 500, statusText: "Network Error" });
-	});
+// Hall ID ile filmler getir
+export const getMoviesByHallId = async (hallId) => {
+	const movies = await getAllMovies();
+	return movies.filter(m => m.hallId === hallId);
 };
 
-
-export const getNowShowingMovies = async () => {
-	return fetch(MOVIE_NOW_SHOWING_API_ROUTE).catch(() => {
-		return new Response(null, { status: 500, statusText: "Network Error" });
-	});
-};
-
-
-export const importMovies = async (movies) => {
-	return fetch(MOVIE_IMPORT_API_ROUTE, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(movies),
-	});
-};
-
-
-export const getMovieById = async (id, lang = null) => {
-	const url = GET_MOVIE_BY_ID(id);
-	const headers = {
-		'Content-Type': 'application/json',
-	};
-
-	if (lang) {
-		headers['Accept-Language'] = lang === 'en' ? 'en-US,en;q=0.9' : 'de-DE,de;q=0.9';
-	}
-	return fetch(url, { headers });
-};
-
-
-export const getMovieBySlug = async (slug) => {
-	return fetch(MOVIE_BY_SLUG_API_ROUTE(slug));
-};
-
-
-export const getInTheatersMovies = async (params = {}) => {
-	const url = new URL(MOVIE_IN_THEATERS_API_ROUTE);
-
-	Object.entries(params).forEach(([key, value]) => {
-		if (value !== undefined && value !== null) {
-			url.searchParams.append(key, value);
-		}
-	});
-
-	return fetch(url.toString());
-};
-
-
-export const getComingSoonMovies = async (params = {}) => {
-	const url = new URL(MOVIE_COMING_SOON_API_ROUTE);
-
-	Object.entries(params).forEach(([key, value]) => {
-		if (value !== undefined && value !== null) {
-			url.searchParams.append(key, value);
-		}
-	});
-
-	return fetch(url.toString());
-};
-
-
-export const getMoviesByHall = async (hallName, params = {}) => {
-	const url = new URL(MOVIE_BY_HALL_API_ROUTE(hallName));
-
-	Object.entries(params).forEach(([key, value]) => {
-		if (value !== undefined && value !== null) {
-			url.searchParams.append(key, value);
-		}
-	});
-
-	return fetch(url.toString());
-};
-
-
-export const createMovie = async (movieData) => {
-	return fetch(MOVIE_CREATE_API_ROUTE, {
-		method: "POST",
-		headers: await getAuthHeader(),
-		body: movieData,
-	});
-};
-
-
-export const updateMovie = async (id, movieData) => {
-	return fetch(MOVIE_UPDATE_API_ROUTE(id), {
-		method: "PUT",
-		headers: await getAuthHeader(),
-		body: movieData,
-	});
-};
-
-
-export const deleteMovie = async (id) => {
-	return fetch(MOVIE_DELETE_API_ROUTE(id), {
-		method: "DELETE",
-		headers: await getAuthHeader(),
-	});
-};
-
-export const getMoviesByHallId = async (
-	hallId,
-	page = 0,
-	size = 10,
-	sort = "title",
-	type = "asc"
-) => {
-	const queryParams = new URLSearchParams({
-		page,
-		size,
-		sort,
-		type,
-	}).toString();
-
-	return fetch(`${GET_MOVIES_BY_HALL_ID(hallId)}?${queryParams}`);
+// In theaters movies (backward compatibility)
+export const getInTheatersMovies = async () => {
+	return getNowShowingMovies();
 };
