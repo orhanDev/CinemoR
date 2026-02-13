@@ -556,6 +556,12 @@ const Movies = () => {
 			const slider = frontendSlider.toString().toLowerCase();
 			const originalPoster = (posterPath || "").toString().toLowerCase();
 			const originalSlider = (sliderPath || "").toString().toLowerCase();
+			
+			const isNowShowing = poster.includes("/nowshowing/") || slider.includes("/nowshowing/") || 
+			                     originalPoster.includes("nowshowing") || originalSlider.includes("nowshowing");
+			
+			if (isNowShowing) return false;
+			
 			return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
 			       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
 		};
@@ -572,13 +578,24 @@ const Movies = () => {
 		});
 
 		const seen = new Set();
-		filtered = filtered.filter((m) => {
+		const movieMap = new Map();
+		
+		filtered.forEach((m) => {
 			const k = keyOf(m);
-			if (!k) return true;
-			if (seen.has(k)) return false;
-			seen.add(k);
-			return true;
+			if (!k) return;
+			const isNowShowing = !isComingSoonMovie(m);
+			if (!movieMap.has(k)) {
+				movieMap.set(k, m);
+			} else {
+				const existing = movieMap.get(k);
+				const existingIsNowShowing = !isComingSoonMovie(existing);
+				if (isNowShowing && !existingIsNowShowing) {
+					movieMap.set(k, m);
+				}
+			}
 		});
+		
+		filtered = Array.from(movieMap.values());
 
 		if (searchQuery) {
 			const q = searchQuery;

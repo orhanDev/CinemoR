@@ -323,6 +323,21 @@ const MovieDetail = () => {
 		};
 	}, [calendarOpen]);
 
+	const isComingSoonMovie = (m) => {
+		if (!m) return false;
+		if (m?.isComingSoon === true) return true;
+		const posterPath = m?.poster || m?.posterUrl || m?.posterPath || "";
+		const sliderPath = m?.slider || m?.sliderPath || m?.sliderUrl || "";
+		const frontendPoster = getPosterUrl(posterPath, m?.title) || "";
+		const frontendSlider = getPosterUrl(sliderPath, m?.title) || "";
+		const poster = frontendPoster.toString().toLowerCase();
+		const slider = frontendSlider.toString().toLowerCase();
+		const originalPoster = (posterPath || "").toString().toLowerCase();
+		const originalSlider = (sliderPath || "").toString().toLowerCase();
+		return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
+		       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
+	};
+
 	useEffect(() => {
 		if (!id) return;
 		if (window.innerWidth > 750) {
@@ -396,7 +411,11 @@ const MovieDetail = () => {
 					originalTitle: raw.originalTitle,
 				});
 			} catch (err) {
-				setError(err.message);
+				if (err.message === "Film nicht gefunden" || err.message.includes("404")) {
+					setError(null);
+				} else {
+					setError(err.message);
+				}
 
 				setMovieData({
 					id: parseInt(id, 10),
@@ -458,6 +477,14 @@ const MovieDetail = () => {
 
 	useEffect(() => {
 		if (!id || !movie) return;
+		
+		if (isComingSoonMovie(movie)) {
+			setShowtimesLoading(false);
+			setShowtimes([]);
+			setDemoSchedule(false);
+			return;
+		}
+		
 		const fetchShowtimes = async () => {
 			setShowtimesLoading(true);
 			try {
@@ -474,16 +501,10 @@ const MovieDetail = () => {
 				}
 
 				const res = await getMovieShowtimes(id);
-				if (res.status === 404) {
+				if (res.status === 404 || res.status === 403) {
 					setUseApiShowtimes(false);
-					setDemoSchedule(true);
-					setShowtimes(
-						createDemoShowtimes({
-							movie,
-							startOffset: dateOffset,
-							days: visibleDates,
-						})
-					);
+					setDemoSchedule(false);
+					setShowtimes([]);
 					return;
 				}
 				let list = [];
