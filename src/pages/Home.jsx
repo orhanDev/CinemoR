@@ -279,6 +279,20 @@ const Home = () => {
 		return t.includes("charlie") || t.includes("superhund") || ot.includes("charlie") || ot.includes("superhund");
 	};
 
+	const isComingSoonMovie = (m) => {
+		if (m?.isComingSoon === true) return true;
+		const posterPath = m?.poster || m?.posterUrl || m?.posterPath || "";
+		const sliderPath = m?.slider || m?.sliderPath || m?.sliderUrl || "";
+		const frontendPoster = getPosterUrl(posterPath, m?.title) || "";
+		const frontendSlider = getPosterUrl(sliderPath, m?.title) || "";
+		const poster = frontendPoster.toString().toLowerCase();
+		const slider = frontendSlider.toString().toLowerCase();
+		const originalPoster = (posterPath || "").toString().toLowerCase();
+		const originalSlider = (sliderPath || "").toString().toLowerCase();
+		return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
+		       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
+	};
+
 	const displayMovies = useMemo(() => {
 		const MAX_MOVIES = 9;
 		const isTrainToBusan = (m) => {
@@ -302,9 +316,9 @@ const Home = () => {
 			seen.add(key);
 			return true;
 		});
-		let list = unique.filter((m) => !isTrainToBusan(m)).slice(0, MAX_MOVIES);
-		const charlieInList = list.find(isCharlieMovie);
-		const charlieFromSample = sampleMovies.find((m) => m.title && m.title.toLowerCase().includes("charlie"));
+		let list = unique.filter((m) => !isTrainToBusan(m) && !isComingSoonMovie(m)).slice(0, MAX_MOVIES);
+		const charlieInList = list.find((m) => isCharlieMovie(m) && !isComingSoonMovie(m));
+		const charlieFromSample = sampleMovies.find((m) => m.title && m.title.toLowerCase().includes("charlie") && !isComingSoonMovie(m));
 		if (charlieInList) {
 			if (list.indexOf(charlieInList) !== 0) {
 				list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
