@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useBookingStore } from '../store/bookingStore';
 import { useCartStore } from '../store/cartStore';
 import { getPosterUrl, getSliderImageUrl } from '../helpers/image-utils';
+import { getMoviePosterUrl, getMovieSliderUrl } from '../helpers/local-image-utils';
 import './Auth.scss';
 
 const Login = () => {
@@ -57,12 +58,12 @@ const Login = () => {
         if (selectedSeats) setSeats(selectedSeats);
         if (totalPrice) setPrice(totalPrice);
         
-        const sliderSource = movie?.sliderPath || movie?.slider || movie?.sliderUrl || movie?.sliderImagePath || movie?.sliderImage;
-        const posterSource = movie?.posterUrl || movie?.posterPath || movie?.poster || movie?.image;
-        const imageForCart = sliderSource
-          ? getPosterUrl(sliderSource)
-          : (getSliderImageUrl(posterSource) || getPosterUrl(posterSource));
-        const imagePathForCart = sliderSource || posterSource;
+        // Use local images from /public/images/movies/
+        const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
+        const sliderUrl = movieForImage ? getMovieSliderUrl(movieForImage) : null;
+        const posterUrl = movieForImage ? getMoviePosterUrl(movieForImage) : null;
+        const imageForCart = sliderUrl || posterUrl || "/images/movies/placeholder.png";
+        const imagePathForCart = imageForCart;
 
         const movieItem = {
           id: `movie-${movie?.id || Date.now()}-${showtimeId || Date.now()}`,

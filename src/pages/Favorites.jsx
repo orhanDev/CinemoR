@@ -8,17 +8,20 @@ import { useFavorites } from '../hooks/useFavorites';
 import { getAuthHeader } from '../helpers/auth-helper';
 import { USER_FAVORITES_API_ROUTE } from '../helpers/api-routes';
 import { getPosterUrl } from '../helpers/image-utils';
+import { getMoviePosterUrl } from '../helpers/local-image-utils';
 import './Favorites.scss';
 
 const normalizeFavorite = (item) => {
   if (!item || typeof item !== 'object') return null;
   const id = item.id ?? item.movieId ?? item.movie_id;
   const title = item.title ?? item.name ?? item.movieTitle ?? item.movieName ?? 'Film';
-  const rawPoster = item.posterPath ?? item.poster ?? item.posterUrl ?? item.image ?? item.cover;
+  // Use local images from /public/images/movies/
+  const movieForImage = { title, isComingSoon: item.isComingSoon ?? false };
+  const posterPath = getMoviePosterUrl(movieForImage);
   return {
     id,
     title,
-    posterPath: getPosterUrl(rawPoster) || rawPoster,
+    posterPath,
     slug: item.slug ?? item.movieSlug,
   };
 };

@@ -50,6 +50,9 @@ export const fetchMenuItems = async () => {
 			return defaultMenuItems;
 		}
 	} catch (err) {
+		if (err.message?.includes('Failed to fetch') || err.message?.includes('ERR_CONNECTION_REFUSED')) {
+			return defaultMenuItems;
+		}
 		logError("menu-items", err);
 	}
 	return defaultMenuItems;

@@ -4,6 +4,7 @@ import { useCartStore } from "../store/cartStore";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { getPosterUrl, getSliderImageUrl } from "../helpers/image-utils";
+import { getMoviePosterUrl, getMovieSliderUrl } from "../helpers/local-image-utils";
 import { FaTrash, FaPlus, FaMinus, FaArrowLeft, FaShoppingCart } from "react-icons/fa";
 import "./Cart.scss";
 
@@ -85,32 +86,35 @@ const Cart = () => {
 							<li key={item.id || index} className="cart-item">
 								<div className="cart-item-thumb">
 									{item.type === "movie" ? (
-										(item.slider || item.sliderUrl || item.poster || item.posterUrl || item.posterPath) ? (
-											<img
-												src={
-													getPosterUrl(item.slider || item.sliderUrl) ||
-													getSliderImageUrl(item.posterPath || item.poster || item.posterUrl) ||
-													getPosterUrl(item.poster || item.posterUrl || item.posterPath) ||
-													""
-												}
-												alt=""
-												onError={(e) => {
-													const img = e.target;
-													const fallback = getPosterUrl(item.poster || item.posterUrl || item.posterPath);
-													if (fallback && img.src !== fallback) {
-														img.src = fallback;
-														return;
-													}
-													img.style.display = "none";
-													const pl = img.nextElementSibling;
-													if (pl) pl.hidden = false;
-												}}
-											/>
-										) : null
+										(() => {
+											// Use local images from /public/images/movies/
+											const movieForImage = item.movieTitle ? { title: item.movieTitle, isComingSoon: false } : null;
+											const imageUrl = movieForImage 
+												? (getMovieSliderUrl(movieForImage) || getMoviePosterUrl(movieForImage))
+												: (item.poster || item.posterUrl || item.posterPath || null);
+											
+											return imageUrl ? (
+												<img
+													src={imageUrl}
+													alt=""
+													onError={(e) => {
+														const img = e.target;
+														const fallback = movieForImage ? getMoviePosterUrl(movieForImage) : null;
+														if (fallback && img.src !== fallback) {
+															img.src = fallback;
+															return;
+														}
+														img.style.display = "none";
+														const pl = img.nextElementSibling;
+														if (pl) pl.hidden = false;
+													}}
+												/>
+											) : null;
+										})()
 									) : item.image ? (
 										<img src={item.image} alt="" />
 									) : null}
-									<span className="cart-item-placeholder" hidden={item.type === "movie" ? !!(item.slider || item.sliderUrl || item.poster || item.posterUrl || item.posterPath) : !!item.image}>
+									<span className="cart-item-placeholder" hidden={item.type === "movie" ? !!(item.poster || item.posterUrl || item.posterPath || item.movieTitle) : !!item.image}>
 										{item.type === "movie" ? "🎬" : "🍿"}
 									</span>
 								</div>

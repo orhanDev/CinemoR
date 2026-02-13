@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import "./slider.css";
 
 import { getInTheatersMovies } from "../../../services/movie-service";
-import { appConfig } from "../../../helpers/config";
+import { getMoviePosterUrl, getMovieSliderUrl } from "../../../helpers/local-image-utils";
 
 export const Slider = () => {
 	const [movies, setMovies] = useState([]);
@@ -100,10 +100,11 @@ export const Slider = () => {
 				className="swiper-container"
 			>
 				{displayMovies.map((movie) => {
-					let imageUrl = movie.posterUrl || movie.image || '/images/slider/image1.jpg';
-					if (imageUrl && imageUrl.startsWith("/uploads/")) {
-						imageUrl = `${appConfig.apiURLWithoutApi}${imageUrl}`;
-					}
+					// Use local images from /public/images/movies/
+					const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
+					const imageUrl = movieForImage 
+						? (getMovieSliderUrl(movieForImage) || getMoviePosterUrl(movieForImage) || '/images/movies/placeholder.png')
+						: '/images/movies/placeholder.png';
 
 					return (
 						<SwiperSlide key={movie.id}>

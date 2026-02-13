@@ -153,21 +153,21 @@
     "ticketPath": "/images/tickets/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann-ticket.jpg"
   },
   {
-    "title": "KEIN WEG ZURÜCK",
+    "title": "KEIN WEG ZURUCK",
     "originalTitle": "Vejen hjem",
     "genre": "Drama / Thriller",
     "duration": "98 Minuten",
     "director": "",
     "cast": "Nikolaj Lie Kaas, Albert Rudbeck Lindhardt, Arian Kashef",
-    "description": "Ein Vater begibt sich auf eine gefährliche Reise, um seinen Sohn zu retten. Kein Weg zurück ist ein spannungsgeladener Thriller über Schuld, Hoffnung und moralische Grenzen.\n\nAls der Sohn eines dänischen Familienvaters in einem Kriegsgebiet verschwindet, zögert dieser nicht lange und macht sich selbst auf den Weg. In einer fremden und feindlichen Umgebung wird er mit Gewalt, Korruption und moralischen Dilemmata konfrontiert.\r\n\r\nJe tiefer er in den Konflikt hineingezogen wird, desto mehr verschwimmen die Grenzen zwischen richtig und falsch. Kein Weg zurück verbindet persönliche Tragik mit politischer Realität und erzählt eine intensive Geschichte über die Konsequenzen verzweifelter Entscheidungen.",
+    "description": "Ein Vater begibt sich auf eine gefährliche Reise, um seinen Sohn zu retten. KEIN WEG ZURUCK ist ein spannungsgeladener Thriller über Schuld, Hoffnung und moralische Grenzen.\n\nAls der Sohn eines dänischen Familienvaters in einem Kriegsgebiet verschwindet, zögert dieser nicht lange und macht sich selbst auf den Weg. In einer fremden und feindlichen Umgebung wird er mit Gewalt, Korruption und moralischen Dilemmata konfrontiert.\r\n\r\nJe tiefer er in den Konflikt hineingezogen wird, desto mehr verschwimmen die Grenzen zwischen richtig und falsch. KEIN WEG ZURUCK verbindet persönliche Tragik mit politischer Realität und erzählt eine intensive Geschichte über die Konsequenzen verzweifelter Entscheidungen.",
     "year": "2024",
     "country": "Dänemark",
     "releaseDate": "01.01.2024",
     "fsk": "ab 16 Jahren",
     "isComingSoon": false,
-    "posterPath": "/images/movies/nowshowing/kein_weg_zur_ck.jpg",
-    "sliderPath": "/images/movies/nowshowing/kein_weg_zur_ck-slider.png",
-    "ticketPath": "/images/tickets/nowshowing/kein_weg_zur_ck-ticket.jpg",
+    "posterPath": "/images/movies/nowshowing/kein_weg_zuruck.jpg",
+    "sliderPath": "/images/movies/nowshowing/kein_weg_zuruck-slider.png",
+    "ticketPath": "/images/tickets/nowshowing/kein_weg_zuruck-ticket.jpg",
     "castImages": "{\"Nikolaj Lie Kaas\":\"/images/actors/Nikolaj_Lie_Kaas.jpg\"}"
   },
   {

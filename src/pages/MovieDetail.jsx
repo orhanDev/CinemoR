@@ -18,6 +18,7 @@ import { getAllMovies, getMovieById } from "@/services/movie-service";
 import { getMovieShowtimes } from "@/services/showtime-service";
 import { useBookingStore } from "@/store/bookingStore";
 import { getPosterUrl, getActorImageUrl } from "@/helpers/image-utils";
+import { getMoviePosterUrl, getMovieSliderUrl } from "@/helpers/local-image-utils";
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
@@ -375,17 +376,22 @@ const MovieDetail = () => {
 					? descriptionEn
 					: descriptionDe;
 				
+				// Use local images from /public/images/movies/
+				const movieForImage = { title: raw.title, isComingSoon: raw.isComingSoon ?? false };
+				const localPosterUrl = getMoviePosterUrl(movieForImage);
+				const localSliderUrl = getMovieSliderUrl(movieForImage);
+				
 				setMovieData({
 					id: raw.id,
 					title: raw.title,
 					description: language === "en" ? finalDescriptionEn : descriptionDe,
 					descriptionDe: descriptionDe,
 					descriptionEn: finalDescriptionEn,
-					image: raw.posterPath ?? raw.poster ?? raw.image,
-					posterUrl: raw.posterPath ?? raw.poster ?? raw.image,
-					posterPath: raw.posterPath ?? raw.poster ?? raw.image,
-					sliderPath: raw.sliderPath ?? raw.slider ?? raw.sliderUrl ?? raw.sliderImagePath ?? raw.sliderImage,
-					slider: raw.sliderPath ?? raw.slider ?? raw.sliderUrl ?? raw.sliderImagePath ?? raw.sliderImage,
+					image: localPosterUrl,
+					posterUrl: localPosterUrl,
+					posterPath: localPosterUrl,
+					sliderPath: localSliderUrl,
+					slider: localSliderUrl,
 					releaseDate: raw.releaseDate,
 					genre: raw.genre ?? raw.genres,
 					duration: parseDuration(durationRaw) ?? durationRaw,
@@ -394,6 +400,7 @@ const MovieDetail = () => {
 					cast: raw.cast ?? raw.movieCast ?? raw.movie_cast ?? raw.besetzung ?? raw.actors ?? [],
 					director: raw.director,
 					originalTitle: raw.originalTitle,
+					isComingSoon: raw.isComingSoon ?? false,
 				});
 			} catch (err) {
 				setError(err.message);
@@ -590,13 +597,18 @@ const MovieDetail = () => {
 
 		const cinemaDisplayName = cityFilter || showtime.cinemaName;
 
+		// Use local images from /public/images/movies/
+		const movieForImage = { title: movie?.title, isComingSoon: movie?.isComingSoon ?? false };
+		const localPosterUrl = getMoviePosterUrl(movieForImage);
+		const localSliderUrl = getMovieSliderUrl(movieForImage);
+		
 		const movieWithPoster = {
 			...movie,
-			poster: movie?.posterUrl || movie?.posterPath || movie?.poster || movie?.image,
-			posterUrl: movie?.posterUrl || movie?.posterPath || movie?.poster || movie?.image,
-			posterPath: movie?.posterPath || movie?.poster || movie?.posterUrl || movie?.image,
-			slider: movie?.sliderPath || movie?.slider || movie?.sliderUrl || movie?.sliderImagePath || movie?.sliderImage,
-			sliderPath: movie?.sliderPath || movie?.slider || movie?.sliderUrl || movie?.sliderImagePath || movie?.sliderImage,
+			poster: localPosterUrl,
+			posterUrl: localPosterUrl,
+			posterPath: localPosterUrl,
+			slider: localSliderUrl,
+			sliderPath: localSliderUrl,
 		};
 		setMovie(movieWithPoster);
 		setCinema(cinemaDisplayName);
@@ -751,9 +763,11 @@ const MovieDetail = () => {
 
 		return movie?.description ?? "";
 	}, [movie, language]);
-	const posterPath = movie?.posterUrl ?? movie?.posterPath ?? movie?.poster ?? movie?.image;
-	const movieImage =
-		getPosterUrl(posterPath) || "/images/movies/nowshowing/dune5.png";
+	// Use local images from /public/images/movies/
+	const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
+	const movieImage = movieForImage 
+		? getMoviePosterUrl(movieForImage)
+		: "/images/movies/placeholder.png";
 	const releaseDate = movie?.releaseDate
 		? formatDisplayDate(movie.releaseDate)
 		: t("moviedetail.comingSoon");

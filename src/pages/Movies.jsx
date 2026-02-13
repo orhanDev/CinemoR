@@ -6,8 +6,8 @@ import { getNowShowingMovies, getComingSoonMovies } from "@/services/movie-servi
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
-import { appConfig } from "@/helpers/config";
 import { useMovieList } from "@/hooks/useMovieList";
+import { getMoviePosterUrl, getMoviePosterUrlFallback, titleToFilename } from "@/helpers/local-image-utils";
 import "./Movies.scss";
 
 const formatDate = (dateString) => {
@@ -72,38 +72,6 @@ const stableHash = (input) => {
 	return h >>> 0;
 };
 
-const getPosterUrl = (posterPath) => {
-	if (!posterPath) return null;
-
-	if (posterPath.startsWith("http://") || posterPath.startsWith("https://")) {
-		return posterPath;
-	}
-
-	if (posterPath.startsWith("/images/")) return posterPath;
-
-	const base = appConfig.apiURLWithoutApi || "";
-	if (
-		posterPath.startsWith("/uploads/") ||
-		posterPath.startsWith("/upload/") ||
-		posterPath.startsWith("/tickets/") ||
-		posterPath.startsWith("/files/")
-	) {
-		return base ? `${base}${posterPath}` : posterPath;
-	}
-	if (
-		posterPath.startsWith("uploads/") ||
-		posterPath.startsWith("upload/") ||
-		posterPath.startsWith("tickets/") ||
-		posterPath.startsWith("files/")
-	) {
-		return base ? `${base}/${posterPath}` : `/${posterPath}`;
-	}
-
-	if (posterPath.startsWith("/")) return posterPath;
-
-	return `/${posterPath}`;
-};
-
 const formatEuroPrice = (value) => {
 	const numeric = Number.isFinite(value) ? value : 12;
 	return new Intl.NumberFormat("de-DE", {
@@ -163,11 +131,15 @@ const buildTicketImageCandidates = (rawTicket) => {
 	return candidates;
 };
 
-const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false, onToggleFavorite, selectedCinema }) => {
+	const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false, onToggleFavorite, selectedCinema }) => {
 	const { t } = useLanguage();
 	const linkState = selectedCinema ? { cinema: selectedCinema } : undefined;
 	const releaseLabel = movie.releaseDate ? formatDate(movie.releaseDate) : t("movies.comingSoon");
-	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster);
+	// Use local images from /public/images/movies/
+	// IMPORTANT: Use isComingSoon prop from parent (based on activeTab), NOT from API data
+	// This ensures we look in the correct folder regardless of API data
+	const movieWithStatus = { ...movie, isComingSoon };
+	const posterUrl = getMoviePosterUrl(movieWithStatus);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
 		: Number.isFinite(movie?.price)
@@ -210,8 +182,32 @@ const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false,
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										e.target.src =
-											"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+										// Try fallback: .png extension, then comingsoon folder
+										const img = e.target;
+										const currentSrc = img.src;
+										
+										// Don't retry if already showing placeholder
+										if (currentSrc.includes('data:image')) return;
+										
+										// Track retry attempts to prevent infinite loop
+										if (!img.dataset.retryCount) img.dataset.retryCount = '0';
+										const retryCount = parseInt(img.dataset.retryCount, 10);
+										if (retryCount >= 2) {
+											// Already tried fallbacks, show placeholder
+											img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+											return;
+										}
+										
+										// Try fallback paths
+										const fallbackPath = getMoviePosterUrlFallback(movie, currentSrc);
+										if (fallbackPath && img.src !== fallbackPath) {
+											img.dataset.retryCount = String(retryCount + 1);
+											img.src = fallbackPath;
+											return;
+										}
+										
+										// Show placeholder if all fails
+										img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
 							</Link>
@@ -225,8 +221,24 @@ const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false,
 								className="movie-card-image"
 								loading="lazy"
 								onError={(e) => {
-									e.target.src =
-										"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+									// Try fallback folder if primary fails (handles API data inconsistencies)
+									const img = e.target;
+									const currentSrc = img.src;
+									if (movie.title && !currentSrc.includes('data:image')) {
+										const filename = titleToFilename(movie.title);
+										if (filename) {
+											// Try opposite folder
+											const fallbackPath = currentSrc.includes('nowshowing') 
+												? `/images/movies/comingsoon/${filename}.jpg`
+												: `/images/movies/nowshowing/${filename}.jpg`;
+											if (img.src !== fallbackPath) {
+												img.src = fallbackPath;
+												return;
+											}
+										}
+									}
+									// Show placeholder if all fails
+									img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 								}}
 							/>
 						)}
@@ -271,7 +283,8 @@ const FEB_YEAR = 2026;
 const FEB_MONTH = 2;
 const FEB_DAYS = 28;
 
-const sampleMovies = [
+	const sampleMovies = [
+		// Coming soon movies (isComingSoon: true) - in /public/images/movies/comingsoon/
 		{
 			id: 1,
 			title: "AB DURCH DIE MITTE",
@@ -281,7 +294,8 @@ const sampleMovies = [
 			rating: 7.4,
 			duration: 98,
 			genre: "Komödie",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
 		},
 		{
 			id: 2,
@@ -292,7 +306,8 @@ const sampleMovies = [
 			rating: 6.9,
 			duration: 92,
 			genre: "Animation",
-			fsk: "6"
+			fsk: "6",
+			isComingSoon: true
 		},
 		{
 			id: 3,
@@ -303,18 +318,8 @@ const sampleMovies = [
 			rating: 7.8,
 			duration: 100,
 			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 4,
-			title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
-			poster: "/images/movies/comingsoon/les_mis_rables_die_geschichte_von_jean_valjean.jpg",
-			slider: "/images/movies/comingsoon/les_mis_rables_die_geschichte_von_jean_valjean-slider.png",
-			ticket: "/images/tickets/comingsoon/les_mis_rables_die_geschichte_von_jean_valjean-ticket.png",
-			rating: 8.1,
-			duration: 98,
-			genre: "Drama",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
 		},
 		{
 			id: 5,
@@ -325,7 +330,8 @@ const sampleMovies = [
 			rating: 7.2,
 			duration: 100,
 			genre: "Komödie",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
 		},
 		{
 			id: 6,
@@ -336,7 +342,21 @@ const sampleMovies = [
 			rating: 6.6,
 			duration: 100,
 			genre: "Drama",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
+		},
+		// Now showing movies (isComingSoon: false) - in /public/images/movies/nowshowing/
+		{
+			id: 4,
+			title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
+			poster: "/images/movies/nowshowing/les_miserables_die_geschichte_von_jean_valjean.jpg",
+			slider: "/images/movies/nowshowing/les_miserables_die_geschichte_von_jean_valjean-slider.png",
+			ticket: "/images/tickets/nowshowing/les_miserables_die_geschichte_von_jean_valjean-ticket.png",
+			rating: 8.1,
+			duration: 98,
+			genre: "Drama",
+			fsk: "",
+			isComingSoon: false
 		},
 		{
 			id: 7,
@@ -347,7 +367,8 @@ const sampleMovies = [
 			rating: 8.3,
 			duration: 100,
 			genre: "Tragikomödie",
-			fsk: ""
+			fsk: "",
+			isComingSoon: false
 		},
 		{
 			id: 8,
@@ -358,20 +379,22 @@ const sampleMovies = [
 			rating: 7.0,
 			duration: 90,
 			genre: "Dokumentarfilm",
-			fsk: "0"
+			fsk: "0",
+			isComingSoon: false
 		},
 		{
 			id: 9,
-			title: "KEIN WEG ZURÜCK",
-			poster: "/images/movies/nowshowing/kein_weg_zur_ck.jpg",
-			slider: "/images/movies/nowshowing/kein_weg_zur_ck-slider.png",
-			ticket: "/images/tickets/nowshowing/kein_weg_zur_ck-ticket.png",
+			title: "KEIN WEG ZURUCK",
+			poster: "/images/movies/nowshowing/kein_weg_zuruck.jpg",
+			slider: "/images/movies/nowshowing/kein_weg_zuruck-slider.png",
+			ticket: "/images/tickets/nowshowing/kein_weg_zuruck-ticket.png",
 			rating: 7.6,
 			duration: 100,
 			genre: "Drama",
-			fsk: ""
+			fsk: "",
+			isComingSoon: false
 		}
-];
+	];
 
 const Movies = () => {
 	const { t } = useLanguage();
@@ -420,13 +443,21 @@ const Movies = () => {
 			return `${FEB_YEAR}-${mm}-${dd}`;
 		};
 
-		const featured = movieData.filter((m) => !isTrainToBusan(m)).slice(0, MAX_FEATURED);
-		const featuredKeys = new Set(featured.map((m) => keyOf(m)));
-
+		// ALL movies are now in nowshowing folder
+		// "im-kino" tab shows all movies
+		// "bald" tab shows empty (no coming soon movies)
 		let filtered = movieData.filter((movie) => {
-			const isFeatured = featuredKeys.has(keyOf(movie));
-
-			return activeTab === "bald" ? !isFeatured : isFeatured;
+			const isTrain = isTrainToBusan(movie);
+			
+			if (isTrain) return false; // Always exclude Train to Busan
+			
+			if (activeTab === "bald") {
+				// No coming soon movies - return empty list
+				return false;
+			} else {
+				// Show all movies in "im-kino" tab
+				return true;
+			}
 		});
 
 		const seen = new Set();
@@ -514,16 +545,23 @@ const Movies = () => {
 					</div>
 				) : (
 					<div className="movies-grid">
-						{filteredAndSortedMovies.map((movie) => (
-							<MovieCard 
-								key={movie.id || movie.title} 
-								movie={movie} 
-								isComingSoon={activeTab === "bald"}
-								isFavorite={isFavorite(movie.id)}
-								onToggleFavorite={handleFavoriteClick}
-								selectedCinema={selectedCinema}
-							/>
-						))}
+						{filteredAndSortedMovies.map((movie) => {
+							// ALL images are in nowshowing folder - set isComingSoon: false for all
+							const movieForLocalImages = {
+								...movie,
+								isComingSoon: false // All movies are now showing
+							};
+							return (
+								<MovieCard 
+									key={movie.id || movie.title} 
+									movie={movieForLocalImages} 
+									isComingSoon={false} // All movies are now showing
+									isFavorite={isFavorite(movie.id)}
+									onToggleFavorite={handleFavoriteClick}
+									selectedCinema={selectedCinema}
+								/>
+							);
+						})}
 					</div>
 				)}
 			</Container>

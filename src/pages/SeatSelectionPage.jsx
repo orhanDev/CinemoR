@@ -5,6 +5,7 @@ import { useCartStore } from "../store/cartStore";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { getPosterUrl, getSliderImageUrl } from "../helpers/image-utils";
+import { getMoviePosterUrl, getMovieSliderUrl } from "../helpers/local-image-utils";
 import "./SeatSelection.scss";
 
 const BASE_PRICE = 12;
@@ -59,13 +60,18 @@ const SeatSelectionPage = () => {
 		const state = location?.state;
 		if (state?.movie) {
 			const m = state.movie;
+			// Use local images from /public/images/movies/
+			const movieForImage = { title: m?.title, isComingSoon: m?.isComingSoon ?? false };
+			const localPosterUrl = getMoviePosterUrl(movieForImage);
+			const localSliderUrl = getMovieSliderUrl(movieForImage);
+			
 			const movieWithPoster = {
 				...m,
-				poster: m?.posterUrl || m?.posterPath || m?.poster || m?.image,
-				posterUrl: m?.posterUrl || m?.posterPath || m?.poster || m?.image,
-				posterPath: m?.posterPath || m?.poster || m?.posterUrl || m?.image,
-				slider: m?.sliderPath || m?.slider || m?.sliderUrl || m?.sliderImagePath || m?.sliderImage,
-				sliderPath: m?.sliderPath || m?.slider || m?.sliderUrl || m?.sliderImagePath || m?.sliderImage,
+				poster: localPosterUrl,
+				posterUrl: localPosterUrl,
+				posterPath: localPosterUrl,
+				slider: localSliderUrl,
+				sliderPath: localSliderUrl,
 			};
 			setMovie(movieWithPoster);
 		}
@@ -197,12 +203,12 @@ const SeatSelectionPage = () => {
 		setBookingSeats(selectedSeats.map((s) => s.id));
 		setPrice(totalPriceFromTypes);
 
-		const sliderSource = movie?.sliderPath || movie?.slider || movie?.sliderUrl || movie?.sliderImagePath || movie?.sliderImage;
-		const posterSource = movie?.posterUrl || movie?.posterPath || movie?.poster || movie?.image;
-		const imageForCart = sliderSource
-			? getPosterUrl(sliderSource)
-			: (getSliderImageUrl(posterSource) || getPosterUrl(posterSource));
-		const imagePathForCart = sliderSource || posterSource;
+		// Use local images from /public/images/movies/
+		const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
+		const sliderUrl = movieForImage ? getMovieSliderUrl(movieForImage) : null;
+		const posterUrl = movieForImage ? getMoviePosterUrl(movieForImage) : null;
+		const imageForCart = sliderUrl || posterUrl || "/images/movies/placeholder.png";
+		const imagePathForCart = imageForCart;
 
 		const movieItem = {
 			id: `movie-${movie?.id || Date.now()}-${showtimeId || Date.now()}`,

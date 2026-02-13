@@ -7,9 +7,9 @@ export const appConfig = {
 		description:
 			"CinemoR ist deine Plattform für die neuesten Filme, Spielzeiten und exklusive Kinoinhalte.",
 	},
-	apiURL: import.meta.env.VITE_API_URL || "http://localhost:8081/api",
+	apiURL: import.meta.env.VITE_API_URL || "http://localhost:8082/api",
 	apiURLWithoutApi:
-		import.meta.env.VITE_API_URL_WITHOUT_API || "http://localhost:8081",
+		import.meta.env.VITE_API_URL_WITHOUT_API || "http://localhost:8082",
 	endpoints: {
 		cinema: {
 			list: "/cinemas",

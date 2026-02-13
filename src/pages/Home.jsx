@@ -5,8 +5,8 @@ import { FaStar, FaCalendarAlt, FaChevronLeft, FaChevronRight, FaHeart, FaRegHea
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
-import { appConfig } from "@/helpers/config";
 import { useMovieList } from "@/hooks/useMovieList";
+import { getMoviePosterUrl, getMovieSliderUrl, getMoviePosterUrlFallback, getMovieSliderUrlFallback } from "@/helpers/local-image-utils";
 import "./Home.scss";
 
 const MovieCardSkeleton = React.memo(() => (
@@ -26,38 +26,6 @@ const MovieCardSkeleton = React.memo(() => (
 ));
 
 MovieCardSkeleton.displayName = 'MovieCardSkeleton';
-
-const getPosterUrl = (posterPath) => {
-	if (!posterPath) return null;
-
-	if (posterPath.startsWith("http://") || posterPath.startsWith("https://")) {
-		return posterPath;
-	}
-
-	if (posterPath.startsWith("/images/")) return posterPath;
-
-	const base = appConfig.apiURLWithoutApi || "";
-	if (
-		posterPath.startsWith("/uploads/") ||
-		posterPath.startsWith("/upload/") ||
-		posterPath.startsWith("/tickets/") ||
-		posterPath.startsWith("/files/")
-	) {
-		return base ? `${base}${posterPath}` : posterPath;
-	}
-	if (
-		posterPath.startsWith("uploads/") ||
-		posterPath.startsWith("upload/") ||
-		posterPath.startsWith("tickets/") ||
-		posterPath.startsWith("files/")
-	) {
-		return base ? `${base}/${posterPath}` : `/${posterPath}`;
-	}
-
-	if (posterPath.startsWith("/")) return posterPath;
-
-	return `/${posterPath}`;
-};
 
 const formatEuroPrice = (value) => {
 	const numeric = Number.isFinite(value) ? value : 12;
@@ -79,7 +47,8 @@ const isWideSliderAsset = (maybePath) => {
 
 const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) => {
 	const { t } = useLanguage();
-	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster);
+	// Use local images from /public/images/movies/
+	const posterUrl = getMoviePosterUrl(movie);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
 		: Number.isFinite(movie?.price)
@@ -122,8 +91,32 @@ const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) =
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										e.target.src =
-											"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+										// Try fallback: .png extension, then comingsoon folder
+										const img = e.target;
+										const currentSrc = img.src;
+										
+										// Don't retry if already showing placeholder
+										if (currentSrc.includes('data:image')) return;
+										
+										// Track retry attempts to prevent infinite loop
+										if (!img.dataset.retryCount) img.dataset.retryCount = '0';
+										const retryCount = parseInt(img.dataset.retryCount, 10);
+										if (retryCount >= 2) {
+											// Already tried fallbacks, show placeholder
+											img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+											return;
+										}
+										
+										// Try fallback paths
+										const fallbackPath = getMoviePosterUrlFallback(movie, currentSrc);
+										if (fallbackPath && img.src !== fallbackPath) {
+											img.dataset.retryCount = String(retryCount + 1);
+											img.src = fallbackPath;
+											return;
+										}
+										
+										// Show placeholder if all fails
+										img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
 							</Link>
@@ -182,6 +175,7 @@ const Home = () => {
 	const { isFavorite, toggleFavorite } = useFavorites(user);
 
 	const sampleMovies = [
+		// Coming soon movies (isComingSoon: true) - in /public/images/movies/comingsoon/
 		{
 			id: 1,
 			title: "AB DURCH DIE MITTE",
@@ -191,7 +185,8 @@ const Home = () => {
 			rating: 7.4,
 			duration: 98,
 			genre: "Komödie",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
 		},
 		{
 			id: 2,
@@ -202,7 +197,8 @@ const Home = () => {
 			rating: 6.9,
 			duration: 92,
 			genre: "Animation",
-			fsk: "6"
+			fsk: "6",
+			isComingSoon: true
 		},
 		{
 			id: 3,
@@ -213,18 +209,8 @@ const Home = () => {
 			rating: 7.8,
 			duration: 100,
 			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 4,
-			title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
-			poster: "/images/movies/comingsoon/les_mis_rables_die_geschichte_von_jean_valjean.jpg",
-			slider: "/images/movies/comingsoon/les_mis_rables_die_geschichte_von_jean_valjean-slider.png",
-			ticket: "/images/tickets/comingsoon/les_mis_rables_die_geschichte_von_jean_valjean-ticket.png",
-			rating: 8.1,
-			duration: 98,
-			genre: "Drama",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
 		},
 		{
 			id: 5,
@@ -235,7 +221,8 @@ const Home = () => {
 			rating: 7.2,
 			duration: 100,
 			genre: "Komödie",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
 		},
 		{
 			id: 6,
@@ -246,7 +233,21 @@ const Home = () => {
 			rating: 6.6,
 			duration: 100,
 			genre: "Drama",
-			fsk: ""
+			fsk: "",
+			isComingSoon: true
+		},
+		// Now showing movies (isComingSoon: false) - in /public/images/movies/nowshowing/
+		{
+			id: 4,
+			title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
+			poster: "/images/movies/nowshowing/les_miserables_die_geschichte_von_jean_valjean.jpg",
+			slider: "/images/movies/nowshowing/les_miserables_die_geschichte_von_jean_valjean-slider.png",
+			ticket: "/images/tickets/nowshowing/les_miserables_die_geschichte_von_jean_valjean-ticket.png",
+			rating: 8.1,
+			duration: 98,
+			genre: "Drama",
+			fsk: "",
+			isComingSoon: false
 		},
 		{
 			id: 7,
@@ -257,7 +258,8 @@ const Home = () => {
 			rating: 8.3,
 			duration: 100,
 			genre: "Tragikomödie",
-			fsk: ""
+			fsk: "",
+			isComingSoon: false
 		},
 		{
 			id: 8,
@@ -268,18 +270,20 @@ const Home = () => {
 			rating: 7.0,
 			duration: 90,
 			genre: "Dokumentarfilm",
-			fsk: "0"
+			fsk: "0",
+			isComingSoon: false
 		},
 		{
 			id: 9,
-			title: "KEIN WEG ZURÜCK",
-			poster: "/images/movies/nowshowing/kein_weg_zur_ck.jpg",
-			slider: "/images/movies/nowshowing/kein_weg_zur_ck-slider.png",
-			ticket: "/images/tickets/nowshowing/kein_weg_zur_ck-ticket.png",
+			title: "KEIN WEG ZURUCK",
+			poster: "/images/movies/nowshowing/kein_weg_zuruck.jpg",
+			slider: "/images/movies/nowshowing/kein_weg_zuruck-slider.png",
+			ticket: "/images/tickets/nowshowing/kein_weg_zuruck-ticket.png",
 			rating: 7.6,
 			duration: 100,
 			genre: "Drama",
-			fsk: ""
+			fsk: "",
+			isComingSoon: false
 		}
 	];
 
@@ -334,28 +338,45 @@ const Home = () => {
 			seen.add(key);
 			return true;
 		});
-		let list = unique.filter((m) => !isTrainToBusan(m)).slice(0, MAX_MOVIES);
+		// ALL movies are now in nowshowing folder - show all movies
+		// Filter out Train to Busan only
+		let list = unique.filter((m) => {
+			return !isTrainToBusan(m);
+		}).slice(0, MAX_MOVIES);
+		
+		// Ensure all movies have isComingSoon: false for image loading (all images in nowshowing)
+		list = list.map(m => ({ ...m, isComingSoon: false }));
+		
 		const charlieInList = list.find(isCharlieMovie);
-		const charlieFromSample = sampleMovies.find((m) => m.title && m.title.toLowerCase().includes("charlie"));
+		const charlieFromSample = sampleMovies.find((m) => {
+			let isComingSoon = false;
+			if (m?.isComingSoon !== undefined && m?.isComingSoon !== null) {
+				if (typeof m.isComingSoon === 'boolean') {
+					isComingSoon = m.isComingSoon;
+				} else if (typeof m.isComingSoon === 'string') {
+					isComingSoon = m.isComingSoon.toLowerCase() === 'true' || m.isComingSoon === '1';
+				} else {
+					isComingSoon = Boolean(m.isComingSoon);
+				}
+			}
+			return !isComingSoon && m.title && m.title.toLowerCase().includes("charlie");
+		});
 		if (charlieInList) {
 			if (list.indexOf(charlieInList) !== 0) {
 				list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
 			}
 		} else if (charlieFromSample) {
-			list = [charlieFromSample, ...list.filter((m) => !isCharlieMovie(m))].slice(0, MAX_MOVIES);
+			const charlieFixed = charlieFromSample ? { ...charlieFromSample, isComingSoon: false } : null;
+			if (charlieFixed) {
+				list = [charlieFixed, ...list.filter((m) => !isCharlieMovie(m))].slice(0, MAX_MOVIES);
+			}
 		}
 		return list;
 	}, [movieData]);
 
 	const sliderMovies = useMemo(() => {
-		const getSliderRaw = (m) =>
-			m?.slider || m?.sliderPath || m?.sliderUrl || m?.sliderImage || m?.sliderImagePath;
-
-		const wideOnly = displayMovies.filter((m) => isWideSliderAsset(getSliderRaw(m)));
-		let movies = wideOnly.length > 0 ? wideOnly : displayMovies;
-
-		const withSlider = movies.filter((m) => Boolean(getSliderRaw(m)));
-		movies = (withSlider.length > 0 ? withSlider : movies).slice(0, 9);
+		// ALL movies are in nowshowing folder - use displayMovies directly
+		let movies = displayMovies.slice(0, 9);
 
 		const charlieInSlider = movies.find(isCharlieMovie);
 		const charlieFromDisplay = displayMovies.find(isCharlieMovie);
@@ -363,6 +384,10 @@ const Home = () => {
 		if (charlie) {
 			movies = [charlie, ...movies.filter((m) => m !== charlie)].slice(0, 9);
 		}
+
+		// Ensure all slider movies have isComingSoon: false for image loading
+		// (all images are in nowshowing folder)
+		movies = movies.map(m => ({ ...m, isComingSoon: false }));
 
 		return movies;
 	}, [displayMovies]);
@@ -479,18 +504,11 @@ const Home = () => {
 						onTouchEnd={handleTouchEnd}
 					>
 							{sliderMovies.map((movie, index) => {
-
-
-								const sliderPath = movie.slider || movie.sliderPath || movie.sliderUrl || movie.sliderImage || movie.sliderImagePath;
-								let posterPath = movie.posterUrl || movie.poster || movie.posterPath;
-
-								if (isMobile && posterPath && /-slider\.(png|jpg|jpeg|webp)$/i.test(posterPath)) {
-									posterPath = posterPath.replace(/-slider\.(png|jpg|jpeg|webp)$/i, ".jpg");
-								}
-								
-								const posterUrl = isMobile
-									? getPosterUrl(posterPath)
-									: getPosterUrl(sliderPath || posterPath);
+								// Use local images from /public/images/movies/
+								const sliderUrl = getMovieSliderUrl(movie);
+								const posterUrlForSlider = isMobile 
+									? getMoviePosterUrl(movie)
+									: (sliderUrl || getMoviePosterUrl(movie));
 								const movieId = movie.id;
 								return (
 									<div key={movie.id || index} className="hero-slide">
@@ -501,18 +519,51 @@ const Home = () => {
 											data-has-bg="true"
 											style={{
 												cursor: "pointer",
-												"--slide-bg": posterUrl ? `url(${posterUrl})` : "none",
+												"--slide-bg": posterUrlForSlider ? `url(${posterUrlForSlider})` : "none",
 											}}
 										>
 											<img 
-												src={posterUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E"}
+												src={posterUrlForSlider || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E"}
 												alt={movie.title}
 												className="hero-slide-poster"
 												loading={index === 0 ? "eager" : "lazy"}
 												onError={(e) => {
-													e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
-											}}
-										/>
+													// Try fallback: .png extension, then comingsoon folder
+													const img = e.target;
+													const currentSrc = img.src;
+													
+													// Don't retry if already showing placeholder
+													if (currentSrc.includes('data:image')) return;
+													
+													// Track retry attempts to prevent infinite loop
+													if (!img.dataset.retryCount) img.dataset.retryCount = '0';
+													const retryCount = parseInt(img.dataset.retryCount, 10);
+													if (retryCount >= 3) {
+														// Already tried all fallbacks, show placeholder
+														img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+														return;
+													}
+													
+													// Try fallback slider image first
+													const fallbackSlider = getMovieSliderUrlFallback(movie, currentSrc);
+													if (fallbackSlider && img.src !== fallbackSlider && retryCount === 0) {
+														img.dataset.retryCount = '1';
+														img.src = fallbackSlider;
+														return;
+													}
+													
+													// Try fallback poster image
+													const fallbackPoster = getMoviePosterUrlFallback(movie, currentSrc);
+													if (fallbackPoster && img.src !== fallbackPoster && retryCount === 1) {
+														img.dataset.retryCount = '2';
+														img.src = fallbackPoster;
+														return;
+													}
+													
+													// Show placeholder if all fails
+													img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+												}}
+											/>
 										{isMobile && (
 												<button
 													type="button"
@@ -532,12 +583,12 @@ const Home = () => {
 											className="hero-slide-link"
 											style={{
 												cursor: "not-allowed",
-												"--slide-bg": posterUrl ? `url(${posterUrl})` : "none",
+												"--slide-bg": posterUrlForSlider ? `url(${posterUrlForSlider})` : "none",
 											}}
 											data-has-bg="true"
 										>
 											<img 
-												src={posterUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E"}
+												src={posterUrlForSlider || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E"}
 												alt={movie.title}
 												className="hero-slide-poster"
 												loading={index === 0 ? "eager" : "lazy"}
