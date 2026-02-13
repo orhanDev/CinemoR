@@ -944,10 +944,14 @@
 	position: relative;
 	width: 92px;
 	height: 132px;
+	aspect-ratio: 92 / 132;
 	flex: 0 0 auto;
 	border-radius: 10px;
 	overflow: hidden;
 	background: #1f2128;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .movie-card-favorite-btn {
