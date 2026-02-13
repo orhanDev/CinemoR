@@ -388,13 +388,22 @@ const Movies = () => {
 			return `${FEB_YEAR}-${mm}-${dd}`;
 		};
 
-		const featured = movieData.filter((m) => !isTrainToBusan(m)).slice(0, MAX_FEATURED);
+		const isComingSoonMovie = (m) => {
+			if (m?.isComingSoon === true) return true;
+			const poster = (m?.poster || m?.posterUrl || m?.posterPath || "").toString().toLowerCase();
+			const slider = (m?.slider || m?.sliderPath || m?.sliderUrl || "").toString().toLowerCase();
+			return poster.includes("comingsoon") || slider.includes("comingsoon");
+		};
+
+		const featured = movieData.filter((m) => !isTrainToBusan(m) && !isComingSoonMovie(m)).slice(0, MAX_FEATURED);
 		const featuredKeys = new Set(featured.map((m) => keyOf(m)));
 
 		let filtered = movieData.filter((movie) => {
-			const isFeatured = featuredKeys.has(keyOf(movie));
-
-			return activeTab === "bald" ? !isFeatured : isFeatured;
+			if (activeTab === "bald") {
+				return isComingSoonMovie(movie);
+			} else {
+				return !isComingSoonMovie(movie);
+			}
 		});
 
 		const seen = new Set();
