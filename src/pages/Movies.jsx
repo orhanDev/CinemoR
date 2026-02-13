@@ -420,56 +420,23 @@ const Movies = () => {
 			return `${FEB_YEAR}-${mm}-${dd}`;
 		};
 
-		const isComingSoonMovie = (m) => {
-			if (m?.isComingSoon === true) return true;
-			const posterPath = m?.poster || m?.posterUrl || m?.posterPath || "";
-			const sliderPath = m?.slider || m?.sliderPath || m?.sliderUrl || "";
-			const frontendPoster = getPosterUrl(posterPath) || "";
-			const frontendSlider = getPosterUrl(sliderPath) || "";
-			const poster = frontendPoster.toString().toLowerCase();
-			const slider = frontendSlider.toString().toLowerCase();
-			const originalPoster = (posterPath || "").toString().toLowerCase();
-			const originalSlider = (sliderPath || "").toString().toLowerCase();
-			
-			const isNowShowing = poster.includes("/nowshowing/") || slider.includes("/nowshowing/") || 
-			                     originalPoster.includes("nowshowing") || originalSlider.includes("nowshowing");
-			
-			if (isNowShowing) return false;
-			
-			return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
-			       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
-		};
-
-		const featured = movieData.filter((m) => !isTrainToBusan(m) && !isComingSoonMovie(m)).slice(0, MAX_FEATURED);
+		const featured = movieData.filter((m) => !isTrainToBusan(m)).slice(0, MAX_FEATURED);
 		const featuredKeys = new Set(featured.map((m) => keyOf(m)));
 
 		let filtered = movieData.filter((movie) => {
-			if (activeTab === "bald") {
-				return isComingSoonMovie(movie);
-			} else {
-				return !isComingSoonMovie(movie);
-			}
+			const isFeatured = featuredKeys.has(keyOf(movie));
+
+			return activeTab === "bald" ? !isFeatured : isFeatured;
 		});
 
 		const seen = new Set();
-		const movieMap = new Map();
-		
-		filtered.forEach((m) => {
+		filtered = filtered.filter((m) => {
 			const k = keyOf(m);
-			if (!k) return;
-			const isNowShowing = !isComingSoonMovie(m);
-			if (!movieMap.has(k)) {
-				movieMap.set(k, m);
-			} else {
-				const existing = movieMap.get(k);
-				const existingIsNowShowing = !isComingSoonMovie(existing);
-				if (isNowShowing && !existingIsNowShowing) {
-					movieMap.set(k, m);
-				}
-			}
+			if (!k) return true;
+			if (seen.has(k)) return false;
+			seen.add(k);
+			return true;
 		});
-		
-		filtered = Array.from(movieMap.values());
 
 		if (searchQuery) {
 			const q = searchQuery;
