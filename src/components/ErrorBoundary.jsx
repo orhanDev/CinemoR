@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 class ErrorBoundary extends React.Component {
 	constructor(props) {
 		super(props);
@@ -13,12 +14,12 @@ class ErrorBoundary extends React.Component {
 	componentDidCatch(error, errorInfo) {
 		console.error('ErrorBoundary caught an error:', error, errorInfo);
 	}
-	
+	render() {
 		if (this.state.hasError) {
 			return (
-				<div style={{ 
-					padding: '2rem', 
-					textAlign: 'center', 
+				<div style={{
+					padding: '2rem',
+					textAlign: 'center',
 					color: '#fff',
 					background: '#1A1A1A',
 					minHeight: '100vh',
@@ -51,7 +52,6 @@ class ErrorBoundary extends React.Component {
 				</div>
 			);
 		}
-
 		return this.props.children;
 	}
 }
