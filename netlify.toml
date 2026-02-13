@@ -10,4 +10,6 @@
   force = true
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
+  VITE_API_URL = "https://cinemor-api.onrender.com/api"
+  VITE_API_URL_WITHOUT_API = "https://cinemor-api.onrender.com"
