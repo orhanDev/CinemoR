@@ -80,8 +80,8 @@
     "releaseDate": "01.01.2025",
     "fsk": "ab 12 Jahren",
     "isComingSoon": false,
-    "posterPath": "/images/movies/nowshowing/les_mis_rables_die_geschichte_von_jean_valjean.jpg",
-    "sliderPath": "/images/movies/nowshowing/les_mis_rables_die_geschichte_von_jean_valjean-slider.png",
+    "posterPath": "/images/movies/nowshowing/les_miserables_die_geschichte_von_jean_valjean.jpg",
+    "sliderPath": "/images/movies/nowshowing/les_miserables_die_geschichte_von_jean_valjean-slider.png",
     "ticketPath": "/images/tickets/nowshowing/les_mis_rables_die_geschichte_von_jean_valjean-ticket.jpg",
     "castImages": "{\"Grégory Gadebois\":\"/images/actors/Grégory_Gadebois.jpg\"}"
   },
