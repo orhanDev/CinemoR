@@ -1,21 +1,50 @@
-import { getAuthHeader } from "../helpers/auth-helper";
-import { fetchWithTimeout } from "../helpers/fetch-with-timeout";
-import {
-	GET_MOVIE_BY_ID,
-	MOVIE_CREATE_API_ROUTE,
-	MOVIE_UPDATE_API_ROUTE,
-	MOVIE_DELETE_API_ROUTE,
-	MOVIE_BY_SLUG_API_ROUTE,
-	MOVIE_COMING_SOON_API_ROUTE,
-	MOVIE_IN_THEATERS_API_ROUTE,
-	MOVIE_NOW_SHOWING_API_ROUTE,
-	MOVIE_BY_HALL_API_ROUTE,
-	GET_MOVIE_BY_QUERY_API_ROUTE,
-	GET_ALL_MOVIES_API_ROUTE,
-	GET_MOVIES_BY_HALL_ID,
-	MOVIE_IMPORT_API_ROUTE,
-} from "../helpers/api-routes";
 
+
+// Tüm filmleri getir (movies-data.json'dan)
+export const getAllMovies = async () => {
+	const response = await fetch('/movies-data.json');
+	if (!response.ok) throw new Error('movies-data.json yüklenemedi');
+	return response.json();
+};
+
+// Şu anda vizyondaki filmleri getir (isComingSoon: false)
+export const getNowShowingMovies = async () => {
+	const movies = await getAllMovies();
+	return movies.filter(m => m.isComingSoon === false);
+};
+
+// Yakında gelecek filmleri getir (isComingSoon: true)
+export const getComingSoonMovies = async () => {
+	const movies = await getAllMovies();
+	return movies.filter(m => m.isComingSoon === true);
+};
+
+// ID ile film getir
+export const getMovieById = async (id) => {
+	const movies = await getAllMovies();
+	return movies.find(m => m.id === id || m._id === id);
+};
+
+// Slug ile film getir
+export const getMovieBySlug = async (slug) => {
+	const movies = await getAllMovies();
+	return movies.find(m => m.slug === slug);
+};
+
+// Sorguya göre film getir (ör. arama)
+export const getMoviesByQuery = async (query = "") => {
+	const movies = await getAllMovies();
+	if (!query) return movies;
+	return movies.filter(m => m.title.toLowerCase().includes(query.toLowerCase()));
+};
+
+// Salon adına göre film getir
+export const getMoviesByHall = async (hallName) => {
+	const movies = await getAllMovies();
+	return movies.filter(m => m.hall && m.hall === hallName);
+};
+
+// Diğer film API fonksiyonları kaldırıldı (create, update, delete, import, vs.)
 
 export const getMoviesByQuery = async (params = {}) => {
 	const url = new URL(GET_MOVIE_BY_QUERY_API_ROUTE);
