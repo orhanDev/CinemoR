@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Container } from "react-bootstrap";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
-import { getNowShowingMovies, getComingSoonMovies } from "@/services/movie-service";
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
-import { appConfig } from "@/helpers/config";
-import { useMovieList } from "@/hooks/useMovieList";
 import { getPosterUrl } from "@/helpers/image-utils";
 import "./Movies.scss";
 
@@ -81,55 +78,6 @@ const formatEuroPrice = (value) => {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2
 	}).format(numeric);
-};
-
-const resolveTicketAssetUrl = (assetPath) => {
-	if (!assetPath) return null;
-	if (typeof assetPath !== "string") return null;
-
-	if (assetPath.startsWith("http://") || assetPath.startsWith("https://")) {
-		return assetPath;
-	}
-
-	if (assetPath.startsWith("/images/")) return assetPath;
-
-	const base = appConfig.apiURLWithoutApi || "";
-	if (!base) return assetPath.startsWith("/") ? assetPath : `/${assetPath}`;
-
-	if (assetPath.startsWith("/")) return `${base}${assetPath}`;
-	return `${base}/${assetPath}`;
-};
-
-const buildTicketImageCandidates = (rawTicket) => {
-	const candidates = [];
-
-	const add = (p) => {
-		const u = resolveTicketAssetUrl(p);
-		if (u && !candidates.includes(u)) candidates.push(u);
-	};
-
-	add(rawTicket);
-
-	if (typeof rawTicket === "string") {
-		const t = rawTicket.trim();
-		if (t) {
-			if (
-				!t.startsWith("/") &&
-				(t.startsWith("uploads/") || t.startsWith("tickets/") || t.startsWith("images/"))
-			) {
-				add(`/${t}`);
-			}
-
-			if (!t.includes("/")) {
-				add(`/uploads/${t}`);
-				add(`/uploads/tickets/${t}`);
-				add(`/tickets/${t}`);
-				add(`/images/tickets/${t}`);
-			}
-		}
-	}
-
-	return candidates;
 };
 
 const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false, onToggleFavorite, selectedCinema }) => {
@@ -345,7 +293,8 @@ const Movies = () => {
 	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { movies: movieData, loading } = useMovieList(sampleMovies, { dedupe: true });
+	const movieData = sampleMovies;
+	const loading = false;
 	const { tab } = useParams();
 	const { user } = useAuth();
 	const { isFavorite, toggleFavorite } = useFavorites(user);
@@ -390,9 +339,16 @@ const Movies = () => {
 
 		const isComingSoonMovie = (m) => {
 			if (m?.isComingSoon === true) return true;
-			const poster = (m?.poster || m?.posterUrl || m?.posterPath || "").toString().toLowerCase();
-			const slider = (m?.slider || m?.sliderPath || m?.sliderUrl || "").toString().toLowerCase();
-			return poster.includes("comingsoon") || slider.includes("comingsoon");
+			const posterPath = m?.poster || m?.posterUrl || m?.posterPath || "";
+			const sliderPath = m?.slider || m?.sliderPath || m?.sliderUrl || "";
+			const frontendPoster = getPosterUrl(posterPath, m?.title) || "";
+			const frontendSlider = getPosterUrl(sliderPath, m?.title) || "";
+			const poster = frontendPoster.toString().toLowerCase();
+			const slider = frontendSlider.toString().toLowerCase();
+			const originalPoster = (posterPath || "").toString().toLowerCase();
+			const originalSlider = (sliderPath || "").toString().toLowerCase();
+			return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
+			       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
 		};
 
 		const featured = movieData.filter((m) => !isTrainToBusan(m) && !isComingSoonMovie(m)).slice(0, MAX_FEATURED);
