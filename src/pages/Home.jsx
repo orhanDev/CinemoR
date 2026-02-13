@@ -7,7 +7,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
 import { appConfig } from "@/helpers/config";
 import { useMovieList } from "@/hooks/useMovieList";
-import { getPosterUrl, getApiFallbackUrl } from "@/helpers/image-utils";
+import { getPosterUrl } from "@/helpers/image-utils";
 import "./Home.scss";
 
 const MovieCardSkeleton = React.memo(() => (
@@ -49,7 +49,6 @@ const isWideSliderAsset = (maybePath) => {
 const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) => {
 	const { t } = useLanguage();
 	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster, movie.title);
-	const apiFallbackUrl = getApiFallbackUrl(movie.posterUrl || movie.poster);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
 		: Number.isFinite(movie?.price)
@@ -92,12 +91,7 @@ const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) =
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										// Frontend'de bulunamadıysa API'ye düş
-										if (apiFallbackUrl && e.target.src !== apiFallbackUrl) {
-											e.target.src = apiFallbackUrl;
-										} else {
-											e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
-										}
+										e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
 							</Link>
@@ -465,9 +459,6 @@ const Home = () => {
 								const posterUrl = isMobile
 									? getPosterUrl(posterPath, movie.title)
 									: getPosterUrl(sliderPath || posterPath, movie.title);
-								const apiFallbackUrl = isMobile
-									? getApiFallbackUrl(posterPath)
-									: getApiFallbackUrl(sliderPath || posterPath);
 								const movieId = movie.id;
 								const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 								return (
@@ -488,11 +479,7 @@ const Home = () => {
 												className="hero-slide-poster"
 												loading={index === 0 ? "eager" : "lazy"}
 												onError={(e) => {
-													if (apiFallbackUrl && e.target.src !== apiFallbackUrl) {
-														e.target.src = apiFallbackUrl;
-													} else {
-														e.target.src = placeholder;
-													}
+													e.target.src = placeholder;
 												}}
 											/>
 										{isMobile && (

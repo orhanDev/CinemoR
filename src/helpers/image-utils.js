@@ -30,14 +30,43 @@ const mapApiPathToFrontend = (apiPath, movieTitle = null) => {
 		if (titleBased) baseName = titleBased;
 	}
 
+	const pathLower = path.toLowerCase();
+	let folderType = "movies";
+	let subFolder = "";
+
+	if (pathLower.includes("/tickets/") || pathLower.includes("tickets/")) {
+		folderType = "tickets";
+		if (pathLower.includes("nowshowing") || pathLower.includes("now_showing")) {
+			subFolder = "nowshowing/";
+		} else if (pathLower.includes("comingsoon") || pathLower.includes("coming_soon")) {
+			subFolder = "comingsoon/";
+		}
+	} else if (pathLower.includes("/menu/") || pathLower.includes("menu/")) {
+		folderType = "menu";
+	} else if (pathLower.includes("/movies/") || pathLower.includes("movies/")) {
+		folderType = "movies";
+		if (pathLower.includes("nowshowing") || pathLower.includes("now_showing")) {
+			subFolder = "nowshowing/";
+		} else if (pathLower.includes("comingsoon") || pathLower.includes("coming_soon")) {
+			subFolder = "comingsoon/";
+		}
+	}
+
 	const candidates = [
-		`/images/movies/nowshowing/${baseName}.${ext}`,
-		`/images/movies/nowshowing/${baseName}.jpg`,
-		`/images/movies/comingsoon/${baseName}.${ext}`,
-		`/images/movies/comingsoon/${baseName}.jpg`,
-		`/images/movies/${baseName}.${ext}`,
-		`/images/movies/${baseName}.jpg`,
+		`/images/${folderType}/${subFolder}${baseName}.${ext}`,
+		`/images/${folderType}/${subFolder}${baseName}.jpg`,
+		`/images/${folderType}/${baseName}.${ext}`,
+		`/images/${folderType}/${baseName}.jpg`,
 	];
+
+	if (folderType === "movies") {
+		candidates.push(
+			`/images/movies/nowshowing/${baseName}.${ext}`,
+			`/images/movies/nowshowing/${baseName}.jpg`,
+			`/images/movies/comingsoon/${baseName}.${ext}`,
+			`/images/movies/comingsoon/${baseName}.jpg`
+		);
+	}
 
 	return candidates[0];
 };
@@ -63,17 +92,7 @@ export const getPosterUrl = (posterPath, movieTitle = null) => {
 
 	if (isApiPath) {
 		const frontendPath = mapApiPathToFrontend(posterPath, movieTitle);
-		if (frontendPath) {
-			return frontendPath;
-		}
-	}
-
-	const base = appConfig.apiURLWithoutApi || "";
-	if (isApiPath) {
-		if (posterPath.startsWith("/")) {
-			return base ? `${base}${posterPath}` : posterPath;
-		}
-		return base ? `${base}/${posterPath}` : `/${posterPath}`;
+		return frontendPath || "/images/movies/placeholder.png";
 	}
 
 	if (posterPath.startsWith("/")) return posterPath;
@@ -96,30 +115,6 @@ export const getSliderImageUrl = (posterPath) => {
 	return getPosterUrl(sliderPath);
 };
 
-export const getApiFallbackUrl = (posterPath) => {
-	if (!posterPath) return null;
-	const path = typeof posterPath === "string" ? posterPath.trim() : "";
-	if (!path) return null;
-
-	const base = appConfig.apiURLWithoutApi || "";
-	if (
-		path.startsWith("/uploads/") ||
-		path.startsWith("/upload/") ||
-		path.startsWith("/tickets/") ||
-		path.startsWith("/files/")
-	) {
-		return base ? `${base}${path}` : path;
-	}
-	if (
-		path.startsWith("uploads/") ||
-		path.startsWith("upload/") ||
-		path.startsWith("tickets/") ||
-		path.startsWith("files/")
-	) {
-		return base ? `${base}/${path}` : `/${path}`;
-	}
-	return null;
-};
 
 
 const ACTORS_BASE = "/images/actors";
