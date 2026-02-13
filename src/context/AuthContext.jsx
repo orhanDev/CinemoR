@@ -50,26 +50,14 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const payload = {
+      // Use the correct register endpoint: /api/register
+      const response = await fetch(REGISTER_API_ROUTE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
-      };
-      const candidates = [
-        REGISTER_API_ROUTE,
-        `${appConfig.apiURL}/auth/register`,
-        `${appConfig.apiURLWithoutApi}/auth/register`,
-        `${appConfig.apiURLWithoutApi}${appConfig.endpoints.user.register}`,
-      ];
-      let response;
-      for (const url of candidates) {
-        response = await fetch(url, payload);
-        if (response.status !== 404) {
-          break;
-        }
-      }
+      });
 
       if (!response.ok) {
         let errorMessage = 'Registration failed';
@@ -92,6 +80,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       return { success: true, data };
     } catch (error) {
+      console.error('Registration error:', error);
       return { success: false, error: error.message };
     }
   };
