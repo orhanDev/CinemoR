@@ -13,8 +13,7 @@ class ErrorBoundary extends React.Component {
 	componentDidCatch(error, errorInfo) {
 		console.error('ErrorBoundary caught an error:', error, errorInfo);
 	}
-
-	render() {
+	
 		if (this.state.hasError) {
 			return (
 				<div style={{ 
