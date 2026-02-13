@@ -1,11 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container } from "react-bootstrap";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
+import { getNowShowingMovies, getComingSoonMovies } from "@/services/movie-service";
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
-import { getPosterUrl } from "@/helpers/image-utils";
+import { appConfig } from "@/helpers/config";
+import { useMovieList } from "@/hooks/useMovieList";
 import "./Movies.scss";
 
 const formatDate = (dateString) => {
@@ -70,6 +72,38 @@ const stableHash = (input) => {
 	return h >>> 0;
 };
 
+const getPosterUrl = (posterPath) => {
+	if (!posterPath) return null;
+
+	if (posterPath.startsWith("http://") || posterPath.startsWith("https://")) {
+		return posterPath;
+	}
+
+	if (posterPath.startsWith("/images/")) return posterPath;
+
+	const base = appConfig.apiURLWithoutApi || "";
+	if (
+		posterPath.startsWith("/uploads/") ||
+		posterPath.startsWith("/upload/") ||
+		posterPath.startsWith("/tickets/") ||
+		posterPath.startsWith("/files/")
+	) {
+		return base ? `${base}${posterPath}` : posterPath;
+	}
+	if (
+		posterPath.startsWith("uploads/") ||
+		posterPath.startsWith("upload/") ||
+		posterPath.startsWith("tickets/") ||
+		posterPath.startsWith("files/")
+	) {
+		return base ? `${base}/${posterPath}` : `/${posterPath}`;
+	}
+
+	if (posterPath.startsWith("/")) return posterPath;
+
+	return `/${posterPath}`;
+};
+
 const formatEuroPrice = (value) => {
 	const numeric = Number.isFinite(value) ? value : 12;
 	return new Intl.NumberFormat("de-DE", {
@@ -80,11 +114,60 @@ const formatEuroPrice = (value) => {
 	}).format(numeric);
 };
 
+const resolveTicketAssetUrl = (assetPath) => {
+	if (!assetPath) return null;
+	if (typeof assetPath !== "string") return null;
+
+	if (assetPath.startsWith("http://") || assetPath.startsWith("https://")) {
+		return assetPath;
+	}
+
+	if (assetPath.startsWith("/images/")) return assetPath;
+
+	const base = appConfig.apiURLWithoutApi || "";
+	if (!base) return assetPath.startsWith("/") ? assetPath : `/${assetPath}`;
+
+	if (assetPath.startsWith("/")) return `${base}${assetPath}`;
+	return `${base}/${assetPath}`;
+};
+
+const buildTicketImageCandidates = (rawTicket) => {
+	const candidates = [];
+
+	const add = (p) => {
+		const u = resolveTicketAssetUrl(p);
+		if (u && !candidates.includes(u)) candidates.push(u);
+	};
+
+	add(rawTicket);
+
+	if (typeof rawTicket === "string") {
+		const t = rawTicket.trim();
+		if (t) {
+			if (
+				!t.startsWith("/") &&
+				(t.startsWith("uploads/") || t.startsWith("tickets/") || t.startsWith("images/"))
+			) {
+				add(`/${t}`);
+			}
+
+			if (!t.includes("/")) {
+				add(`/uploads/${t}`);
+				add(`/uploads/tickets/${t}`);
+				add(`/tickets/${t}`);
+				add(`/images/tickets/${t}`);
+			}
+		}
+	}
+
+	return candidates;
+};
+
 const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false, onToggleFavorite, selectedCinema }) => {
 	const { t } = useLanguage();
 	const linkState = selectedCinema ? { cinema: selectedCinema } : undefined;
 	const releaseLabel = movie.releaseDate ? formatDate(movie.releaseDate) : t("movies.comingSoon");
-	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster, movie.title);
+	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
 		: Number.isFinite(movie?.price)
@@ -127,7 +210,8 @@ const MovieCard = React.memo(({ movie, isComingSoon = false, isFavorite = false,
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+										e.target.src =
+											"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
 							</Link>
@@ -286,215 +370,6 @@ const sampleMovies = [
 			duration: 100,
 			genre: "Drama",
 			fsk: ""
-		},
-		{
-			id: 10,
-			title: "EXORCISM CHRONICLES: THE BEGINNING",
-			poster: "/images/movies/comingsoon/exorcism_chronicles_the_beginning.jpg",
-			slider: "/images/movies/comingsoon/exorcism_chronicles_the_beginning-slider.png",
-			ticket: "/images/tickets/comingsoon/exorcism_chronicles_the_beginning-ticket.png",
-			rating: 6.8,
-			duration: 95,
-			genre: "Horror",
-			fsk: "16"
-		},
-		{
-			id: 11,
-			title: "GODZILLA MINUS ONE MINUS COLOR",
-			poster: "/images/movies/comingsoon/godzilla_minus_one_minus_color.png",
-			slider: "/images/movies/comingsoon/godzilla_minus_one_minus_color-slider.png",
-			ticket: "/images/tickets/comingsoon/godzilla_minus_one_minus_color-ticket.png",
-			rating: 8.5,
-			duration: 125,
-			genre: "Action",
-			fsk: "12"
-		},
-		{
-			id: 12,
-			title: "IT'S CHRISTMAS - WEIHNACHTEN MIT JONAS KAUFMANN",
-			poster: "/images/movies/comingsoon/it_s_christmas_weihnachten_mit_jonas_kaufmann.jpg",
-			slider: "/images/movies/comingsoon/it_s_christmas_weihnachten_mit_jonas_kaufmann-slider.png",
-			ticket: "/images/tickets/comingsoon/it_s_christmas_weihnachten_mit_jonas_kaufmann-ticket.png",
-			rating: 8.0,
-			duration: 90,
-			genre: "Musik",
-			fsk: "0"
-		},
-		{
-			id: 13,
-			title: "MAD HEIDI",
-			poster: "/images/movies/comingsoon/mad_heidi.jpg",
-			slider: "/images/movies/comingsoon/mad_heidi-slider.png",
-			ticket: "/images/tickets/comingsoon/mad_heidi-ticket.png",
-			rating: 7.3,
-			duration: 92,
-			genre: "Action",
-			fsk: "16"
-		},
-		{
-			id: 14,
-			title: "MARCO",
-			poster: "/images/movies/comingsoon/marco.jpg",
-			slider: "/images/movies/comingsoon/marco-slider.png",
-			ticket: "/images/tickets/comingsoon/marco-ticket.png",
-			rating: 7.5,
-			duration: 105,
-			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 15,
-			title: "OVERLORD: THE SACRED KINGDOM",
-			poster: "/images/movies/comingsoon/overlord_the_sacred_kingdom.jpg",
-			slider: "/images/movies/comingsoon/overlord_the_sacred_kingdom-slider.png",
-			ticket: "/images/tickets/comingsoon/overlord_the_sacred_kingdom-ticket.png",
-			rating: 7.1,
-			duration: 110,
-			genre: "Action",
-			fsk: "16"
-		},
-		{
-			id: 16,
-			title: "TERESA - EIN LEBEN ZWISCHEN LICHT UND SCHATTEN",
-			poster: "/images/movies/comingsoon/teresa_ein_leben_zwischen_licht_und_schatten.jpg",
-			slider: "/images/movies/comingsoon/teresa_ein_leben_zwischen_licht_und_schatten-slider.png",
-			ticket: "/images/tickets/comingsoon/teresa_ein_leben_zwischen_licht_und_schatten-ticket.png",
-			rating: 7.7,
-			duration: 98,
-			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 17,
-			title: "THE LONGEST WAVE",
-			poster: "/images/movies/comingsoon/the_longest_wave.jpg",
-			slider: "/images/movies/comingsoon/the_longest_wave-slider.png",
-			ticket: "/images/tickets/comingsoon/the_longest_wave-ticket.png",
-			rating: 7.4,
-			duration: 88,
-			genre: "Dokumentarfilm",
-			fsk: "0"
-		},
-		{
-			id: 18,
-			title: "ZOMBIE: DAWN OF THE DEAD",
-			poster: "/images/movies/comingsoon/zombie_dawn_of_the_dead.jpg",
-			slider: "/images/movies/comingsoon/zombie_dawn_of_the_dead-slider.png",
-			ticket: "/images/tickets/comingsoon/zombie_dawn_of_the_dead-ticket.png",
-			rating: 7.9,
-			duration: 100,
-			genre: "Horror",
-			fsk: "18"
-		},
-		{
-			id: 19,
-			title: "DIE GESCHICHTE VON JEAN VALJEAN",
-			poster: "/images/movies/nowshowing/die_geschichte_von_jean_valjean.jpg",
-			slider: "/images/movies/nowshowing/die_geschichte_von_jean_valjean-slider.png",
-			ticket: "/images/tickets/nowshowing/die_geschichte_von_jean_valjean-ticket.png",
-			rating: 8.2,
-			duration: 95,
-			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 20,
-			title: "EXORCISM CHRONICLES: THE BEGINNING",
-			poster: "/images/movies/nowshowing/exorcism_chronicles_the_beginning.jpg",
-			slider: "/images/movies/nowshowing/exorcism_chronicles_the_beginning-slider.png",
-			ticket: "/images/tickets/nowshowing/exorcism_chronicles_the_beginning-ticket.png",
-			rating: 6.8,
-			duration: 95,
-			genre: "Horror",
-			fsk: "16"
-		},
-		{
-			id: 21,
-			title: "GODZILLA MINUS ONE MINUS COLOR",
-			poster: "/images/movies/nowshowing/godzilla_minus_one_minus_color.png",
-			slider: "/images/movies/nowshowing/godzilla_minus_one_minus_color-slider.png",
-			ticket: "/images/tickets/nowshowing/godzilla_minus_one_minus_color-ticket.png",
-			rating: 8.5,
-			duration: 125,
-			genre: "Action",
-			fsk: "12"
-		},
-		{
-			id: 22,
-			title: "IT'S CHRISTMAS - WEIHNACHTEN MIT JONAS KAUFMANN",
-			poster: "/images/movies/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann.jpg",
-			slider: "/images/movies/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann-slider.png",
-			ticket: "/images/tickets/nowshowing/it_s_christmas_weihnachten_mit_jonas_kaufmann-ticket.png",
-			rating: 8.0,
-			duration: 90,
-			genre: "Musik",
-			fsk: "0"
-		},
-		{
-			id: 23,
-			title: "MAD HEIDI",
-			poster: "/images/movies/nowshowing/mad_heidi.jpg",
-			slider: "/images/movies/nowshowing/mad_heidi-slider.png",
-			ticket: "/images/tickets/nowshowing/mad_heidi-ticket.png",
-			rating: 7.3,
-			duration: 92,
-			genre: "Action",
-			fsk: "16"
-		},
-		{
-			id: 24,
-			title: "MARCO",
-			poster: "/images/movies/nowshowing/marco.jpg",
-			slider: "/images/movies/nowshowing/marco-slider.png",
-			ticket: "/images/tickets/nowshowing/marco-ticket.png",
-			rating: 7.5,
-			duration: 105,
-			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 25,
-			title: "OVERLORD: THE SACRED KINGDOM",
-			poster: "/images/movies/nowshowing/overlord_the_sacred_kingdom.jpg",
-			slider: "/images/movies/nowshowing/overlord_the_sacred_kingdom-slider.png",
-			ticket: "/images/tickets/nowshowing/overlord_the_sacred_kingdom-ticket.png",
-			rating: 7.1,
-			duration: 110,
-			genre: "Action",
-			fsk: "16"
-		},
-		{
-			id: 26,
-			title: "TERESA - EIN LEBEN ZWISCHEN LICHT UND SCHATTEN",
-			poster: "/images/movies/nowshowing/teresa_ein_leben_zwischen_licht_und_schatten.jpg",
-			slider: "/images/movies/nowshowing/teresa_ein_leben_zwischen_licht_und_schatten-slider.png",
-			ticket: "/images/tickets/nowshowing/teresa_ein_leben_zwischen_licht_und_schatten-ticket.png",
-			rating: 7.7,
-			duration: 98,
-			genre: "Drama",
-			fsk: ""
-		},
-		{
-			id: 27,
-			title: "THE LONGEST WAVE",
-			poster: "/images/movies/nowshowing/the_longest_wave.jpg",
-			slider: "/images/movies/nowshowing/the_longest_wave-slider.png",
-			ticket: "/images/tickets/nowshowing/the_longest_wave-ticket.png",
-			rating: 7.4,
-			duration: 88,
-			genre: "Dokumentarfilm",
-			fsk: "0"
-		},
-		{
-			id: 28,
-			title: "ZOMBIE: DAWN OF THE DEAD",
-			poster: "/images/movies/nowshowing/zombie_dawn_of_the_dead.jpg",
-			slider: "/images/movies/nowshowing/zombie_dawn_of_the_dead-slider.png",
-			ticket: "/images/tickets/nowshowing/zombie_dawn_of_the_dead-ticket.png",
-			rating: 7.9,
-			duration: 100,
-			genre: "Horror",
-			fsk: "18"
 		}
 ];
 
@@ -502,8 +377,7 @@ const Movies = () => {
 	const { t } = useLanguage();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const movieData = sampleMovies;
-	const loading = false;
+	const { movies: movieData, loading } = useMovieList(sampleMovies, { dedupe: true });
 	const { tab } = useParams();
 	const { user } = useAuth();
 	const { isFavorite, toggleFavorite } = useFavorites(user);
@@ -546,56 +420,23 @@ const Movies = () => {
 			return `${FEB_YEAR}-${mm}-${dd}`;
 		};
 
-		const isComingSoonMovie = (m) => {
-			if (m?.isComingSoon === true) return true;
-			const posterPath = m?.poster || m?.posterUrl || m?.posterPath || "";
-			const sliderPath = m?.slider || m?.sliderPath || m?.sliderUrl || "";
-			const frontendPoster = getPosterUrl(posterPath, m?.title) || "";
-			const frontendSlider = getPosterUrl(sliderPath, m?.title) || "";
-			const poster = frontendPoster.toString().toLowerCase();
-			const slider = frontendSlider.toString().toLowerCase();
-			const originalPoster = (posterPath || "").toString().toLowerCase();
-			const originalSlider = (sliderPath || "").toString().toLowerCase();
-			
-			const isNowShowing = poster.includes("/nowshowing/") || slider.includes("/nowshowing/") || 
-			                     originalPoster.includes("nowshowing") || originalSlider.includes("nowshowing");
-			
-			if (isNowShowing) return false;
-			
-			return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
-			       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
-		};
-
-		const featured = movieData.filter((m) => !isTrainToBusan(m) && !isComingSoonMovie(m)).slice(0, MAX_FEATURED);
+		const featured = movieData.filter((m) => !isTrainToBusan(m)).slice(0, MAX_FEATURED);
 		const featuredKeys = new Set(featured.map((m) => keyOf(m)));
 
 		let filtered = movieData.filter((movie) => {
-			if (activeTab === "bald") {
-				return isComingSoonMovie(movie);
-			} else {
-				return !isComingSoonMovie(movie);
-			}
+			const isFeatured = featuredKeys.has(keyOf(movie));
+
+			return activeTab === "bald" ? !isFeatured : isFeatured;
 		});
 
 		const seen = new Set();
-		const movieMap = new Map();
-		
-		filtered.forEach((m) => {
+		filtered = filtered.filter((m) => {
 			const k = keyOf(m);
-			if (!k) return;
-			const isNowShowing = !isComingSoonMovie(m);
-			if (!movieMap.has(k)) {
-				movieMap.set(k, m);
-			} else {
-				const existing = movieMap.get(k);
-				const existingIsNowShowing = !isComingSoonMovie(existing);
-				if (isNowShowing && !existingIsNowShowing) {
-					movieMap.set(k, m);
-				}
-			}
+			if (!k) return true;
+			if (seen.has(k)) return false;
+			seen.add(k);
+			return true;
 		});
-		
-		filtered = Array.from(movieMap.values());
 
 		if (searchQuery) {
 			const q = searchQuery;

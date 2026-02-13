@@ -7,7 +7,6 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useLanguage } from "@/context/LanguageContext";
 import { appConfig } from "@/helpers/config";
 import { useMovieList } from "@/hooks/useMovieList";
-import { getPosterUrl } from "@/helpers/image-utils";
 import "./Home.scss";
 
 const MovieCardSkeleton = React.memo(() => (
@@ -27,6 +26,38 @@ const MovieCardSkeleton = React.memo(() => (
 ));
 
 MovieCardSkeleton.displayName = 'MovieCardSkeleton';
+
+const getPosterUrl = (posterPath) => {
+	if (!posterPath) return null;
+
+	if (posterPath.startsWith("http://") || posterPath.startsWith("https://")) {
+		return posterPath;
+	}
+
+	if (posterPath.startsWith("/images/")) return posterPath;
+
+	const base = appConfig.apiURLWithoutApi || "";
+	if (
+		posterPath.startsWith("/uploads/") ||
+		posterPath.startsWith("/upload/") ||
+		posterPath.startsWith("/tickets/") ||
+		posterPath.startsWith("/files/")
+	) {
+		return base ? `${base}${posterPath}` : posterPath;
+	}
+	if (
+		posterPath.startsWith("uploads/") ||
+		posterPath.startsWith("upload/") ||
+		posterPath.startsWith("tickets/") ||
+		posterPath.startsWith("files/")
+	) {
+		return base ? `${base}/${posterPath}` : `/${posterPath}`;
+	}
+
+	if (posterPath.startsWith("/")) return posterPath;
+
+	return `/${posterPath}`;
+};
 
 const formatEuroPrice = (value) => {
 	const numeric = Number.isFinite(value) ? value : 12;
@@ -48,7 +79,7 @@ const isWideSliderAsset = (maybePath) => {
 
 const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) => {
 	const { t } = useLanguage();
-	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster, movie.title);
+	const posterUrl = getPosterUrl(movie.posterUrl || movie.poster);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
 		: Number.isFinite(movie?.price)
@@ -91,7 +122,8 @@ const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) =
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+										e.target.src =
+											"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
 							</Link>
@@ -279,20 +311,6 @@ const Home = () => {
 		return t.includes("charlie") || t.includes("superhund") || ot.includes("charlie") || ot.includes("superhund");
 	};
 
-	const isComingSoonMovie = (m) => {
-		if (m?.isComingSoon === true) return true;
-		const posterPath = m?.poster || m?.posterUrl || m?.posterPath || "";
-		const sliderPath = m?.slider || m?.sliderPath || m?.sliderUrl || "";
-		const frontendPoster = getPosterUrl(posterPath, m?.title) || "";
-		const frontendSlider = getPosterUrl(sliderPath, m?.title) || "";
-		const poster = frontendPoster.toString().toLowerCase();
-		const slider = frontendSlider.toString().toLowerCase();
-		const originalPoster = (posterPath || "").toString().toLowerCase();
-		const originalSlider = (sliderPath || "").toString().toLowerCase();
-		return poster.includes("/comingsoon/") || slider.includes("/comingsoon/") || 
-		       originalPoster.includes("comingsoon") || originalSlider.includes("comingsoon");
-	};
-
 	const displayMovies = useMemo(() => {
 		const MAX_MOVIES = 9;
 		const isTrainToBusan = (m) => {
@@ -316,9 +334,9 @@ const Home = () => {
 			seen.add(key);
 			return true;
 		});
-		let list = unique.filter((m) => !isTrainToBusan(m) && !isComingSoonMovie(m)).slice(0, MAX_MOVIES);
-		const charlieInList = list.find((m) => isCharlieMovie(m) && !isComingSoonMovie(m));
-		const charlieFromSample = sampleMovies.find((m) => m.title && m.title.toLowerCase().includes("charlie") && !isComingSoonMovie(m));
+		let list = unique.filter((m) => !isTrainToBusan(m)).slice(0, MAX_MOVIES);
+		const charlieInList = list.find(isCharlieMovie);
+		const charlieFromSample = sampleMovies.find((m) => m.title && m.title.toLowerCase().includes("charlie"));
 		if (charlieInList) {
 			if (list.indexOf(charlieInList) !== 0) {
 				list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
@@ -471,10 +489,9 @@ const Home = () => {
 								}
 								
 								const posterUrl = isMobile
-									? getPosterUrl(posterPath, movie.title)
-									: getPosterUrl(sliderPath || posterPath, movie.title);
+									? getPosterUrl(posterPath)
+									: getPosterUrl(sliderPath || posterPath);
 								const movieId = movie.id;
-								const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 								return (
 									<div key={movie.id || index} className="hero-slide">
 										{movieId ? (
@@ -488,14 +505,14 @@ const Home = () => {
 											}}
 										>
 											<img 
-												src={posterUrl || placeholder}
+												src={posterUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E"}
 												alt={movie.title}
 												className="hero-slide-poster"
 												loading={index === 0 ? "eager" : "lazy"}
 												onError={(e) => {
-													e.target.src = placeholder;
-												}}
-											/>
+													e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
+											}}
+										/>
 										{isMobile && (
 												<button
 													type="button"
