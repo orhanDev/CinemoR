@@ -132,15 +132,20 @@ export const getLocalTicketPath = (movie) => {
  * Gets poster URL - ALWAYS uses local images from /public/images/movies/nowshowing/
  * All movie images are now in the nowshowing folder
  * Tries both .jpg and .png extensions
- * @param {Object} movie - Movie object with title
+ * @param {Object} movie - Movie object with title and posterPath
  * @returns {string} Poster URL
  */
 export const getMoviePosterUrl = (movie) => {
 	if (!movie) return '/images/movies/placeholder.png';
 	
+	// FIRST: Use posterPath from movies-data.json if available
+	if (movie.posterPath && movie.posterPath.startsWith('/images/movies/')) {
+		return movie.posterPath;
+	}
+	
 	if (!movie.title) return '/images/movies/placeholder.png';
 	
-	// Try multiple filename variations for better matching
+	// FALLBACK: Generate filename from title
 	const title = String(movie.title).trim();
 	const filename = titleToFilename(title);
 	if (!filename) return '/images/movies/placeholder.png';
@@ -210,15 +215,21 @@ export const getMoviePosterUrlWithFallback = (movie) => {
 /**
  * Gets slider URL - ALWAYS uses local images from /public/images/movies/nowshowing/
  * All movie images are now in the nowshowing folder
- * @param {Object} movie - Movie object with title
+ * @param {Object} movie - Movie object with title and sliderPath
  * @returns {string} Slider URL
  */
 export const getMovieSliderUrl = (movie) => {
 	if (!movie || !movie.title) return null;
 	
+	// FIRST: Use sliderPath from movies-data.json if available
+	if (movie.sliderPath && movie.sliderPath.startsWith('/images/movies/')) {
+		return movie.sliderPath;
+	}
+	
 	const filename = titleToFilename(movie.title);
 	if (!filename) return null;
 	
+	// FALLBACK: Generate filename from title
 	// ALL images are in nowshowing folder - ignore isComingSoon completely
 	const sliderPath = `/images/movies/nowshowing/${filename}-slider.png`;
 	
