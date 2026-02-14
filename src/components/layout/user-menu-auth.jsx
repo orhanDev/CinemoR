@@ -31,13 +31,13 @@ export const UserMenuAuth = ({ user, logout }) => {
   return (
     <Dropdown className="user-dropdown">
       <Dropdown.Toggle variant="link" className="user-dropdown-toggle" id="user-dropdown">
-        <span className="user-menu-label">{displayName || t("usermenu.myAccount")}</span>
+        <span className="user-menu-label">{t("usermenu.hallo")}, {displayName || t("usermenu.myAccount")}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu className="user-dropdown-menu">
         <Dropdown.Header className="user-dropdown-header">
           <div className="user-header-info">
-            <strong>{displayName || t("usermenu.user")}</strong>
+            <strong>{t("usermenu.hallo")}, {displayName || t("usermenu.user")}</strong>
             <small className="user-email d-block">{user?.email}</small>
           </div>
         </Dropdown.Header>

@@ -235,6 +235,7 @@ const translations = {
 		"bookinghistory.loadingText": "Loading bookings…",
 		"bookinghistory.errorText": "Booking History could not be loaded. Please try again later.",
 
+		"usermenu.hallo": "Hello",
 		"usermenu.myAccount": "My Account",
 		"usermenu.profile": "Profile",
 		"usermenu.myTickets": "My Tickets",
@@ -622,6 +623,7 @@ const translations = {
 		"bookinghistory.loadingText": "Buchungen werden geladen…",
 		"bookinghistory.errorText": "Buchungshistorie konnte nicht geladen werden. Bitte später erneut versuchen.",
 
+		"usermenu.hallo": "Hallo",
 		"usermenu.myAccount": "Mein Konto",
 		"usermenu.profile": "Profil",
 		"usermenu.myTickets": "Meine Tickets",

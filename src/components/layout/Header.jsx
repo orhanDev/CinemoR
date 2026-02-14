@@ -349,7 +349,7 @@ const Header = () => {
 											onClick={() => setIsMobileMenuOpen(false)}
 										>
 											<FiUser />
-											<span>{getDisplayName(user) || t("usermenu.myAccount")}</span>
+											<span>{t("usermenu.hallo")}, {getDisplayName(user) || t("usermenu.myAccount")}</span>
 										</Link>
 										<button
 											type="button"
