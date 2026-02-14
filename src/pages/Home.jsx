@@ -47,7 +47,6 @@ const isWideSliderAsset = (maybePath) => {
 
 const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) => {
 	const { t } = useLanguage();
-	// Use local images from /public/images/movies/
 	const posterUrl = getMoviePosterUrl(movie);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
 		? movie.ticketPrice
@@ -91,31 +90,21 @@ const MovieCard = React.memo(({ movie, isFavorite = false, onToggleFavorite }) =
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										// Try fallback: .png extension, then comingsoon folder
 										const img = e.target;
 										const currentSrc = img.src;
-										
-										// Don't retry if already showing placeholder
 										if (currentSrc.includes('data:image')) return;
-										
-										// Track retry attempts to prevent infinite loop
 										if (!img.dataset.retryCount) img.dataset.retryCount = '0';
 										const retryCount = parseInt(img.dataset.retryCount, 10);
 										if (retryCount >= 2) {
-											// Already tried fallbacks, show placeholder
 											img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 											return;
 										}
-										
-										// Try fallback paths
 										const fallbackPath = getMoviePosterUrlFallback(movie, currentSrc);
 										if (fallbackPath && img.src !== fallbackPath) {
 											img.dataset.retryCount = String(retryCount + 1);
 											img.src = fallbackPath;
 											return;
 										}
-										
-										// Show placeholder if all fails
 										img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
@@ -175,7 +164,6 @@ const Home = () => {
 	const { isFavorite, toggleFavorite } = useFavorites(user);
 
 	const sampleMovies = [
-		// Yeni filmler – slider ve Jetzt im Kino'da ilk sırada
 		{
 			id: 20,
 			title: "CRIME 101",
@@ -204,7 +192,6 @@ const Home = () => {
 			fsk: "ab 12 Jahren",
 			isComingSoon: false
 		},
-		// Coming soon movies (isComingSoon: true) - in /public/images/movies/comingsoon/
 		{
 			id: 1,
 			title: "AB DURCH DIE MITTE",
@@ -265,7 +252,6 @@ const Home = () => {
 			fsk: "",
 			isComingSoon: true
 		},
-		// Now showing movies (isComingSoon: false) - in /public/images/movies/nowshowing/
 		{
 			id: 4,
 			title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
@@ -382,8 +368,6 @@ const Home = () => {
 		});
 		let list = unique.filter((m) => !isTrainToBusan(m));
 		list = list.map(m => ({ ...m, isComingSoon: false }));
-
-		// Crime 101 ve Greenland 2 her zaman ilk iki sırada
 		const crime101 = list.find(isCrime101);
 		const greenland2 = list.find(isGreenland2);
 		const featuredFirst = [crime101, greenland2].filter(Boolean);
@@ -550,7 +534,6 @@ const Home = () => {
 						onTouchEnd={handleTouchEnd}
 					>
 							{sliderMovies.map((movie, index) => {
-								// Use local images from /public/images/movies/
 								const sliderUrl = getMovieSliderUrl(movie);
 								const posterUrlForSlider = isMobile 
 									? getMoviePosterUrl(movie)
@@ -574,39 +557,27 @@ const Home = () => {
 												className="hero-slide-poster"
 												loading={index === 0 ? "eager" : "lazy"}
 												onError={(e) => {
-													// Try fallback: .png extension, then comingsoon folder
 													const img = e.target;
 													const currentSrc = img.src;
-													
-													// Don't retry if already showing placeholder
 													if (currentSrc.includes('data:image')) return;
-													
-													// Track retry attempts to prevent infinite loop
 													if (!img.dataset.retryCount) img.dataset.retryCount = '0';
 													const retryCount = parseInt(img.dataset.retryCount, 10);
 													if (retryCount >= 3) {
-														// Already tried all fallbacks, show placeholder
 														img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 														return;
 													}
-													
-													// Try fallback slider image first
 													const fallbackSlider = getMovieSliderUrlFallback(movie, currentSrc);
 													if (fallbackSlider && img.src !== fallbackSlider && retryCount === 0) {
 														img.dataset.retryCount = '1';
 														img.src = fallbackSlider;
 														return;
 													}
-													
-													// Try fallback poster image
 													const fallbackPoster = getMoviePosterUrlFallback(movie, currentSrc);
 													if (fallbackPoster && img.src !== fallbackPoster && retryCount === 1) {
 														img.dataset.retryCount = '2';
 														img.src = fallbackPoster;
 														return;
 													}
-													
-													// Show placeholder if all fails
 													img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='1280' height='720' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 												}}
 											/>

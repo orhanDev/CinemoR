@@ -135,9 +135,6 @@ const buildTicketImageCandidates = (rawTicket) => {
 	const { t } = useLanguage();
 	const linkState = selectedCinema ? { cinema: selectedCinema } : undefined;
 	const releaseLabel = movie.releaseDate ? formatDate(movie.releaseDate) : t("movies.comingSoon");
-	// Use local images from /public/images/movies/
-	// IMPORTANT: Use isComingSoon prop from parent (based on activeTab), NOT from API data
-	// This ensures we look in the correct folder regardless of API data
 	const movieWithStatus = { ...movie, isComingSoon };
 	const posterUrl = getMoviePosterUrl(movieWithStatus);
 	const priceValue = Number.isFinite(movie?.ticketPrice)
@@ -182,31 +179,21 @@ const buildTicketImageCandidates = (rawTicket) => {
 									className="movie-card-image"
 									loading="lazy"
 									onError={(e) => {
-										// Try fallback: .png extension, then comingsoon folder
 										const img = e.target;
 										const currentSrc = img.src;
-										
-										// Don't retry if already showing placeholder
 										if (currentSrc.includes('data:image')) return;
-										
-										// Track retry attempts to prevent infinite loop
 										if (!img.dataset.retryCount) img.dataset.retryCount = '0';
 										const retryCount = parseInt(img.dataset.retryCount, 10);
 										if (retryCount >= 2) {
-											// Already tried fallbacks, show placeholder
 											img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 											return;
 										}
-										
-										// Try fallback paths
 										const fallbackPath = getMoviePosterUrlFallback(movie, currentSrc);
 										if (fallbackPath && img.src !== fallbackPath) {
 											img.dataset.retryCount = String(retryCount + 1);
 											img.src = fallbackPath;
 											return;
 										}
-										
-										// Show placeholder if all fails
 										img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 									}}
 								/>
@@ -221,13 +208,11 @@ const buildTicketImageCandidates = (rawTicket) => {
 								className="movie-card-image"
 								loading="lazy"
 								onError={(e) => {
-									// Try fallback folder if primary fails (handles API data inconsistencies)
 									const img = e.target;
 									const currentSrc = img.src;
 									if (movie.title && !currentSrc.includes('data:image')) {
 										const filename = titleToFilename(movie.title);
 										if (filename) {
-											// Try opposite folder
 											const fallbackPath = currentSrc.includes('nowshowing') 
 												? `/images/movies/comingsoon/${filename}.jpg`
 												: `/images/movies/nowshowing/${filename}.jpg`;
@@ -237,7 +222,6 @@ const buildTicketImageCandidates = (rawTicket) => {
 											}
 										}
 									}
-									// Show placeholder if all fails
 									img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='%231E293B'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16'%3EKein Bild%3C/text%3E%3C/svg%3E";
 								}}
 							/>
@@ -284,7 +268,6 @@ const FEB_MONTH = 2;
 const FEB_DAYS = 28;
 
 	const sampleMovies = [
-		// Coming soon movies (isComingSoon: true) - in /public/images/movies/comingsoon/
 		{
 			id: 1,
 			title: "AB DURCH DIE MITTE",
@@ -345,7 +328,6 @@ const FEB_DAYS = 28;
 			fsk: "",
 			isComingSoon: true
 		},
-		// Now showing movies (isComingSoon: false) - in /public/images/movies/nowshowing/
 		{
 			id: 4,
 			title: "LES MISÉRABLES – DIE GESCHICHTE VON JEAN VALJEAN",
@@ -443,21 +425,11 @@ const Movies = () => {
 			return `${FEB_YEAR}-${mm}-${dd}`;
 		};
 
-		// ALL movies are now in nowshowing folder
-		// "im-kino" tab shows all movies
-		// "bald" tab shows empty (no coming soon movies)
 		let filtered = movieData.filter((movie) => {
 			const isTrain = isTrainToBusan(movie);
-			
-			if (isTrain) return false; // Always exclude Train to Busan
-			
-			if (activeTab === "bald") {
-				// No coming soon movies - return empty list
-				return false;
-			} else {
-				// Show all movies in "im-kino" tab
-				return true;
-			}
+			if (isTrain) return false;
+			if (activeTab === "bald") return false;
+			return true;
 		});
 
 		const seen = new Set();
@@ -495,7 +467,6 @@ const Movies = () => {
 				.map(({ m }) => m);
 		}
 
-		// "im-kino": Crime 101 ve Greenland 2 ilk iki sırada
 		if (activeTab === "im-kino" && filtered.length > 0) {
 			const isCrime101 = (m) =>
 				(m?.title || "").toString().trim().toLowerCase().includes("crime 101") || m?.id === 20;
@@ -560,16 +531,12 @@ const Movies = () => {
 				) : (
 					<div className="movies-grid">
 						{filteredAndSortedMovies.map((movie) => {
-							// ALL images are in nowshowing folder - set isComingSoon: false for all
-							const movieForLocalImages = {
-								...movie,
-								isComingSoon: false // All movies are now showing
-							};
+							const movieForLocalImages = { ...movie, isComingSoon: false };
 							return (
 								<MovieCard 
 									key={movie.id || movie.title} 
 									movie={movieForLocalImages} 
-									isComingSoon={false} // All movies are now showing
+									isComingSoon={false}
 									isFavorite={isFavorite(movie.id)}
 									onToggleFavorite={handleFavoriteClick}
 									selectedCinema={selectedCinema}

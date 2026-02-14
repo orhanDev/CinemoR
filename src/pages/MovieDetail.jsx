@@ -338,7 +338,6 @@ const MovieDetail = () => {
 			setError(null);
 			try {
 				setLoading(true);
-				// Önce liste sayfasından gelindiyse state'teki filmi kullan
 				const stateMovie = location.state?.movie;
 				if (stateMovie && String(stateMovie.id) === String(id)) {
 					const m = { ...stateMovie, isComingSoon: false };
@@ -353,7 +352,6 @@ const MovieDetail = () => {
 					setLoading(false);
 					return;
 				}
-				// movies-data.json'dan tüm filmleri al
 				const movies = await getAllMovies();
 				const list = Array.isArray(movies) ? movies : [];
 				const movie = list.find(m => String(m.id) === String(id));
@@ -368,7 +366,6 @@ const MovieDetail = () => {
 						slider: getMovieSliderUrl(m),
 					});
 				} else if (stateMovie) {
-					// ID eşleşmedi ama state'te film var, yine de kullan
 					const m = { ...stateMovie, isComingSoon: false };
 					setMovieData({
 						...stateMovie,
@@ -399,7 +396,6 @@ const MovieDetail = () => {
 					});
 				}
 			} catch (err) {
-				// JSON yüklenemezse liste sayfasından gelen state varsa onu kullan
 				const stateMovie = location.state?.movie;
 				if (stateMovie) {
 					const m = { ...stateMovie, isComingSoon: false };
@@ -609,7 +605,6 @@ const MovieDetail = () => {
 
 		const cinemaDisplayName = cityFilter || showtime.cinemaName;
 
-		// Use local images from /public/images/movies/
 		const movieForImage = { title: movie?.title, isComingSoon: movie?.isComingSoon ?? false };
 		const localPosterUrl = getMoviePosterUrl(movieForImage);
 		const localSliderUrl = getMovieSliderUrl(movieForImage);
@@ -775,7 +770,6 @@ const MovieDetail = () => {
 
 		return movie?.description ?? "";
 	}, [movie, language]);
-	// Use local images from /public/images/movies/
 	const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
 	const movieImage = movieForImage 
 		? getMoviePosterUrl(movieForImage)

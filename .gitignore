@@ -58,3 +58,5 @@ Thumbs.db
 # IDE specific
 .vscode/settings.json
 .idea/workspace.xml
+.cursor
+.cursorrules

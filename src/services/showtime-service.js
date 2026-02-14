@@ -16,7 +16,6 @@ export const getMovieShowtimes = async (movieId, params = {}) => {
 		const res = await fetch(url.toString());
 		return res;
 	} catch {
-		// API yoksa veya hata olursa null dön (demo showtimes kullanılacak)
 		return null;
 	}
 };

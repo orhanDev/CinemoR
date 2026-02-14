@@ -50,7 +50,6 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      // Use the correct register endpoint: /api/register
       const response = await fetch(REGISTER_API_ROUTE, {
         method: 'POST',
         headers: {

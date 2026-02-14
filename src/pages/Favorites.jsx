@@ -15,7 +15,6 @@ const normalizeFavorite = (item) => {
   if (!item || typeof item !== 'object') return null;
   const id = item.id ?? item.movieId ?? item.movie_id;
   const title = item.title ?? item.name ?? item.movieTitle ?? item.movieName ?? 'Film';
-  // Use local images from /public/images/movies/
   const movieForImage = { title, isComingSoon: item.isComingSoon ?? false };
   const posterPath = getMoviePosterUrl(movieForImage);
   return {

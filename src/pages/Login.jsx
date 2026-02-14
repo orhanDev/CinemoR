@@ -58,7 +58,6 @@ const Login = () => {
         if (selectedSeats) setSeats(selectedSeats);
         if (totalPrice) setPrice(totalPrice);
         
-        // Use local images from /public/images/movies/
         const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
         const sliderUrl = movieForImage ? getMovieSliderUrl(movieForImage) : null;
         const posterUrl = movieForImage ? getMoviePosterUrl(movieForImage) : null;

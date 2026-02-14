@@ -33,7 +33,6 @@ const TicketSuccess = () => {
 				if (!cancelled) setQRCodeComponent(() => m.QRCodeSVG);
 			})
 			.catch(() => {});
-		// Film detayını local JSON'dan çek
 		const fetchMovie = async () => {
 			const movieId = booking?.movie?.id || urlId;
 			if (movieId) {

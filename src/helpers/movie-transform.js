@@ -7,19 +7,18 @@ export function parseDuration(durationStr) {
 function decodeUTF8(text) {
 	if (!text || typeof text !== 'string') return text;
 	
-	// Common UTF-8 encoding issues and their fixes
 	const fixes = {
 		'ZURÃœCK': 'ZURUCK',
 		'zurÃ¼ck': 'zuruck',
 		'ZURÃ¼CK': 'ZURUCK',
 		'zurÃ¼ck': 'zuruck',
-		'ZURÜCK': 'ZURUCK', // Also fix already decoded versions
+		'ZURÜCK': 'ZURUCK',
 		'zurück': 'zuruck',
 		'LES MISÃ‰RABLES': 'LES MISERABLES',
 		'les misÃ©rables': 'les miserables',
 		'MISÃ‰RABLES': 'MISERABLES',
 		'misÃ©rables': 'miserables',
-		'LES MISÉRABLES': 'LES MISERABLES', // Also fix already decoded versions
+		'LES MISÉRABLES': 'LES MISERABLES',
 		'les misérables': 'les miserables',
 		'GESCHICHTE': 'GESCHICHTE',
 		'geschichte': 'geschichte',
@@ -30,7 +29,6 @@ function decodeUTF8(text) {
 		'â€': '"',
 	};
 	
-	// Apply direct fixes first
 	let decoded = text;
 	for (const [wrong, correct] of Object.entries(fixes)) {
 		if (decoded.includes(wrong)) {
@@ -38,24 +36,17 @@ function decodeUTF8(text) {
 		}
 	}
 	
-	// Try decodeURIComponent if still contains encoding issues
 	try {
 		if (decoded.includes('Ã') || decoded.includes('â€')) {
 			const decoded2 = decodeURIComponent(escape(decoded));
-			// Only use if it actually improved the text
-			if (decoded2 !== decoded && !decoded2.includes('Ã')) {
-				return decoded2;
-			}
+			if (decoded2 !== decoded && !decoded2.includes('Ã')) return decoded2;
 		}
-	} catch {
-		// If decode fails, return the fixed version
-	}
+	} catch {}
 	
 	return decoded;
 }
 
 export function transformMovieData(movie) {
-	// Ensure isComingSoon is properly set (handle null, undefined, boolean, string)
 	let isComingSoon = false;
 	if (movie.isComingSoon !== undefined && movie.isComingSoon !== null) {
 		if (typeof movie.isComingSoon === 'boolean') {
@@ -70,7 +61,6 @@ export function transformMovieData(movie) {
 	return {
 		id: movie.id,
 		title: decodeUTF8(movie.title),
-		// Local paths from movies-data.json so ticket page and list get correct poster/slider
 		posterPath: movie.posterPath ?? null,
 		sliderPath: movie.sliderPath ?? null,
 		ticketPath: movie.ticketPath ?? null,

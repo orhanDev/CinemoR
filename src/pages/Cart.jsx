@@ -87,7 +87,6 @@ const Cart = () => {
 								<div className="cart-item-thumb">
 									{item.type === "movie" ? (
 										(() => {
-											// Use local images from /public/images/movies/
 											const movieForImage = item.movieTitle ? { title: item.movieTitle, isComingSoon: false } : null;
 											const imageUrl = movieForImage 
 												? (getMovieSliderUrl(movieForImage) || getMoviePosterUrl(movieForImage))

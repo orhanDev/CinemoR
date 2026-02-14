@@ -60,7 +60,6 @@ const SeatSelectionPage = () => {
 		const state = location?.state;
 		if (state?.movie) {
 			const m = state.movie;
-			// Use local images from /public/images/movies/
 			const movieForImage = { title: m?.title, isComingSoon: m?.isComingSoon ?? false };
 			const localPosterUrl = getMoviePosterUrl(movieForImage);
 			const localSliderUrl = getMovieSliderUrl(movieForImage);
@@ -203,7 +202,6 @@ const SeatSelectionPage = () => {
 		setBookingSeats(selectedSeats.map((s) => s.id));
 		setPrice(totalPriceFromTypes);
 
-		// Use local images from /public/images/movies/
 		const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
 		const sliderUrl = movieForImage ? getMovieSliderUrl(movieForImage) : null;
 		const posterUrl = movieForImage ? getMoviePosterUrl(movieForImage) : null;

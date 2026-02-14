@@ -85,7 +85,6 @@ export const Slider = () => {
 				className="swiper-container"
 			>
 				{displayMovies.map((movie) => {
-					// Use local images from /public/images/movies/
 					const movieForImage = movie ? { title: movie.title, isComingSoon: movie.isComingSoon ?? false } : null;
 					const imageUrl = movieForImage 
 						? (getMovieSliderUrl(movieForImage) || getMoviePosterUrl(movieForImage) || '/images/movies/placeholder.png')
