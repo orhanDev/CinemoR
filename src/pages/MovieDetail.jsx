@@ -486,7 +486,7 @@ const MovieDetail = () => {
 				}
 
 				const res = await getMovieShowtimes(id);
-				if (!res || res.status === 404) {
+				const useDemoDueToError = () => {
 					setUseApiShowtimes(false);
 					setDemoSchedule(true);
 					setShowtimes(
@@ -496,6 +496,13 @@ const MovieDetail = () => {
 							days: visibleDates,
 						})
 					);
+				};
+				if (!res) {
+					useDemoDueToError();
+					return;
+				}
+				if (res.status === 403 || res.status === 401 || res.status === 404 || res.status >= 500) {
+					useDemoDueToError();
 					return;
 				}
 				let list = [];
