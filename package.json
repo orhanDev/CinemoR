@@ -1,0 +1,16 @@
+{
+  "name": "cinemor-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd cinemor-react && npm run dev",
+    "build": "cd cinemor-react && npm run build",
+    "start": "cd cinemor-react && npm run dev",
+    "lint": "cd cinemor-react && npm run lint",
+    "install": "cd cinemor-react && npm install",
+    "backend": "cd cinemor-api && .\\mvnw.cmd spring-boot:run",
+    "import-movies": "node scripts/import-movies.js",
+    "create-db": "psql -U postgres -d postgres -f scripts/create-cinemor-db.sql"
+  }
+}
+

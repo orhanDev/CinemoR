@@ -1,0 +1,39 @@
+{
+  "folders": [
+    {
+      "path": "cinemor-api"
+    },
+    {
+      "path": "cinemor-react"
+    }
+  ],
+  "settings": {
+    "java.compile.nullAnalysis.mode": "automatic",
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/target/**": true,
+      "**/.git/**": true,
+      "**/dist/**": true,
+      "**/.vite/**": true,
+      "cinemor-react/public/images/**": true,
+      "cinemor-react/public/videos/**": true
+    },
+    "search.exclude": {
+      "**/node_modules/**": true,
+      "**/target/**": true,
+      "**/dist/**": true,
+      "**/.vite/**": true,
+      "cinemor-react/public/images/**": true,
+      "cinemor-react/public/videos/**": true,
+      "**/*.png": true,
+      "**/*.jpg": true,
+      "**/*.jpeg": true,
+      "**/*.webp": true,
+      "**/*.gif": true,
+      "**/*.mp4": true,
+      "**/*.mov": true
+    },
+    "typescript.tsserver.maxTsServerMemory": 4096
+  }
+}
+

@@ -1,0 +1,61 @@
+# Render.com Environment Variables Configuration
+# Bu dosyayı Render Dashboard'da Environment Variables bölümüne ekleyin
+
+# Database Configuration
+SPRING_DATASOURCE_URL=jdbc:postgresql://your-render-postgres-host:5432/cinemor-api
+SPRING_DATASOURCE_USERNAME=your-postgres-username
+SPRING_DATASOURCE_PASSWORD=Vekil402300.
+
+# Server Configuration
+SERVER_PORT=8082
+SPRING_PROFILES_ACTIVE=production
+
+# JWT Configuration
+APP_JWT_SECRET=b28b93f654e2afcb49d792ef1655af3e4f416b5e8d5700fd868670f60087493b
+APP_JWT_EXPIRATION_MILLISECONDS=604800000
+
+# Frontend URL
+APP_FRONTEND_URL=https://cinemor.netlify.app
+
+# Email Configuration (Gmail App Password)
+SPRING_MAIL_HOST=smtp.gmail.com
+SPRING_MAIL_PORT=587
+SPRING_MAIL_USERNAME=cinemorapi@gmail.com
+SPRING_MAIL_PASSWORD=your-gmail-app-password-here
+SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+APP_MAIL_ENABLED=false
+
+# Admin Default Credentials (will be created on first startup)
+ADMIN_EMAIL=orhancodes@gmail.com
+ADMIN_PASSWORD=Vekil402300.
+ADMIN_PHONENUMBER=(111) 111-1111
+
+# User Default Credentials (will be created on first startup)
+USER_EMAIL=orhancodes@gmail.com
+USER_PASSWORD=Vekil402300.
+USER_PHONENUMBER=(111) 111-1111
+
+# Cloudinary (if using image upload)
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+
+# File Upload Directory
+FILE_UPLOAD_DIR=uploads
+
+# Logging
+LOGGING_FILE_NAME=log/cinemorapp.log
+LOGGING_LEVEL_ROOT=INFO
+LOGGING_LEVEL_COM_CINEMOR=INFO
+LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=WARN
+LOGGING_LEVEL_ORG_HIBERNATE=INFO
+
+# Spring JPA
+SPRING_JPA_HIBERNATE_DDL_AUTO=update
+SPRING_JPA_SHOW_SQL=false
+SPRING_SQL_INIT_MODE=always
+
+# Swagger
+SPRINGDOC_SWAGGER_UI_PATH=/swagger-ui.html
+SPRINGDOC_PATHS_TO_MATCH=/api/**
