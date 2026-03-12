@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA routing için redirect kuralları
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[build.environment]
+  NODE_VERSION = "20"
+  VITE_API_URL = "https://cinemor-api.onrender.com/api"
+  VITE_API_URL_WITHOUT_API = "https://cinemor-api.onrender.com"

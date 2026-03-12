@@ -1,0 +1,235 @@
+.help-page {
+	min-height: calc(100vh - 200px);
+	padding: 120px 0 4rem;
+	background: #1A1A1A;
+	color: #F8FAFC;
+
+	.help-hero {
+		margin-bottom: 4rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+		h1 {
+			font-size: 2.5rem;
+			font-weight: 400;
+			margin: 0;
+			color: #F8FAFC;
+			letter-spacing: -0.02em;
+		}
+	}
+
+	.help-content {
+		max-width: 700px;
+	}
+
+	.help-section {
+		margin-bottom: 4rem;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		h2 {
+			font-size: 1rem;
+			font-weight: 500;
+			margin: 0 0 2rem 0;
+			color: rgba(248, 250, 252, 0.6);
+			text-transform: uppercase;
+			letter-spacing: 0.1em;
+		}
+	}
+
+	.help-faq {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+
+		.help-faq-item {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+			padding: 1.5rem 0;
+
+			&:first-child {
+				padding-top: 0;
+			}
+
+			.help-faq-question {
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 1rem;
+				background: none;
+				border: none;
+				padding: 0;
+				text-align: left;
+				cursor: pointer;
+				color: #F8FAFC;
+				font-size: 1rem;
+				font-weight: 400;
+				line-height: 1.5;
+
+				span:first-child {
+					flex: 1;
+				}
+
+				.help-faq-icon {
+					font-size: 1.5rem;
+					font-weight: 300;
+					color: rgba(248, 250, 252, 0.4);
+					line-height: 1;
+					width: 20px;
+					text-align: center;
+					flex-shrink: 0;
+				}
+
+				&:hover {
+					.help-faq-icon {
+						color: rgba(248, 250, 252, 0.7);
+					}
+				}
+			}
+
+			&.is-open {
+				.help-faq-question {
+					.help-faq-icon {
+						color: rgba(248, 250, 252, 0.8);
+					}
+				}
+			}
+
+			.help-faq-answer {
+				margin-top: 1rem;
+				padding-top: 1rem;
+				border-top: 1px solid rgba(255, 255, 255, 0.05);
+				animation: fadeIn 0.2s ease;
+
+				p {
+					margin: 0;
+					color: rgba(248, 250, 252, 0.7);
+					line-height: 1.7;
+					font-size: 0.9375rem;
+				}
+			}
+		}
+	}
+
+	.help-contact {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+
+		.help-contact-row {
+			display: grid;
+			grid-template-columns: 140px 1fr;
+			gap: 2rem;
+			align-items: start;
+
+			.help-contact-label {
+				font-size: 0.875rem;
+				color: rgba(248, 250, 252, 0.5);
+				font-weight: 400;
+			}
+
+			a, span {
+				font-size: 0.9375rem;
+				color: #F8FAFC;
+				line-height: 1.6;
+				text-decoration: none;
+				transition: color 0.2s ease;
+
+				&:hover {
+					color: rgba(248, 250, 252, 0.7);
+				}
+			}
+		}
+	}
+
+	.help-support-text {
+		color: rgba(248, 250, 252, 0.7);
+		line-height: 1.7;
+		margin-bottom: 1.5rem;
+		font-size: 0.9375rem;
+	}
+
+	.help-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+
+		a {
+			display: inline-block;
+			padding: 0.5rem 0;
+			color: rgba(248, 250, 252, 0.8);
+			text-decoration: none;
+			font-size: 0.9375rem;
+			border-bottom: 1px solid transparent;
+			transition: all 0.2s ease;
+
+			&:hover {
+				color: #F8FAFC;
+				border-bottom-color: rgba(248, 250, 252, 0.3);
+			}
+		}
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 750px) {
+	.help-page {
+		padding: 100px 0 3rem;
+
+		.help-hero {
+			margin-bottom: 3rem;
+			padding-bottom: 1.5rem;
+
+			h1 {
+				font-size: 2rem;
+			}
+		}
+
+		.help-section {
+			margin-bottom: 3rem;
+
+			h2 {
+				font-size: 0.875rem;
+				margin-bottom: 1.5rem;
+			}
+		}
+
+		.help-contact {
+			.help-contact-row {
+				grid-template-columns: 1fr;
+				gap: 0.5rem;
+			}
+		}
+
+		.help-faq {
+			.help-faq-item {
+				padding: 1.25rem 0;
+
+				.help-faq-question {
+					font-size: 0.9375rem;
+				}
+
+				.help-faq-answer {
+					margin-top: 0.75rem;
+					padding-top: 0.75rem;
+
+					p {
+						font-size: 0.875rem;
+					}
+				}
+			}
+		}
+	}
+}

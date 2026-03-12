@@ -1,0 +1,406 @@
+
+.ticket-success-page {
+  background: #0f1012;
+  min-height: 100vh;
+  padding-top: 100px;
+  padding-bottom: 3rem;
+  color: #f1f3f5;
+
+  @media (max-width: 750px) {
+    padding-top: calc(80px + 1.5rem);
+    padding-bottom: calc(70px + 1rem);
+  }
+}
+
+.ticket-success-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.ticket-success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #d4a853;
+  margin: 0 0 0.5rem;
+
+  svg {
+    font-size: 1rem;
+  }
+}
+
+.ticket-success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f1f3f5;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.ticket-invoice {
+  background: linear-gradient(145deg, rgba(42, 42, 42, 0.9) 0%, rgba(26, 26, 26, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  margin-bottom: 1.5rem;
+}
+
+.ticket-invoice__block {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &--total {
+    border-bottom: none;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    .ticket-invoice__value {
+      font-weight: 700;
+      color: #d4a853;
+    }
+  }
+}
+
+.ticket-invoice__label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(241, 243, 245, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ticket-invoice__value {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #f1f3f5;
+  word-break: break-word;
+
+  &--code {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.85rem;
+  }
+}
+
+.ticket-invoice__order-head {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0 0.4rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(241, 243, 245, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ticket-invoice__order-label { grid-column: 1; }
+.ticket-invoice__order-qty { grid-column: 2; min-width: 2.5rem; text-align: center; }
+.ticket-invoice__order-price { grid-column: 3; min-width: 4rem; text-align: right; }
+
+.ticket-invoice__order-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem 1rem;
+  align-items: start;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ticket-invoice__order-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.ticket-invoice__order-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f1f3f5;
+}
+
+.ticket-invoice__order-meta {
+  font-size: 0.8rem;
+  color: rgba(241, 243, 245, 0.9);
+  font-weight: 500;
+}
+
+.ticket-invoice__order-qty-val {
+  font-size: 0.9rem;
+  color: rgba(241, 243, 245, 0.9);
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.ticket-invoice__order-price-val {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #d4a853;
+  min-width: 4rem;
+  text-align: right;
+}
+
+.ticket-invoice__receipt-head {
+  display: none;
+}
+
+.ticket-invoice__qr {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  .ticket-invoice__qr-loading {
+    color: rgba(241, 243, 245, 0.4);
+    font-size: 0.9rem;
+  }
+
+  .ticket-invoice__qr-hint {
+    font-size: 0.75rem;
+    color: rgba(241, 243, 245, 0.5);
+  }
+}
+
+.ticket-invoice--show-qr .ticket-invoice__qr {
+  display: flex;
+}
+
+.ticket-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.ticket-success-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+  background: transparent;
+  color: #f1f3f5;
+
+  svg {
+    font-size: 0.95rem;
+  }
+}
+
+.ticket-success-btn--primary {
+  background: #d4a853;
+  color: #0f1012;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+}
+
+.ticket-success-btn--text {
+  color: rgba(241, 243, 245, 0.8);
+
+  &:hover {
+    color: #f1f3f5;
+  }
+}
+
+.ticket-success-links {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ticket-success-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: rgba(241, 243, 245, 0.6);
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: #d4a853;
+  }
+}
+
+.ticket-success-link-sep {
+  color: rgba(241, 243, 245, 0.35);
+  font-size: 0.8rem;
+}
+
+.ticket-success-email {
+  font-size: 0.8rem;
+  color: rgba(241, 243, 245, 0.45);
+  margin: 0;
+}
+
+@page {
+  size: A5;
+  margin: 16mm;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  html,
+  body,
+  .app,
+  .main-content,
+  .ticket-success-page {
+    background: #fff !important;
+    min-height: auto !important;
+  }
+
+  .ticket-success-page {
+    padding: 0 !important;
+    color: #1a1a1a;
+  }
+
+  .ticket-success-container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .ticket-success-badge,
+  .ticket-success-title {
+    display: none !important;
+  }
+
+  .ticket-invoice {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none;
+  }
+
+  .ticket-invoice__receipt-head {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #1a1a1a;
+  }
+
+  .ticket-invoice__company {
+    margin: 0 0 0.2rem;
+    font-size: 14pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #1a1a1a;
+  }
+
+  .ticket-invoice__doc-title {
+    margin: 0;
+    font-size: 10pt;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 0.02em;
+  }
+
+  .ticket-invoice__block {
+    border-bottom: none !important;
+    padding: 0.35rem 0;
+    grid-template-columns: 10rem 1fr;
+    gap: 0.5rem 1rem;
+  }
+
+  .ticket-invoice__block--total {
+    margin-top: 0.75rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid #1a1a1a !important;
+  }
+
+  .ticket-invoice__label {
+    font-size: 9pt;
+    color: #444;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 600;
+  }
+
+  .ticket-invoice__value {
+    font-size: 10pt;
+    color: #1a1a1a;
+
+    &--code {
+      font-size: 9pt;
+      font-family: "Consolas", "Monaco", ui-monospace, monospace;
+    }
+  }
+
+  .ticket-invoice__order-title {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .ticket-invoice__order-meta {
+    font-size: 9pt;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .ticket-invoice__block--total .ticket-invoice__value {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .ticket-invoice__qr {
+    display: flex !important;
+    margin-top: 1.25rem;
+    padding: 1rem;
+    border-top: 1px solid #ccc !important;
+    background: #fff !important;
+    min-height: 0 !important;
+
+    .ticket-invoice__qr-hint {
+      color: #555;
+      font-size: 8pt;
+    }
+
+    svg {
+      display: block;
+      background: #fff;
+    }
+  }
+
+  .ticket-success-container {
+    background: #fff !important;
+  }
+}
