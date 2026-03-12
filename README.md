@@ -1,4 +1,5 @@
-<<<<<<< HEAD
+![CinemoR Banner](cinemorbanner.png)
+
 # CinemoR
 
 Cinema ticket booking system: React frontend + Spring Boot API.
