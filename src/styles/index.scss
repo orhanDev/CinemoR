@@ -1,0 +1,228 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+
+html {
+	overflow-y: scroll; 
+	overflow-x: hidden; 
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: "Inter", "Poppins", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	background: #0F1012;
+	color: #F1F3F5;
+	overflow-x: hidden; 
+	width: 100%; 
+}
+
+.app-body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.app-content {
+	flex: 1;
+}
+
+
+.site-header {
+	@include flex($jc: space-between, $ai: center);
+	padding: $spacing-md 0;
+	margin-bottom: $spacing-xl;
+
+	.logo {
+		height: 40px;
+
+		img {
+			height: 100%;
+		}
+	}
+
+	.auth-buttons {
+		display: flex;
+		gap: $spacing-sm;
+
+		.btn {
+			padding: $spacing-xs $spacing-md;
+			min-width: 100px;
+		}
+	}
+}
+
+
+.btn-primary {
+	@include button-primary;
+}
+
+.btn-secondary {
+	@include button-secondary;
+}
+
+
+.movie-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: $spacing-md;
+	margin: $spacing-xl 0;
+}
+
+.movie-card {
+	@include movie-card;
+
+	&__image {
+		width: 100%;
+		aspect-ratio: 2/3;
+		object-fit: cover;
+	}
+
+	&__title {
+		font-weight: $font-weight-bold;
+		margin-top: $spacing-xs;
+		color: $color-white;
+		text-align: center;
+		padding: $spacing-xs 0;
+	}
+}
+
+
+.seat-grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	max-width: 800px;
+	margin: 0 auto $spacing-xl auto;
+}
+
+.seat {
+	@include seat-button;
+}
+
+.screen-indicator {
+	width: 80%;
+	height: 10px;
+	background-color: rgba(255, 255, 255, 0.2);
+	margin: 0 auto $spacing-xl auto;
+	@include border-radius($border-radius-sm);
+	position: relative;
+
+	&:after {
+		content: "SCREEN";
+		position: absolute;
+		top: 15px;
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: $font-size-xs;
+		color: $color-light-text;
+	}
+}
+
+
+.theater-id {
+	@include theater-identifier;
+	margin-bottom: $spacing-md;
+}
+
+
+.auth-form {
+	background-color: $bg-card;
+	padding: $spacing-xl;
+	@include border-radius($border-radius-md);
+	max-width: 450px;
+	margin: 0 auto;
+
+	h2 {
+		color: $color-text;
+		text-align: center;
+		margin-bottom: $spacing-lg;
+	}
+
+	.form-group {
+		margin-bottom: $spacing-md;
+	}
+
+	.form-label {
+		display: block;
+		margin-bottom: $spacing-xs;
+		font-weight: $font-weight-medium;
+		color: $color-text;
+	}
+
+	.form-control {
+		width: 100%;
+		padding: $spacing-sm $spacing-md;
+		@include border-radius($border-radius-md);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: $bg-primary;
+		color: $color-text;
+
+		&:focus {
+			outline: none;
+			border-color: $color-primary;
+		}
+	}
+
+	.form-footer {
+		text-align: center;
+		margin-top: $spacing-lg;
+		color: $color-text;
+
+		a {
+			color: $color-primary;
+			font-weight: $font-weight-medium;
+			text-decoration: none;
+		}
+	}
+}
+
+
+.container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 $spacing-md;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.mt-1 {
+	margin-top: $spacing-xs;
+}
+.mt-2 {
+	margin-top: $spacing-sm;
+}
+.mt-3 {
+	margin-top: $spacing-md;
+}
+.mt-4 {
+	margin-top: $spacing-lg;
+}
+.mt-5 {
+	margin-top: $spacing-xl;
+}
+
+.mb-1 {
+	margin-bottom: $spacing-xs;
+}
+.mb-2 {
+	margin-bottom: $spacing-sm;
+}
+.mb-3 {
+	margin-bottom: $spacing-md;
+}
+.mb-4 {
+	margin-bottom: $spacing-lg;
+}
+.mb-5 {
+	margin-bottom: $spacing-xl;
+}
+
+.mx-auto {
+	margin-left: auto;
+	margin-right: auto;
+}

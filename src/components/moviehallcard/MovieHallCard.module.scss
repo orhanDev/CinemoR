@@ -1,0 +1,44 @@
+.cardWrapper {
+  width: 100%;
+  padding: 0 8px;
+  
+}
+
+.card {
+  width: 450px;
+  height: 200px;
+  border-radius: 12px;
+  background-color: #fdfdfd;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.cardText {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.icons {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.heart {
+  color: #d6336c;
+  cursor: pointer;
+}
+
+.arrow {
+  color: #192287;
+  cursor: pointer;
+}

@@ -1,0 +1,198 @@
+@use '../../styles/variables' as vars;
+@use '../../styles/mixins' as mix;
+
+
+:global(body) {
+  background-color: #0f0f0f;
+}
+
+.specialHalls {
+  padding: vars.$spacing-xl 0 vars.$spacing-xxl;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 vars.$spacing-md;
+}
+
+.sectionTitle {
+  color: vars.$color-white;
+  font-size: vars.$font-size-xl;
+  font-weight: vars.$font-weight-bold;
+  position: relative;
+  margin-bottom: vars.$spacing-xl;
+  text-align: center;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * vars.$spacing-sm);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: vars.$color-primary;
+  }
+}
+
+.hallGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: vars.$spacing-lg;
+  
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  @media (max-width: 750px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hallCard {
+  position: relative;
+  border-radius: vars.$border-radius-md;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: vars.$color-white;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    
+    .hallImage {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.imageContainer {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.hallImage {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; 
+  object-position: center center;
+  transition: transform 0.5s ease;
+}
+
+
+.hallLogo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  @include mix.flex-center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+  
+  h3 {
+    font-size: vars.$font-size-lg;
+    font-weight: vars.$font-weight-bold;
+    color: vars.$color-white;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+    margin: 0;
+  }
+}
+
+.hallContent {
+  padding: vars.$spacing-md;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: vars.$color-white;
+}
+
+.hallDescription {
+  color: vars.$color-dark;
+  font-size: vars.$font-size-sm;
+  margin-bottom: vars.$spacing-md;
+  text-align: center;
+  min-height: 50px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: vars.$spacing-sm;
+}
+
+.primaryButton {
+  @include mix.button-primary;
+  padding: vars.$spacing-xs vars.$spacing-lg;
+  font-weight: vars.$font-weight-medium;
+  border-radius: vars.$border-radius-lg;
+  font-size: vars.$font-size-sm;
+  background-color: vars.$color-primary;
+  color: vars.$color-white;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  max-width: 200px;
+  
+  &:hover {
+    background-color: vars.$button-hover;
+  }
+}
+
+.infoButtonsRow {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$spacing-xs;
+  border-top: 1px solid vars.$color-light-gray; 
+  padding-top: vars.$spacing-xs;
+  margin-top: auto;
+}
+
+.infoLinksContainer {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.infoButton {
+  display: flex;
+  align-items: center;
+  padding: vars.$spacing-xs;
+  color: vars.$color-dark; 
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 14px;
+  
+  &:hover {
+    color: vars.$color-primary;
+    
+    .icon {
+      background-color: rgba(vars.$color-primary, 0.1);
+    }
+  }
+  
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: vars.$spacing-xs;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #f5f5f5; 
+    transition: background-color 0.3s ease;
+  }
+  
+  .buttonText {
+    font-size: 13px;
+  }
+}
