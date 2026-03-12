@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  cinemor-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinemor-api
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cinemor-api
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=Vekil4023.
+      - SERVER_PORT=8082
+    depends_on:
+      - postgres
+    networks:
+      - cinemor-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: cinemor-postgres
+    environment:
+      - POSTGRES_DB=cinemor-api
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Vekil4023.
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - cinemor-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+
+networks:
+  cinemor-network:
+    driver: bridge
