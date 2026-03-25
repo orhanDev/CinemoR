@@ -740,7 +740,9 @@ const MovieDetail = () => {
 		const isGermanText = (text) => {
 			if (!text || text.trim() === "") return false;
 
-			return /[äöüßÄÖÜ]|der|die|das|und|ist|sind|für|mit|von|auf|zu|ein|eine|einen|eine|ist|sind|werden|haben|sein|können|müssen|sollen|wollen|dürfen/i.test(text);
+			// English texts can accidentally contain German substrings (e.g. "scientists" contains "ist").
+			// Using word boundaries makes the heuristic much safer for language switching.
+			return /[äöüßÄÖÜ]|\b(der|die|das|und|ist|sind|für|mit|von|auf|zu|ein|eine|einen|werden|haben|sein|können|müssen|sollen|wollen|dürfen)\b/i.test(text);
 		};
 
 		if (language === "en") {

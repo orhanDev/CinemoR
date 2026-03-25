@@ -385,4 +385,23 @@
     "ticketPath": "/images/tickets/nowshowing/greenland_2-ticket.jpg",
     "castImages": "{\"Gerard Butler\":\"/images/actors/Gerard_Butler.png\",\"Morena Baccarin\":\"/images/actors/Morena_Baccarin.png\",\"Roman Griffin Davis\":\"/images/actors/Roman_Griffin_Davis.png\",\"Tommie Earl Jenkins\":\"/images/actors/Tommie_Earl_Jenkins.png\"}"
   }
+  ,
+  {
+    "id": 22,
+    "title": "HOPPERS",
+    "originalTitle": "Hoppers",
+    "genre": "Animation / Comedy",
+    "duration": "95 Minuten",
+    "director": "",
+    "cast": "",
+    "description": "In diesem unterhaltsamen Animations- und Abenteuerfilm entwickeln Wissenschaftler eine Technologie, mit der das Bewusstsein von Tieren in andere Körper übertragen werden kann. Während die liebenswerten, aber chaotischen Charaktere diese neue Fähigkeit ausprobieren, geraten sie in eine Reihe unerwarteter Ereignisse. Hoppers kombiniert Humor, Emotion und spannende Momente und behandelt Themen wie Freundschaft, Identität und das Leben im Einklang mit der Natur. Der Film bietet ein warmes und unterhaltsames Erlebnis für Kinder und die ganze Familie.",
+    "descriptionEn": "In this fun animated adventure, scientists develop a technology that makes it possible to transfer animals’ minds into different bodies. While lovable yet chaotic characters try out this new ability, they get pulled into an unexpected chain of events. Packed with humor, emotion, and action-filled moments, Hoppers explores themes of friendship, identity, and living in harmony with nature. The film offers a warm and entertaining story for children and families alike.",
+    "year": "2026",
+    "country": "Deutschland",
+    "releaseDate": "06.03.2026",
+    "fsk": "ab 6 Jahren",
+    "isComingSoon": false,
+    "posterPath": "/images/movies/nowshowing/hoppers.jpg",
+    "sliderPath": "/images/movies/nowshowing/hoppers_slider.png"
+  }
 ]

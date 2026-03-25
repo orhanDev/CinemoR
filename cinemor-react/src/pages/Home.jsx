@@ -299,6 +299,18 @@ const Home = () => {
 			genre: "Drama",
 			fsk: "",
 			isComingSoon: false
+		},
+		{
+			id: 22,
+			title: "HOPPERS",
+			posterPath: "/images/movies/nowshowing/hoppers.jpg",
+			sliderPath: "/images/movies/nowshowing/hoppers_slider.png",
+			poster: "/images/movies/nowshowing/hoppers.jpg",
+			slider: "/images/movies/nowshowing/hoppers_slider.png",
+			duration: 95,
+			genre: "Animation / Comedy",
+			fsk: "ab 6 Jahren",
+			isComingSoon: false
 		}
 	];
 
@@ -343,8 +355,13 @@ const Home = () => {
 		return t.includes("greenland 2") || (m?.id === 21);
 	};
 
+	const isHoppers = (m) => {
+		const t = (m?.title || "").toString().trim().toLowerCase();
+		return t.includes("hoppers") || (m?.id === 22);
+	};
+
 	const displayMovies = useMemo(() => {
-		const MAX_MOVIES = 11;
+		const MAX_MOVIES = 12;
 		const isTrainToBusan = (m) => {
 			const t = (m?.title || "").toString().trim().toLowerCase();
 			const ot = (m?.originalTitle || "").toString().trim().toLowerCase();
@@ -368,11 +385,12 @@ const Home = () => {
 		});
 		let list = unique.filter((m) => !isTrainToBusan(m));
 		list = list.map(m => ({ ...m, isComingSoon: false }));
+		const hoppers = list.find(isHoppers);
 		const crime101 = list.find(isCrime101);
 		const greenland2 = list.find(isGreenland2);
-		const featuredFirst = [crime101, greenland2].filter(Boolean);
+		const featuredFirst = [hoppers, crime101, greenland2].filter(Boolean);
 		if (featuredFirst.length > 0) {
-			list = [...featuredFirst, ...list.filter((m) => !isCrime101(m) && !isGreenland2(m))].slice(0, MAX_MOVIES);
+			list = [...featuredFirst, ...list.filter((m) => !isHoppers(m) && !isCrime101(m) && !isGreenland2(m))].slice(0, MAX_MOVIES);
 		} else {
 			list = list.slice(0, MAX_MOVIES);
 		}
@@ -391,7 +409,7 @@ const Home = () => {
 			}
 			return !isComingSoon && m.title && m.title.toLowerCase().includes("charlie");
 		});
-		if (charlieInList && list.indexOf(charlieInList) !== 0 && !isCrime101(list[0]) && !isGreenland2(list[0])) {
+		if (charlieInList && list.indexOf(charlieInList) !== 0 && !isHoppers(list[0]) && !isCrime101(list[0]) && !isGreenland2(list[0])) {
 			list = [charlieInList, ...list.filter((m) => m !== charlieInList)].slice(0, MAX_MOVIES);
 		} else if (charlieFromSample && !charlieInList) {
 			const charlieFixed = { ...charlieFromSample, isComingSoon: false };
@@ -401,20 +419,21 @@ const Home = () => {
 	}, [movieData]);
 
 	const sliderMovies = useMemo(() => {
-		const SLIDER_COUNT = 11;
+		const SLIDER_COUNT = 12;
 		let movies = displayMovies.slice(0, SLIDER_COUNT);
 
+		const hoppers = movies.find(isHoppers);
 		const crime101 = movies.find(isCrime101);
 		const greenland2 = movies.find(isGreenland2);
-		const featuredFirst = [crime101, greenland2].filter(Boolean);
+		const featuredFirst = [hoppers, crime101, greenland2].filter(Boolean);
 		if (featuredFirst.length > 0) {
-			movies = [...featuredFirst, ...movies.filter((m) => !isCrime101(m) && !isGreenland2(m))].slice(0, SLIDER_COUNT);
+			movies = [...featuredFirst, ...movies.filter((m) => !isHoppers(m) && !isCrime101(m) && !isGreenland2(m))].slice(0, SLIDER_COUNT);
 		}
 
 		const charlieInSlider = movies.find(isCharlieMovie);
 		const charlieFromDisplay = displayMovies.find(isCharlieMovie);
 		const charlie = charlieInSlider || charlieFromDisplay;
-		if (charlie && !isCrime101(movies[0]) && !isGreenland2(movies[0])) {
+		if (charlie && !isHoppers(movies[0]) && !isCrime101(movies[0]) && !isGreenland2(movies[0])) {
 			movies = [charlie, ...movies.filter((m) => m !== charlie)].slice(0, SLIDER_COUNT);
 		}
 
@@ -591,7 +610,7 @@ const Home = () => {
 													}}
 												>
 													<FaTicketAlt />
-													<span>Tickets sichern!</span>
+													<span>{t("home.ticketsBuchen")}</span>
 												</button>
 											)}
 										</div>
